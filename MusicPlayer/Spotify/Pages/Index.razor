@@ -2,8 +2,21 @@
 
 <PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="tracks-area">
+    @foreach (var track in Tracks)
+    {
+        <TrackCard Track="track"></TrackCard>
+    }
+</div>
 
-Welcome to your new app.
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+@code
+{
+    List<TrackModel> Tracks { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Tracks = DataBaseMoq.Tracks;
+    }
+}
+

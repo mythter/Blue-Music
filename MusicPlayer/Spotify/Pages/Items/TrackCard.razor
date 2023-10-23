@@ -1,0 +1,24 @@
+﻿<div class="card">
+    <div class="card-area">
+        <div class="card-image-area">
+            <div>
+                <img class="image" src="@Track.Image" />
+                <div class="play-button">
+                    <i class="fa-solid fa-play"></i>
+                </div>
+            </div>
+        </div>
+        <div class="card-title-area">
+            <p>@Track.Title</p>
+        </div>
+        <div class="card-author-area">
+            <p>@Track.Author</p>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public TrackModel Track { get; set; }
+}

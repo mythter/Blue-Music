@@ -1,0 +1,24 @@
+﻿.card{
+    padding: 15px;
+}
+
+     .card-area {
+        width: 250px;
+        height: 350px;
+        background: #181818;
+        border-radius: 15px;
+     }
+
+     .card-image-area {
+        padding: 20px;
+     }
+
+    .image {
+        border-radius: 15px;
+        overflow: clip;
+    }
+
+
+.card img {
+    width: 100%;
+}
