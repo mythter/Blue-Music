@@ -1,24 +1,89 @@
-﻿.card{
-    padding: 15px;
+﻿.card-area {
+    margin: 15px;
+    width: 250px;
+    height: 350px;
+    background: #181818;
+    border-radius: 10px;
+    transition: 0.3s;
+    cursor: pointer;
 }
 
-     .card-area {
-        width: 250px;
-        height: 350px;
-        background: #181818;
-        border-radius: 15px;
-     }
+.card-image-area {
+    padding: 20px;
+    padding-bottom: 0;
+}
 
-     .card-image-area {
-        padding: 20px;
-     }
+.image {
+    position: relative;
+    overflow: clip;
+    box-shadow: #181818 0px 10px 15px;
+    border-radius: 10px;
+}
 
-    .image {
-        border-radius: 15px;
-        overflow: clip;
+    .image img {
+        width: 100%;
+        border-radius: 10px;
+        transform: scale(1);
+        box-shadow: #181818 0px 10px 15px;
+        pointer-events: none;
+    }
+
+    .image .play-button {
+        position: absolute;
+        opacity: 0;
+        width: 50px;
+        height: 50px;
+        background: #1ED760;
+        right: 10px;
+        bottom: 5px;
+        border-radius: 50%;
+        display: flex;
     }
 
 
-.card img {
-    width: 100%;
+    .image i {
+        transform: scale(1);
+        font-size: 20px;
+        margin: auto
+    }
+
+
+
+p {
+    padding: 20px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.card-title-area {
+    color: #FFFFFF;
+    font-size: 18px;
+    padding-top: 20px;
+}
+
+.card-author-area {
+    color: #A7A7A7;
+    font-size: 14px;
+    padding-top: 10px;
+}
+
+.card-area:hover {
+    background: #282828;
+    transition: 0.3s;
+}
+
+    .card-area:hover .play-button {
+        bottom: 15px;
+        opacity: 1;
+        transition: 0.3s;
+    }
+
+.image:hover {
+    transform: scale(1.025);
+}
+
+.play-button:hover {
+    transition: 0s;
+    background: #1FDF64;
+    transform: scale(1.05);
 }
