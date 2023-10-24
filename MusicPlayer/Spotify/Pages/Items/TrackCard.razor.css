@@ -25,6 +25,7 @@
         width: 100%;
         border-radius: 10px;
         transform: scale(1);
+        transition: 0.2s;
         box-shadow: #181818 0px 10px 15px;
         pointer-events: none;
     }
@@ -41,14 +42,11 @@
         display: flex;
     }
 
-
     .image i {
         transform: scale(1);
         font-size: 20px;
         margin: auto
     }
-
-
 
 p {
     padding: 20px;
@@ -80,9 +78,9 @@ p {
         transition: 0.3s;
     }
 
-.image:hover {
+.image:hover img {
     transform: scale(1.025);
-    transition: 0.3s;
+    transition: 0.2s;
 }
 
 .play-button:hover {
