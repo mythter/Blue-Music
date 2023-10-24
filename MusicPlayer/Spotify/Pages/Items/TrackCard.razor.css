@@ -18,6 +18,7 @@
     overflow: clip;
     box-shadow: #181818 0px 10px 15px;
     border-radius: 10px;
+    transition: 0.2s;
 }
 
     .image img {
@@ -53,6 +54,7 @@ p {
     padding: 20px;
     padding-top: 0;
     padding-bottom: 0;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
 .card-title-area {
@@ -80,6 +82,7 @@ p {
 
 .image:hover {
     transform: scale(1.025);
+    transition: 0.3s;
 }
 
 .play-button:hover {
