@@ -3,16 +3,19 @@
 <PageTitle>Index</PageTitle>
 
 <div class="tracks-area">
-    @foreach (var track in Tracks)
+    @if (Tracks is not null)
     {
-        <TrackCard Track="track"></TrackCard>
+        @foreach (var track in Tracks)
+        {
+            <TrackCard Track="track"></TrackCard>
+        }
     }
 </div>
 
 
 @code
 {
-    List<TrackModel> Tracks { get; set; }
+    List<TrackModel>? Tracks { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
