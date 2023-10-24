@@ -1,4 +1,4 @@
-﻿using Spotify.Data.Models;
+﻿using Spotify.Models;
 
 namespace Spotify.Data
 {

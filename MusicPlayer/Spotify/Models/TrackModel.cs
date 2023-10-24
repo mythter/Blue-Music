@@ -1,4 +1,4 @@
-﻿namespace Spotify.Data.Models
+﻿namespace Spotify.Models
 {
     public class TrackModel
     {
