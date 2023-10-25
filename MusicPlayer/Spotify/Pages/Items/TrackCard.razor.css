@@ -1,8 +1,8 @@
-﻿.card-area {
+﻿.card {
     margin: 15px;
     width: 250px;
     height: 350px;
-    background: #181818;
+    background: #151515;
     border-radius: 10px;
     transition: 0.3s;
     cursor: pointer;
@@ -72,12 +72,12 @@ p {
     padding-top: 10px;
 }
 
-.card-area:hover {
+.card:hover {
     background: #282828;
     transition: 0.3s;
 }
 
-    .card-area:hover .play-button {
+    .card:hover .play-button {
         bottom: 15px;
         opacity: 1;
         transition: 0.3s;

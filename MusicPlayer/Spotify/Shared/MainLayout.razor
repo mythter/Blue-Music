@@ -1,3 +1,39 @@
 ﻿@inherits LayoutComponentBase
 
-@Body
+<PageTitle>Main Title</PageTitle>
+
+<div class="page">
+
+    <div class="sidebar-area">
+        <div class="menu-area">
+
+        </div>
+
+        <div class="favorites-area">
+            @if (Playlists is not null)
+            {
+                @foreach (var pl in Playlists)
+                {
+                    <SidePlaylist Playlist="pl"></SidePlaylist>
+                }
+            }
+        </div>
+    </div>
+
+    <div class="main-area">
+        @Body
+    </div>
+
+</div>
+
+@code
+{
+    List<TrackModel>? Tracks { get; set; }
+    List<PlaylistModel>? Playlists { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Tracks = DataBaseMoq.Tracks;
+        Playlists = DataBaseMoq.Playlists;
+    }
+}
