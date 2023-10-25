@@ -2,6 +2,16 @@
 
 <PageTitle>Index</PageTitle>
 
+<div>
+     @if (Playlists is not null)
+    {
+        @foreach (var pl in Playlists)
+        {
+            <SidePlaylist Playlist="pl"></SidePlaylist>
+        }
+    }
+</div>
+
 <div class="tracks-area">
     @if (Tracks is not null)
     {
@@ -16,10 +26,12 @@
 @code
 {
     List<TrackModel>? Tracks { get; set; }
+    List<PlaylistModel>? Playlists { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         Tracks = DataBaseMoq.Tracks;
+        Playlists = DataBaseMoq.Playlists;
     }
 }
 

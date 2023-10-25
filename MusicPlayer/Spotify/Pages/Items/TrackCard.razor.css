@@ -30,6 +30,11 @@
         pointer-events: none;
     }
 
+    .image:hover img {
+        transform: scale(1.025);
+        transition: 0.2s;
+    }
+
     .image .play-button {
         position: absolute;
         opacity: 0;
@@ -77,11 +82,6 @@ p {
         opacity: 1;
         transition: 0.3s;
     }
-
-.image:hover img {
-    transform: scale(1.025);
-    transition: 0.2s;
-}
 
 .play-button:hover {
     transition: 0s;

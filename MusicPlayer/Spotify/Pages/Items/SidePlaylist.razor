@@ -1,0 +1,20 @@
+﻿<div class="playlist">
+    <div class="image-area">
+        <img src="@Playlist.Image" />
+    </div>
+    <div class="description-area">
+        <div class="title-area">
+            <p class="title">@Playlist.Title</p>
+        </div>
+        <div class="author-area">
+            <i class="ph-fill ph-push-pin"></i>
+            <p class="author">@Playlist.Author</p>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public PlaylistModel Playlist { get; set; }
+}
