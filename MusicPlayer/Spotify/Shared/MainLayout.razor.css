@@ -18,8 +18,11 @@
 }
 
     .sidebar-area .menu-area {
-        height: 150px;
+        /*height: 150px;*/
         margin-bottom: 10px;
+        padding: 5px;
+        padding-left: 10px;
+        padding-right: 10px;
     }
 
     .sidebar-area .favorites-area {
