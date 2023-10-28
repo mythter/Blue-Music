@@ -1,12 +1,40 @@
 ﻿.card {
+    position: relative;
     margin: 15px;
-    width: 250px;
-    height: 350px;
+    max-width: 250px;
+    max-height: 350px;
     background: #151515;
     border-radius: 10px;
     transition: 0.3s;
     cursor: pointer;
+    overflow: hidden;
+    --x: calc(100% + 30px);
+    --y: calc(100% + 30px);
+    --w: calc(100% * 2);
 }
+
+    .card::before {
+        content: "";
+        position: absolute;
+        left: var(--x);
+        top: var(--y);
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: #669ae730;
+        transition: 0.8s;
+        transform: translateX(-50%) translateY(-50%);
+        -moz-transform: translateX(-50%) translateY(-50%);
+        -ms-transform: translateX(-50%) translateY(-50%);
+        -o-transform: translateX(-50%) translateY(-50%);
+        pointer-events: none;
+        filter: blur(10px);
+    }
+
+    .card:hover::before {
+        width: var(--w);
+        height: var(--w);
+    }
 
 .card-image-area {
     padding: 20px;
@@ -40,7 +68,7 @@
         opacity: 0;
         width: 50px;
         height: 50px;
-        background: #1ED760;
+        background: #1e9ed7;
         right: 10px;
         bottom: 5px;
         border-radius: 50%;
@@ -66,28 +94,36 @@ p {
 .card-title-area {
     color: #FFFFFF;
     font-size: 18px;
-    padding-top: 20px;
+    margin-top: 20px;
+    min-width: 0
 }
 
 .card-author-area {
-    color: #A7A7A7;
-    font-size: 14px;
-    padding-top: 10px;
+    color: #FFFFFF;
+    font-size: 18px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    min-width: 0
 }
 
-.card:hover {
-    background: #282828;
+.card-title {
+    color: #FFFFFF;
+    font-size: 18px;
+}
+
+.card-author {
+    color: #A7A7A7;
+    font-size: 14px;
+}
+
+.card:hover .play-button {
+    bottom: 15px;
+    opacity: 1;
     transition: 0.3s;
 }
 
-    .card:hover .play-button {
-        bottom: 15px;
-        opacity: 1;
-        transition: 0.3s;
-    }
-
 .play-button:hover {
     transition: 0s;
-    background: #1FDF64;
+    background: #1fa4df;
     transform: scale(1.05);
 }

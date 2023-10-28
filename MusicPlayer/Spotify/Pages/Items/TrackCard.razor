@@ -1,4 +1,6 @@
-﻿<div class="card">
+﻿@inject IJSRuntime js
+
+<div id="@Track.Id" class="card">
     <div class="card-image-area">
         <div class="image">
             <img src="@Track.Image" />
@@ -7,16 +9,26 @@
             </div>
         </div>
     </div>
-    <div style="min-width: 0">
-        <p class="card-title-area">@Track.Title</p>
+    <div class="card-title-area">
+        <p class="card-title">@Track.Title</p>
     </div>
-    <div style="min-width: 0">
-        <p class="card-author-area">@Track.Author</p>
+    <div class="card-author-area">
+        <p class="card-author">@Track.Author</p>
     </div>
 </div>
 
 @code {
+    IJSObjectReference? jsModule;
 
     [Parameter]
     public TrackModel Track { get; set; }
+
+    protected override async void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            jsModule = await js.InvokeAsync<IJSObjectReference>("import", "./Pages/Items/TrackCard.razor.js");
+            await jsModule.InvokeVoidAsync("TrackCard.InitHover", Track.Id);
+        }
+    }
 }
