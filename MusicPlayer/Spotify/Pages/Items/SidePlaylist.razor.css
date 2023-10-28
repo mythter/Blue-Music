@@ -49,18 +49,20 @@
 
     .description-area i {
         color: #1e9ed7;
-        margin-right: 3px;
+        margin-right: 5px;
+        align-self: center;
         /*visibility: hidden;*/
     }
 
 .title-area .title {
-        color: #ffffff;
-    }
+    color: #ffffff;
+}
 
 .author-area {
     display: flex;
 }
 
-    .author-area p {
+    .author-area .author {
+        line-height: 22px;
         color: #a7a7a7;
     }
