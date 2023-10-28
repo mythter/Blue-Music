@@ -3,6 +3,13 @@
     display: flex;
     padding: 10px;
     height: 100vh;
+    box-sizing: border-box;
+}
+
+#resizer {
+    width: 8px;
+    cursor: col-resize;
+    margin: 0 0 0 auto;
 }
 
 .menu-area, .favorites-area, .main-area {
@@ -11,18 +18,15 @@
 }
 
 .sidebar-area {
-    min-width: 300px;
-    padding-right: 10px;
     display: flex;
     flex-flow: column;
+    overflow: hidden;
 }
 
     .sidebar-area .menu-area {
-        /*height: 150px;*/
-        margin-bottom: 10px;
-        padding: 5px;
-        padding-left: 10px;
-        padding-right: 10px;
+        margin-bottom: 8px;
+        padding-top: 5px;
+        padding-bottom: 5px;
     }
 
     .sidebar-area .favorites-area {
@@ -34,4 +38,18 @@
 .main-area {
     flex: 1;
     padding: 15px;
+    overflow-y: scroll;
 }
+
+    .main-area::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    .main-area::-webkit-scrollbar-track:hover {
+        background: #151515;
+    }
+
+    .main-area::-webkit-scrollbar-thumb {
+        background: #008080;
+        border-radius: 3px;
+    }

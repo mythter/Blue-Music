@@ -1,15 +1,17 @@
 ﻿@inherits LayoutComponentBase
+@inject IJSRuntime js
+
 
 <PageTitle>Main Title</PageTitle>
 
 <div class="page">
 
-    <div class="sidebar-area">
+    <div id="sidebar" class="sidebar-area">
         <div class="menu-area">
             <Menu></Menu>
         </div>
 
-        <div class="favorites-area">
+        <div id="favourites" class="favorites-area">
             @if (Playlists is not null)
             {
                 @foreach (var pl in Playlists)
@@ -20,6 +22,8 @@
         </div>
     </div>
 
+    <div id="resizer"></div>
+
     <div class="main-area">
         @Body
     </div>
@@ -28,6 +32,7 @@
 
 @code
 {
+    IJSObjectReference? jsModule;
     List<TrackModel>? Tracks { get; set; }
     List<PlaylistModel>? Playlists { get; set; }
 
@@ -35,5 +40,14 @@
     {
         Tracks = DataBaseMoq.Tracks;
         Playlists = DataBaseMoq.Playlists;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            jsModule = await js.InvokeAsync<IJSObjectReference>("import", "./Shared/MainLayout.razor.js");
+            await jsModule.InvokeVoidAsync("Main.Init");
+        }
     }
 }

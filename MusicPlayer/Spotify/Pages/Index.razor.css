@@ -1,4 +1,5 @@
 ﻿.tracks-area {
     background: #121212;
     display: flex;  
+    flex-wrap:wrap;
 }

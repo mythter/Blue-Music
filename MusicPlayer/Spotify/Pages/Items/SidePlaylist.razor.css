@@ -2,7 +2,7 @@
     background: #121212;
     height: 50px;
     border-radius: 10px;
-    padding: 10px;
+    padding: 7px;
     display: flex;
     align-items: center;
     /*min-width: 130px;*/
@@ -48,7 +48,7 @@
     }
 
     .description-area i {
-        color: #52d55b;
+        color: #1e9ed7;
         margin-right: 3px;
         /*visibility: hidden;*/
     }
