@@ -1,39 +1,49 @@
 ﻿@inherits LayoutComponentBase
 @inject IJSRuntime js
+@implements IAsyncDisposable
 
 
 <PageTitle>Main Title</PageTitle>
 
-<div class="page">
+<CascadingValue Value="this">
+    <div class="page">
 
-    <div id="sidebar" class="sidebar-area">
-        <div class="menu-area">
-            <Menu></Menu>
-        </div>
+        <div id="sidebar" class="sidebar-area">
+            <div class="menu-area">
+                <Menu></Menu>
+            </div>
 
-        <div id="favourites" class="favorites-area">
-            @if (Playlists is not null)
-            {
-                @foreach (var pl in Playlists)
+            <div id="favourites" class="favorites-area">
+                @if (Playlists is not null)
                 {
-                    <SidePlaylist Playlist="pl"></SidePlaylist>
+                    for (int i = 0; i < 10; i++)
+                    {
+                        @foreach (var pl in Playlists)
+                        {
+                            <SidePlaylist Playlist="pl"></SidePlaylist>
+                        }
+                    }
+                    @*@foreach (var pl in Playlists)
+                {
+                <SidePlaylist Playlist="pl"></SidePlaylist>
+                }*@
                 }
-            }
+            </div>
         </div>
+
+        <div id="resizer"></div>
+
+        <div id="main" class="main-area">
+            @Body
+        </div>
+
     </div>
-
-    <div id="resizer"></div>
-
-    <div class="main-area">
-        @Body
-    </div>
-
-</div>
+</CascadingValue>
 
 @code
 {
     IJSObjectReference? jsModule;
-    List<TrackModel>? Tracks { get; set; }
+    public List<TrackModel>? Tracks { get; set; }
     List<PlaylistModel>? Playlists { get; set; }
 
     protected override async Task OnInitializedAsync()
@@ -47,7 +57,28 @@
         if (firstRender)
         {
             jsModule = await js.InvokeAsync<IJSObjectReference>("import", "./Shared/MainLayout.razor.js");
-            await jsModule.InvokeVoidAsync("Main.Init");
+            await jsModule.InvokeVoidAsync("Main.Init", DotNetObjectReference.Create(this));
+        }
+    }
+
+    [JSInvokable]
+    public async Task LoadNext()
+    {
+        Tracks.Add(new TrackModel()
+            {
+                Author = "Author",
+                Id = Guid.NewGuid(),
+                Image = Tracks[0].Image,
+                Title = "Title"
+            });
+        StateHasChanged();
+    }
+
+    async ValueTask IAsyncDisposable.DisposeAsync()
+    {
+        if (jsModule is not null)
+        {
+            await jsModule.DisposeAsync();
         }
     }
 }

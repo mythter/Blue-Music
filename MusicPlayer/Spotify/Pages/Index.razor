@@ -13,25 +13,32 @@
 </div>*@
 
 <div class="tracks-area">
-    @if (Tracks is not null)
+    @if (Layout.Tracks is not null)
     {
-        @foreach (var track in Tracks)
+        for (int i = 0; i < 10; i++)
+        {
+            @foreach (var track in Layout.Tracks)
+            {
+                <TrackCard Track="track"></TrackCard>
+            }
+        }
+        @*@foreach (var track in Layout.Tracks)
         {
             <TrackCard Track="track"></TrackCard>
-        }
+        }*@
     }
 </div>
 
 
 @code
 {
-    List<TrackModel>? Tracks { get; set; }
-    List<PlaylistModel>? Playlists { get; set; }
+    //List<TrackModel>? Tracks { get; set; }
+    [CascadingParameter]
+    public MainLayout Layout { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        Tracks = DataBaseMoq.Tracks;
-        Playlists = DataBaseMoq.Playlists;
+        //Tracks = DataBaseMoq.Tracks;
     }
 }
 

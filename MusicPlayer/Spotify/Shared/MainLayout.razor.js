@@ -1,6 +1,7 @@
 ﻿export class Main {
-    static Init() {
+    static Init(dotNet) {
         let resizing = false
+        //let scrollDown = false
         let resizer = document.getElementById('resizer')
         let resizingPanel = document.getElementById('sidebar')
         let favouritesPanel = document.getElementById('favourites')
@@ -34,5 +35,33 @@
             document.body.removeEventListener('mouseup', finishResizing)
             resizer.removeEventListener('mousemove', resizingMove)
         }
+
+        let main = document.getElementById("main")
+        main.addEventListener("scroll", (e) => {
+            const scrollTop = main.scrollTop
+            const scrollHeigth = main.scrollHeight
+            const clientHeight = main.clientHeight
+            let percent = scrollTop * 100 / (scrollHeigth - clientHeight)
+            console.log(scrollTop, scrollHeigth, clientHeight, "=>", scrollTop / (scrollHeigth - clientHeight))
+
+            if (percent > 90 /*&& scrollDown*/) {
+                dotNet.invokeMethodAsync("LoadNext")
+            }
+        })
+
+        //main.addEventListener('wheel', checkScrollDirection)
+        //function checkScrollDirection(event) {
+        //    if (checkScrollDirectionIsUp(event)) {
+        //        scrollDown = false
+        //    } else {
+        //        scrollDown = true
+        //    }
+        //}
+        //function checkScrollDirectionIsUp(event) {
+        //    if (event.wheelDelta) {
+        //        return event.wheelDelta > 0
+        //    }
+        //    return event.deltaY < 0
+        //}
     }
 }
