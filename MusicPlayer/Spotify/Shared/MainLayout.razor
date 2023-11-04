@@ -8,31 +8,36 @@
 <CascadingValue Value="@Playlists">
     <div class="page">
 
-        <div @ref=Sidebar class="sidebar-area">
-            <div class="menu-area">
-                <Menu></Menu>
-            </div>
+        <div class="page-area">
+            <div @ref=Sidebar class="sidebar-area">
+                <div class="menu-area">
+                    <Menu></Menu>
+                </div>
 
-            <div @ref=FavouritesPanel class="favorites-area">
-                @if (Playlists is not null)
-                {
-                    for (int i = 0; i < 10; i++)
+                <div @ref=FavouritesPanel class="favorites-area">
+                    @if (Playlists is not null)
                     {
-                        @foreach (var pl in Playlists)
+                        for (int i = 0; i < 10; i++)
                         {
-                            <SidePlaylist Playlist="pl"></SidePlaylist>
+                            @foreach (var pl in Playlists)
+                            {
+                                <SidePlaylist Playlist="pl"></SidePlaylist>
+                            }
                         }
                     }
-                }
+                </div>
             </div>
+
+            <div @ref=Resizer class="resizer"></div>
+
+            <div @ref=MainPanel class="main-area">
+                @Body
+            </div>
+
         </div>
 
-        <div @ref=Resizer class="resizer"></div>
-
-        <div @ref=MainPanel class="main-area">
-            @Body
+        <div class="trackbar-area">
         </div>
-
     </div>
 </CascadingValue>
 
