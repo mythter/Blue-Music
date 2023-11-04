@@ -1,19 +1,19 @@
 ﻿@inject IJSRuntime js
 
-<div id="@Track.Id" class="card">
+<div id="@Playlist.Id" class="card">
     <div class="card-image-area">
         <div class="image">
-            <img src="@Track.Image" />
+            <img src="@Playlist.Image" />
             <div class="play-button">
                 <i class="fa-solid fa-play"></i>
             </div>
         </div>
     </div>
     <div class="card-title-area">
-        <p class="card-title">@Track.Title</p>
+        <p class="card-title">@Playlist.Title</p>
     </div>
     <div class="card-author-area">
-        <p class="card-author">@Track.Author</p>
+        <p class="card-author">@Playlist.Author</p>
     </div>
 </div>
 
@@ -21,14 +21,14 @@
     IJSObjectReference? jsModule;
 
     [Parameter]
-    public TrackModel Track { get; set; }
+    public PlaylistModel Playlist { get; set; }
 
     protected override async void OnAfterRender(bool firstRender)
     {
         if (firstRender)
         {
-            jsModule = await js.InvokeAsync<IJSObjectReference>("import", "./Pages/Items/TrackCard.razor.js");
-            await jsModule.InvokeVoidAsync("TrackCard.InitHover", Track.Id);
+            jsModule = await js.InvokeAsync<IJSObjectReference>("import", "./Pages/Items/PlaylistCard.razor.js");
+            await jsModule.InvokeVoidAsync("PlaylistCard.InitHover", Playlist.Id);
         }
     }
 }

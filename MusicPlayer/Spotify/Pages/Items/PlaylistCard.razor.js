@@ -1,4 +1,4 @@
-﻿export class TrackCard {
+﻿export class PlaylistCard {
     static InitHover(id) {
         let target = document.getElementById(id);
 

@@ -39,8 +39,8 @@
 @code
 {
     IJSObjectReference? jsModule;
-    public List<TrackModel>? Tracks { get; set; }
-    List<PlaylistModel>? Playlists { get; set; }
+    List<TrackModel>? Tracks { get; set; }
+    public List<PlaylistModel>? Playlists { get; set; }
 
     ElementReference Resizer;
     ElementReference Sidebar;
@@ -66,11 +66,11 @@
     [JSInvokable]
     public async Task LoadNext()
     {
-        Tracks.Add(new TrackModel()
+        Playlists.Add(new PlaylistModel()
             {
                 Author = "Author",
                 Id = Guid.NewGuid(),
-                Image = Tracks[0].Image,
+                Image = Playlists[0].Image,
                 Title = "Title"
             });
         StateHasChanged();

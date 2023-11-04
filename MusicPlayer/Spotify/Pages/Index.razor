@@ -13,19 +13,19 @@
 </div>*@
 
 <div class="tracks-area">
-    @if (Layout.Tracks is not null)
+    @if (Layout.Playlists is not null)
     {
         for (int i = 0; i < 10; i++)
         {
-            @foreach (var track in Layout.Tracks)
+            @foreach (var track in Layout.Playlists)
             {
-                <TrackCard Track="track"></TrackCard>
+                <PlaylistCard Playlist="track"></PlaylistCard>
             }
         }
         @*@foreach (var track in Layout.Tracks)
-        {
-            <TrackCard Track="track"></TrackCard>
-        }*@
+    {
+    <PlaylistCard Track="track"></PlaylistCard>
+    }*@
     }
 </div>
 
