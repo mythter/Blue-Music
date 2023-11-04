@@ -8,12 +8,12 @@
 <CascadingValue Value="this">
     <div class="page">
 
-        <div id="sidebar" class="sidebar-area">
+        <div @ref=Sidebar class="sidebar-area">
             <div class="menu-area">
                 <Menu></Menu>
             </div>
 
-            <div id="favourites" class="favorites-area">
+            <div @ref=FavouritesPanel class="favorites-area">
                 @if (Playlists is not null)
                 {
                     for (int i = 0; i < 10; i++)
@@ -23,17 +23,13 @@
                             <SidePlaylist Playlist="pl"></SidePlaylist>
                         }
                     }
-                    @*@foreach (var pl in Playlists)
-                {
-                <SidePlaylist Playlist="pl"></SidePlaylist>
-                }*@
                 }
             </div>
         </div>
 
-        <div id="resizer"></div>
+        <div @ref=Resizer class="resizer"></div>
 
-        <div id="main" class="main-area">
+        <div @ref=MainPanel class="main-area">
             @Body
         </div>
 
@@ -46,6 +42,11 @@
     public List<TrackModel>? Tracks { get; set; }
     List<PlaylistModel>? Playlists { get; set; }
 
+    ElementReference Resizer;
+    ElementReference Sidebar;
+    ElementReference FavouritesPanel;
+    ElementReference MainPanel;
+
     protected override async Task OnInitializedAsync()
     {
         Tracks = DataBaseMoq.Tracks;
@@ -57,7 +58,8 @@
         if (firstRender)
         {
             jsModule = await js.InvokeAsync<IJSObjectReference>("import", "./Shared/MainLayout.razor.js");
-            await jsModule.InvokeVoidAsync("Main.Init", DotNetObjectReference.Create(this));
+            await jsModule.InvokeVoidAsync("Main.ResizeInit", Resizer, Sidebar, FavouritesPanel);
+            await jsModule.InvokeVoidAsync("Main.LoadNextInit", DotNetObjectReference.Create(this), MainPanel);
         }
     }
 

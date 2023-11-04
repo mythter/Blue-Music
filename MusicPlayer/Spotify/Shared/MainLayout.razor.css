@@ -6,7 +6,7 @@
     box-sizing: border-box;
 }
 
-#resizer {
+.resizer {
     width: 8px;
     cursor: col-resize;
     margin: 0 0 0 auto;
