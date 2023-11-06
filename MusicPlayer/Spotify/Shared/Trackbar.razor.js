@@ -12,56 +12,51 @@
             let duration = (title.clientWidth - containerWidth) / speed
             title.classList.add('running-text')
             title.style["animation-duration"] = duration + "s"
-            title.addEventListener("animationstart", function () {
+
+            title.addEventListener("animationstart", () => {
                 animatingTitle = true
             }, false);
-            title.addEventListener("animationend", function () {
+            title.addEventListener("animationend", () => {
                 animatingTitle = false
             }, false);
-            title.addEventListener("mouseenter", function () {
-                if (animatingTitle) {
-                    title.style["animation-play-state"] = "paused"
-                } else {
-                    title.classList.remove('running-text')
-                    title.offsetWidth
-                    title.classList.add('running-text')
-                    title.style["animation-duration"] = duration + "s"
-                    title.style["animation-play-state"] = "paused"
-                }
-            }, false);
-            title.addEventListener("mouseleave", function () {
-                if (animatingTitle) {
-                    title.style["animation-play-state"] = "running"
-                }
-            }, false);
+            title.addEventListener("mouseenter", () => mouseEnter(title, info, animatingTitle), false);
+            title.addEventListener("mouseleave", () => mouseLeave(title, animatingTitle), false);
         }
 
         if (author.clientWidth > containerWidth) {
             let duration = (author.clientWidth - containerWidth) / speed
             author.classList.add('running-text')
             author.style["animation-duration"] = duration + "s"
-            author.addEventListener("animationstart", function () {
+
+            author.addEventListener("animationstart", () => {
                 animatingAuthor = true
             }, false);
-            author.addEventListener("animationend", function () {
+            author.addEventListener("animationend", () => {
                 animatingAuthor = false
             }, false);
-            author.addEventListener("mouseenter", function () {
-                if (animatingAuthor) {
-                    author.style["animation-play-state"] = "paused"
-                } else {
-                    author.classList.remove('running-text')
-                    author.offsetWidth
-                    author.classList.add('running-text')
-                    author.style["animation-duration"] = duration + "s"
-                    author.style["animation-play-state"] = "paused"
-                }
-            }, false);
-            author.addEventListener("mouseleave", function () {
-                if (animatingAuthor) {
-                    author.style["animation-play-state"] = "running"
-                }
-            }, false);
+            author.addEventListener("mouseenter", () => mouseEnter(author, info, animatingAuthor), false);
+            author.addEventListener("mouseleave", () => mouseLeave(author, animatingAuthor), false);
+        }
+
+        function mouseEnter(target, info, animating) {
+            if (animating) {
+                target.style["animation-play-state"] = "paused"
+            } else {
+                let duration = (target.clientWidth - info.clientWidth - 12) / speed
+                document.documentElement.style.setProperty("--track-info-width", info.clientWidth - 12 + "px")
+
+                target.classList.remove('running-text')
+                target.offsetWidth
+                target.classList.add('running-text')
+                target.style["animation-duration"] = duration + "s"
+                target.style["animation-play-state"] = "paused"
+            }
+        }
+
+        function mouseLeave(target, animating) {
+            if (animating) {
+                target.style["animation-play-state"] = "running"
+            }
         }
     }
 }
