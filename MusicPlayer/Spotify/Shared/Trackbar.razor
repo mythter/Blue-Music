@@ -1,0 +1,59 @@
+﻿@inject IJSRuntime js
+@implements IAsyncDisposable
+
+<div class="trackbar">
+    <div class="track-area">
+        <div class="track-image">
+            <img />
+        </div>
+        <div @ref=Info class="track-info">
+            <div class="track-title">
+                <div @ref=Title class="track-title-area">
+                    @*<a href="#">Very Very Very Very Very Very Very Very Very V... Long tetle</a>*@
+                    <a href="#">Very Very Very Very Very Very Very Very Very Very Very Long Title</a>
+                </div>
+            </div>
+            <div class="track-author">
+                <div @ref=Author class="track-author-area">
+                    @*<a href="#">Very Very Very Very Very Very Very Very Very Vei.... Very Long Author</a>*@
+                    <a href="#">Very Very Very Very Very Very Very Very Very Very Very Very Long Author</a>
+                </div>
+            </div>
+        </div>
+        <div class="track-heart">
+            <button class="heart-button" type="button">
+                <i class="ph-fill ph-heart-straight"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="controls-area">
+    </div>
+
+    <div class="other-area">
+    </div>
+</div>
+
+@code {
+    IJSObjectReference? jsModule;
+    ElementReference Title;
+    ElementReference Author;
+    ElementReference Info;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            jsModule = await js.InvokeAsync<IJSObjectReference>("import", "./Shared/Trackbar.razor.js");
+            await jsModule.InvokeVoidAsync("Trackbar.TrackInfoInit", Info, Title, Author);
+        }
+    }
+
+    async ValueTask IAsyncDisposable.DisposeAsync()
+    {
+        if (jsModule is not null)
+        {
+            await jsModule.DisposeAsync();
+        }
+    }
+}

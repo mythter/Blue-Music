@@ -1,0 +1,126 @@
+﻿:root {
+    --track-info-width: 0;
+}
+
+a {
+    color: inherit;
+    text-decoration: inherit;
+}
+
+.trackbar {
+    display: flex;
+    height: 100%;
+}
+
+    .trackbar .track-area, .trackbar .other-area {
+        width: 30%;
+        display: flex;
+    }
+
+    .trackbar .controls-area {
+        width: 40%;
+        background-color: wheat;
+        display: flex;
+    }
+
+    .trackbar .track-area {
+        min-width: 250px;
+        padding-left: 16px;
+    }
+
+.track-area .track-image {
+    width: 56px;
+    height: 56px;
+    min-width: 56px;
+    min-height: 56px;
+    margin-right: 8px;
+    align-self: center;
+}
+
+    .track-area .track-image img {
+        border-radius: 10px;
+    }
+
+.track-area .track-info {
+    color: white;
+    margin-left: 8px;
+    margin-right: 8px;
+    padding-left: 6px;
+    padding-right: 6px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-family: 'Franklin Gothic', 'Arial Narrow', Arial, sans-serif;
+    max-width: 20rem;
+    position: relative;
+    overflow: hidden;
+}
+
+    .track-area .track-info::after {
+        content: " ";
+        position: absolute;
+        pointer-events: none;
+        width: 100%;
+        background-image: linear-gradient(90deg, #000 0px, transparent 8px, transparent calc(100% - 8px), #000 100%);
+        height: 50px;
+        align-self: center;
+    }
+
+
+.track-info .track-title {
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.track-info .track-author {
+    font-size: 12px;
+    /*font-weight: 400;*/
+    color: #9e9e9e;
+    white-space: nowrap;
+}
+
+.track-info a:hover {
+    text-decoration: underline;
+}
+
+
+.track-title .track-title-area, .track-author .track-author-area {
+    width: max-content;
+}
+
+.track-area .track-heart {
+    display: flex;
+    width: 32px;
+    height: 32px;
+    align-self: center;
+}
+
+    .track-area .track-heart .heart-button {
+        border: none;
+        color: #1e9ed7;
+        font-size: 18px;
+        background-color: transparent;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+    }
+
+.running-text {
+    animation: moving 4s 2 linear alternate;
+}
+
+    .running-text:hover {
+        animation-play-state: paused;
+    }
+
+@keyframes moving {
+    from {
+        transform: translateX(0%);
+        /*right: 0%;*/
+    }
+
+    to {
+        transform: translateX(calc(-100% + var(--track-info-width)));
+        /*right: 100%;*/
+    }
+}
