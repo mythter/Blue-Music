@@ -1,7 +1,5 @@
 ﻿export class PlaylistCard {
-    static InitHover(id) {
-        let target = document.getElementById(id);
-
+    static InitHover(target) {
         target.addEventListener('mouseenter', function (e) {
             e.target.style.setProperty('--x', e.offsetX + 'px');
             e.target.style.setProperty('--y', e.offsetY + 'px');

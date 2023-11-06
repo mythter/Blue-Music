@@ -1,6 +1,6 @@
 ﻿@inject IJSRuntime js
 
-<div id="@Playlist.Id" class="card">
+<div @ref=Card class="card">
     <div class="card-image-area">
         <div class="image">
             <img src="@Playlist.Image" />
@@ -19,6 +19,7 @@
 
 @code {
     IJSObjectReference? jsModule;
+    ElementReference Card;
 
     [Parameter]
     public PlaylistModel Playlist { get; set; }
@@ -28,7 +29,7 @@
         if (firstRender)
         {
             jsModule = await js.InvokeAsync<IJSObjectReference>("import", "./Pages/Items/PlaylistCard.razor.js");
-            await jsModule.InvokeVoidAsync("PlaylistCard.InitHover", Playlist.Id);
+            await jsModule.InvokeVoidAsync("PlaylistCard.InitHover", Card);
         }
     }
 }
