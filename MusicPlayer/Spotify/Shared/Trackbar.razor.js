@@ -42,14 +42,14 @@
             if (animating) {
                 target.style["animation-play-state"] = "paused"
             } else {
-                let duration = (target.clientWidth - info.clientWidth - 12) / speed
+                let duration = (target.clientWidth - (info.clientWidth - 12)) / speed
                 document.documentElement.style.setProperty("--track-info-width", info.clientWidth - 12 + "px")
 
                 target.classList.remove('running-text')
                 target.offsetWidth
                 target.classList.add('running-text')
                 target.style["animation-duration"] = duration + "s"
-                target.style["animation-play-state"] = "paused"
+                target.style["animation-play-state"] = "running"
             }
         }
 
