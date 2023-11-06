@@ -90,7 +90,7 @@
             if (animatingTitle) {
                 title.style["animation-play-state"] = "paused"
             } else {
-                let duration = (title.clientWidth - (info.clientWidth - 12)) / speed
+                let duration = (title.clientWidth - (info.clientWidth - infoPaddingRight - infoPaddingLeft)) / speed
                 document.documentElement.style.setProperty("--track-info-width", info.clientWidth - 12 + "px")
 
                 title.classList.remove('running-text')
@@ -112,7 +112,7 @@
             if (animatingAuthor) {
                 author.style["animation-play-state"] = "paused"
             } else {
-                let duration = (author.clientWidth - (info.clientWidth - 12)) / speed
+                let duration = (author.clientWidth - (info.clientWidth - infoPaddingRight - infoPaddingLeft)) / speed
                 document.documentElement.style.setProperty("--track-info-width", info.clientWidth - 12 + "px")
 
                 author.classList.remove('running-text')
