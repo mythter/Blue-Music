@@ -4,7 +4,7 @@
 <div class="trackbar">
     <div class="track-area">
         <div class="track-image">
-            <img />
+            <img src="@Track.Image" />
         </div>
         <div @ref=Info class="track-info">
             <div class="track-title">
@@ -28,6 +28,19 @@
     </div>
 
     <div class="controls-area">
+        <div class="buttons-area">
+        </div>
+        <div class="slider-area">
+            <div class="play-time">
+
+            </div>
+            <div class="slider-container">
+                <input @ref=Slider type="range" class="slider" id="track-bar">
+            </div>
+            <div class="end-time">
+
+            </div>
+        </div>
     </div>
 
     <div class="other-area">
@@ -39,6 +52,14 @@
     ElementReference Title;
     ElementReference Author;
     ElementReference Info;
+    ElementReference Slider;
+
+    TrackModel Track { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Track = DataBaseMoq.Tracks[2];
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -46,6 +67,7 @@
         {
             jsModule = await js.InvokeAsync<IJSObjectReference>("import", "./Shared/Trackbar.razor.js");
             await jsModule.InvokeVoidAsync("Trackbar.TrackInfoInit", Info, Title, Author);
+            await jsModule.InvokeVoidAsync("Trackbar.SliderInit", Slider);
         }
     }
 

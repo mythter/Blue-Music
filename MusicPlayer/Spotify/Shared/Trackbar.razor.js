@@ -144,4 +144,17 @@
             }
         }
     }
+
+    static SliderInit(slider) {
+        slider.oninput = function () {
+            let url = "url(" +
+                "\x22data:image/svg+xml,<svg xmlns='http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg' width='100%' height='10'><defs><linearGradient id='blue-grad'><stop stop-color='%231e9ed7' offset='0%'/><stop stop-color='white' offset='100%'/></linearGradient></defs><rect x='0' y='0' width='" +
+                this.value + "%" +
+                "' height='10' rx='5' fill='url(%23blue-grad)'/></svg>\x22" +
+                "), url(" +
+                "\x22data:image/svg+xml,<svg xmlns='http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg' width='100%' height='10'><rect x='0' y='0' width='100%' height='10' rx='5' fill='lightgray'/></svg>\x22" +
+                ")";
+            this.style.backgroundImage = url;
+        }
+    }
 }
