@@ -13,13 +13,13 @@
 </div>*@
 
 <div class="tracks-area">
-    @if (Layout.Playlists is not null)
+    @if (Playlists is not null)
     {
         for (int i = 0; i < 10; i++)
         {
-            @foreach (var track in Layout.Playlists)
+            @foreach (var playlist in Playlists)
             {
-                <PlaylistCard Playlist="track"></PlaylistCard>
+                <PlaylistCard Playlist="playlist"></PlaylistCard>
             }
         }
         @*@foreach (var track in Layout.Tracks)
@@ -34,7 +34,7 @@
 {
     //List<TrackModel>? Tracks { get; set; }
     [CascadingParameter]
-    public MainLayout Layout { get; set; }
+    public List<PlaylistModel> Playlists { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
