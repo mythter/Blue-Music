@@ -2,6 +2,8 @@
     static TrackInfoInit(info, title, author) {
         let animatingTitle = false
         let animatingAuthor = false
+        let timeOutTitle = null
+        let timeOutAuthor = null
         let speed = 12
         let infoPaddingRight = parseFloat(window.getComputedStyle(info, null).getPropertyValue('padding-right'))
         let infoPaddingLeft = parseFloat(window.getComputedStyle(info, null).getPropertyValue('padding-left'))
@@ -90,22 +92,27 @@
             if (animatingTitle) {
                 title.style["animation-play-state"] = "paused"
             } else {
-                let infoWidth = info.clientWidth - infoPaddingRight - infoPaddingLeft
-                let duration = (title.clientWidth - infoWidth) / speed
-                document.documentElement.style.setProperty("--track-info-width", infoWidth + "px")
+                timeOutTitle = setTimeout(() => {
+                    let infoWidth = info.clientWidth - infoPaddingRight - infoPaddingLeft
+                    let duration = (title.clientWidth - infoWidth) / speed
+                    document.documentElement.style.setProperty("--track-info-width", infoWidth + "px")
 
-                title.classList.remove('running-text')
-                title.offsetWidth
-                title.classList.add('running-text')
-                title.style["animation-duration"] = duration + "s"
-                title.style["animation-play-state"] = "running"
-                title.style["animation-iteration-count"] = "2"
+                    title.classList.remove('running-text')
+                    title.offsetWidth
+                    title.classList.add('running-text')
+                    title.style["animation-duration"] = duration + "s"
+                    title.style["animation-play-state"] = "running"
+                    title.style["animation-iteration-count"] = "2"
+                }, 160)
             }
         }
 
         function mouseLeaveTitle() {
             if (animatingTitle) {
                 title.style["animation-play-state"] = "running"
+            } else {
+                clearTimeout(timeOutTitle)
+                timeOutTitle = null
             }
         }
 
@@ -113,22 +120,27 @@
             if (animatingAuthor) {
                 author.style["animation-play-state"] = "paused"
             } else {
-                let infoWidth = info.clientWidth - infoPaddingRight - infoPaddingLeft
-                let duration = (author.clientWidth - infoWidth) / speed
-                document.documentElement.style.setProperty("--track-info-width", infoWidth + "px")
+                timeOutAuthor = setTimeout(() => {
+                    let infoWidth = info.clientWidth - infoPaddingRight - infoPaddingLeft
+                    let duration = (author.clientWidth - infoWidth) / speed
+                    document.documentElement.style.setProperty("--track-info-width", infoWidth + "px")
 
-                author.classList.remove('running-text')
-                author.offsetWidth
-                author.classList.add('running-text')
-                author.style["animation-duration"] = duration + "s"
-                author.style["animation-play-state"] = "running"
-                author.style["animation-iteration-count"] = "2"
+                    author.classList.remove('running-text')
+                    author.offsetWidth
+                    author.classList.add('running-text')
+                    author.style["animation-duration"] = duration + "s"
+                    author.style["animation-play-state"] = "running"
+                    author.style["animation-iteration-count"] = "2"
+                }, 160)
             }
         }
 
         function mouseLeaveAuthor() {
             if (animatingAuthor) {
                 author.style["animation-play-state"] = "running"
+            } else {
+                clearTimeout(timeOutAuthor)
+                timeOutAuthor = null
             }
         }
     }
