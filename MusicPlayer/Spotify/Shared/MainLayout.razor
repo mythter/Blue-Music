@@ -37,7 +37,10 @@
         </div>
 
         <div class="trackbar-area">
-            <Trackbar></Trackbar>
+            @if (Tracks is not null)
+            {
+                <Trackbar Track="@Tracks[0]"></Trackbar>
+            }
         </div>
     </div>
 </CascadingValue>
