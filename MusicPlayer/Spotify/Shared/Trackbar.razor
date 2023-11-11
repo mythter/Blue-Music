@@ -21,24 +21,47 @@
             </div>
         </div>
         <div class="track-heart">
-            <button class="heart-button" type="button">
+            <button class="heart-button button" type="button">
                 <i class="ph-fill ph-heart-straight"></i>
             </button>
         </div>
     </div>
-
+    @*@Track.Source*@
     <div class="controls-area">
+        <audio @ref=Audio src="Find me.mp3" loop></audio>
         <div class="buttons-area">
+            <div class="buttons-left-area">
+                <button class="shuffle-button button">
+                    <i class="ph-bold ph-shuffle"></i>
+                </button>
+                <button class="previous-button button">
+                    <i class="fa-solid fa-backward-step"></i>
+                </button>
+            </div>
+
+            <button @ref=PlayButton class="playpause-button button">
+                <i class="fa-solid fa-circle-play"></i>
+                @*<i class="fa-solid fa-circle-pause"></i>*@
+            </button>
+
+            <div class="buttons-right-area">
+                <button class="next-button  button">
+                    <i class="fa-solid fa-forward-step"></i>
+                </button>
+                <button class="repeat-button button">
+                    <i class="ph-bold ph-repeat"></i>
+                </button>
+            </div>
         </div>
         <div class="slider-area">
-            <div class="play-time">
-
+            <div @ref=CurrentTime class ="current-time">
+                -:--
             </div>
             <div class="slider-container">
                 <input @ref=Slider type="range" class="slider" id="track-bar">
             </div>
-            <div class="end-time">
-
+            <div @ref=DurationTime class="duration-time">
+                -:--
             </div>
         </div>
     </div>
@@ -53,8 +76,14 @@
     ElementReference Author;
     ElementReference Info;
     ElementReference Slider;
+    ElementReference Audio;
+    ElementReference CurrentTime;
+    ElementReference DurationTime;
+    ElementReference Volume;
+    ElementReference PlayButton;
 
-    TrackModel Track { get; set; }
+    [Parameter]
+    public TrackModel Track { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -68,6 +97,7 @@
             jsModule = await js.InvokeAsync<IJSObjectReference>("import", "./Shared/Trackbar.razor.js");
             await jsModule.InvokeVoidAsync("Trackbar.TrackInfoInit", Info, Title, Author);
             await jsModule.InvokeVoidAsync("Trackbar.SliderInit", Slider);
+            await jsModule.InvokeVoidAsync("Trackbar.AudioInit", Audio, Slider, PlayButton, CurrentTime, DurationTime, Volume);
         }
     }
 

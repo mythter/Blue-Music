@@ -148,13 +148,109 @@
     static SliderInit(slider) {
         slider.oninput = function () {
             let url = "url(" +
-                "\x22data:image/svg+xml,<svg xmlns='http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg' width='100%' height='10'><defs><linearGradient id='blue-grad'><stop stop-color='%231e9ed7' offset='0%'/><stop stop-color='white' offset='100%'/></linearGradient></defs><rect x='0' y='0' width='" +
-                this.value + "%" +
-                "' height='10' rx='5' fill='url(%23blue-grad)'/></svg>\x22" +
+                "\x22data:image/svg+xml,<svg xmlns='http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg' width='100%' height='8'><defs><linearGradient id='blue-grad'><stop stop-color='%231e9ed7' offset='0%'/><stop stop-color='white' offset='100%'/></linearGradient></defs><rect x='0' y='0' width='" +
+                this.value * 100 / this.max + "%" +
+                "' height='8' rx='4' fill='url(%23blue-grad)'/></svg>\x22" +
                 "), url(" +
-                "\x22data:image/svg+xml,<svg xmlns='http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg' width='100%' height='10'><rect x='0' y='0' width='100%' height='10' rx='5' fill='lightgray'/></svg>\x22" +
+                "\x22data:image/svg+xml,<svg xmlns='http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg' width='100%' height='8'><rect x='0' y='0' width='100%' height='8' rx='4' fill='%234d4c4d'/></svg>\x22" +
                 ")";
             this.style.backgroundImage = url;
         }
+    }
+
+    static AudioInit(audio, slider, playBtn, currentTime, durationTime, volume) {
+        let raf = null;
+        let playState = 'play';
+        let muteState = 'unmute';
+
+        playBtn.addEventListener('click', () => {
+            if (playState === 'play') {
+                console.log("play");
+                audio.play();
+                playBtn.innerHTML = '<i class="fa-solid fa-circle-pause"></i>';
+                requestAnimationFrame(whilePlaying);
+                playState = 'pause';
+            } else {
+                audio.pause();
+                playBtn.innerHTML = '<i class="fa-solid fa-circle-play"></i>';
+                cancelAnimationFrame(raf);
+                playState = 'play';
+            }
+        });
+
+        const calculateTime = (secs) => {
+            const minutes = Math.floor(secs / 60);
+            const seconds = Math.floor(secs % 60);
+            const returnedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
+            return `${minutes}:${returnedSeconds}`;
+        }
+
+        const setSliderPosition = () => {
+            let url = "url(" +
+                "\x22data:image/svg+xml,<svg xmlns='http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg' width='100%' height='8'><defs><linearGradient id='blue-grad'><stop stop-color='%231e9ed7' offset='0%'/><stop stop-color='white' offset='100%'/></linearGradient></defs><rect x='0' y='0' width='" +
+                slider.value * 100 / slider.max + "%" +
+                "' height='8' rx='4' fill='url(%23blue-grad)'/></svg>\x22" +
+                "), url(" +
+                "\x22data:image/svg+xml,<svg xmlns='http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg' width='100%' height='8'><rect x='0' y='0' width='100%' height='8' rx='4' fill='%234d4c4d'/></svg>\x22" +
+                ")";
+            slider.style.backgroundImage = url;
+            if (slider.value == slider.max) {
+                audio.currentTime = 0;
+                audio.pause();
+                playState = 'play';
+                //audio.currentTime = 0;
+                //audio.play();
+                //playBtn.innerHTML = '<i class="fa-solid fa-circle-pause"></i>';
+                //requestAnimationFrame(whilePlaying);
+                //let dt = new Date();
+                //while ((new Date()) - dt <= 1000)
+                //playState = 'pause';
+                //audio.pause();
+                playBtn.innerHTML = '<i class="fa-solid fa-circle-play"></i>';
+                //cancelAnimationFrame(raf);
+                //playState = 'play';
+            }
+        }
+
+        const displayDuration = () => {
+            durationTime.textContent = calculateTime(audio.duration);
+        }
+
+        const setSliderMax = () => {
+            slider.max = Math.floor(audio.duration);
+        }
+
+        const whilePlaying = () => {
+            slider.value = Math.floor(audio.currentTime);
+            currentTime.textContent = calculateTime(slider.value);
+            setSliderPosition();
+            raf = requestAnimationFrame(whilePlaying);
+        }
+
+        if (audio.readyState > 0) {
+            currentTime.textContent = '0:00'
+            displayDuration();
+            setSliderMax();
+        } else {
+            audio.addEventListener('loadedmetadata', () => {
+                displayDuration();
+                setSliderMax();
+            });
+        }
+
+        slider.addEventListener('input', () => {
+            currentTime.textContent = calculateTime(slider.value);
+            if (!audio.paused) {
+                cancelAnimationFrame(raf);
+            }
+        });
+
+        slider.addEventListener('change', () => {
+            audio.currentTime = slider.value;
+            console.log(audio.paused)
+            if (!audio.paused) {
+                requestAnimationFrame(whilePlaying);
+            }
+        });
     }
 }
