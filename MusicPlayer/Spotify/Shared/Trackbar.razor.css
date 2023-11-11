@@ -117,6 +117,10 @@ a {
         color: #1e9ed7;
     }
 
+        .track-area .track-heart .heart-button:focus {
+            outline: none;
+        }
+
 .running-text {
     animation: moving 4s 2 linear alternate;
 }
@@ -163,14 +167,18 @@ a {
             color: #fff;
         }
 
+        .controls-area .buttons-area .button:focus {
+            outline: none;
+        }
+
     .controls-area .buttons-area .playpause-button {
         color: #fff;
         font-size: 32px;
     }
 
-    .controls-area .buttons-area .playpause-button:hover {
-        transform: scale(1.05)
-    }
+        .controls-area .buttons-area .playpause-button:hover {
+            transform: scale(1.05)
+        }
 
 .buttons-area .buttons-left-area, .buttons-area .buttons-right-area {
     display: flex;
