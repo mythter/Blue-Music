@@ -1,7 +1,8 @@
 ﻿@inject IJSRuntime js
 @using Spotify.Data.Images
+@inject NavigationManager navigation
 
-<div @ref=Card class="card">
+<div @ref=Card class="card" @onclick="OpenPlaylistPage">
     <div class="image-area">
         <div class="image">
             @if (!String.IsNullOrEmpty(Playlist.Image))
@@ -40,5 +41,10 @@
             jsModule = await js.InvokeAsync<IJSObjectReference>("import", "./Pages/Items/PlaylistCard.razor.js");
             await jsModule.InvokeVoidAsync("PlaylistCard.InitHover", Card);
         }
+    }
+
+    private void OpenPlaylistPage()
+    {
+        navigation.NavigateTo($"/playlist/{Playlist.Id}");
     }
 }
