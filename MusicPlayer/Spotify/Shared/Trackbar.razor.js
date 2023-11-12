@@ -159,20 +159,134 @@
         }
     }
 
-    static AudioInit(audio, slider, playBtn, currentTime, durationTime, volume) {
+    static VolumeSliderInit(container, outer, inner, circle) {
+        document.documentElement.style.setProperty("--volume-x", "100%");
+        document.documentElement.style.setProperty("--circle-x", outer.clientWidth + "px");
+        document.documentElement.style.setProperty("--volume-width", "100%");
+        let moving = false;
+        let entering = false;
+        container.max = 100;
+        container.value = 0;
+        container.updateValue = (v) => {
+            if (v < 0) {
+                container.value = 0;
+            }
+            else if (v > container.max) {
+                container.value = container.max;
+            }
+            else if (v >= 0 && v <= container.max) {
+                container.value = v;
+            }
+
+            document.documentElement.style.setProperty(
+                "--volume-x",
+                container.value + "%"
+            );
+            document.documentElement.style.setProperty("--circle-x", container.value * outer.clientWidth / 100 + "px");
+        }
+        let input = new CustomEvent("input", {
+            bubbles: true,
+            cancelable: true
+        });
+
+        const start = function (e) {
+            let width = outer.clientWidth;
+            let rect = outer.getBoundingClientRect();
+
+            let x = e.clientX - rect.left;
+
+            if (moving) {
+                if (x >= width) {
+                    document.documentElement.style.setProperty("--volume-x", 100 + "%");
+                    document.documentElement.style.setProperty(
+                        "--circle-x",
+                        width + "px"
+                    );
+                } else if (x <= 0) {
+                    document.documentElement.style.setProperty("--volume-x", 0 + "%");
+                    document.documentElement.style.setProperty("--circle-x", 0 + "px");
+                } else {
+                    document.documentElement.style.setProperty(
+                        "--volume-x",
+                        (x * 100) / width + "%"
+                    );
+                    document.documentElement.style.setProperty("--circle-x", x + "px");
+                }
+
+                container.value = Math.round(
+                    parseFloat(
+                        getComputedStyle(document.documentElement).getPropertyValue("--volume-x")
+                    ) * container.max / 100
+                );
+
+                container.dispatchEvent(input);
+            } else {
+                finish();
+            }
+        };
+
+        const finish = () => {
+            moving = false;
+
+            if (!entering) {
+                inner.classList.remove("inner-hover");
+                circle.classList.remove("circle-hover");
+            }
+
+            container.removeEventListener("mousemove", start);
+            document.removeEventListener("mousemove", start);
+            document.removeEventListener("mouseup", finish);
+        };
+
+        container.addEventListener("mousedown", (e) => {
+            moving = true;
+            start(e);
+
+            container.addEventListener("mousemove", start);
+            document.addEventListener("mousemove", start);
+            document.addEventListener("mouseup", finish);
+        });
+
+        container.addEventListener("mouseenter", () => {
+            entering = true;
+
+            inner.classList.add("inner-hover");
+            circle.classList.add("circle-hover");
+        });
+
+        container.addEventListener("mouseleave", () => {
+            entering = false;
+
+            if (!moving) {
+                inner.classList.remove("inner-hover");
+                circle.classList.remove("circle-hover");
+            }
+        });
+
+        window.addEventListener("resize", (e) => {
+            let x =
+                parseInt(
+                    getComputedStyle(document.documentElement).getPropertyValue("--volume-x")
+                ) / 100;
+            document.documentElement.style.setProperty(
+                "--circle-x",
+                inner.clientWidth * x + "px"
+            );
+        });
+
+    }
+
+    static AudioInit(audio, slider, playBtn, currentTime, durationTime, volume, volumeBtn) {
         let raf = null;
         let playState = 'play';
-        let muteState = 'unmute';
 
         playBtn.addEventListener('click', () => {
             if (playState === 'play') {
-                console.log("playBtn playState play");
                 audio.play();
                 playBtn.innerHTML = '<i class="fa-solid fa-circle-pause"></i>';
                 requestAnimationFrame(whilePlaying);
                 playState = 'pause';
             } else {
-                console.log("playBtn playState pause")
                 audio.pause();
                 playBtn.innerHTML = '<i class="fa-solid fa-circle-play"></i>';
                 cancelAnimationFrame(raf);
@@ -181,7 +295,6 @@
         });
 
         const calculateTime = (secs) => {
-            console.log("calculate Time")
             const minutes = Math.floor(secs / 60);
             const seconds = Math.floor(secs % 60);
             const returnedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
@@ -189,7 +302,6 @@
         }
 
         const setSliderPosition = () => {
-            console.log("set Slider Position")
             let url = "url(" +
                 "\x22data:image/svg+xml,<svg xmlns='http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg' width='100%' height='8'><defs><linearGradient id='blue-grad'><stop stop-color='%231e9ed7' offset='0%'/><stop stop-color='white' offset='100%'/></linearGradient></defs><rect x='0' y='0' width='" +
                 slider.value * 100 / slider.max + "%" +
@@ -199,7 +311,6 @@
                 ")";
             slider.style.backgroundImage = url;
             if (slider.value == slider.max) {
-                console.log("slider ended")
 
                 audio.currentTime = 0;
                 audio.pause();
@@ -214,17 +325,14 @@
         }
 
         const displayDuration = () => {
-            console.log("display Duration")
             durationTime.textContent = calculateTime(audio.duration);
         }
 
         const setSliderMax = () => {
-            console.log("set Slider Max")
             slider.max = Math.floor(audio.duration);
         }
 
         const whilePlaying = () => {
-            console.log("while playing")
             slider.value = Math.floor(audio.currentTime);
             currentTime.textContent = calculateTime(slider.value);
             raf = requestAnimationFrame(whilePlaying);
@@ -232,12 +340,10 @@
         }
 
         if (audio.readyState > 0) {
-            console.log("audio.readyState > 0")
             currentTime.textContent = '0:00'
             displayDuration();
             setSliderMax();
         } else {
-            console.log("audio.readyState not > 0")
             audio.addEventListener('loadedmetadata', () => {
                 displayDuration();
                 setSliderMax();
@@ -246,7 +352,6 @@
 
         slider.addEventListener('input', () => {
             currentTime.textContent = calculateTime(slider.value);
-            console.log("slider input")
             if (!audio.paused) {
                 cancelAnimationFrame(raf);
             }
@@ -254,10 +359,54 @@
 
         slider.addEventListener('change', () => {
             audio.currentTime = slider.value;
-            console.log("slider changed")
             if (!audio.paused) {
                 requestAnimationFrame(whilePlaying);
             }
         });
+
+        volume.addEventListener('input', () => {
+            if (volume.value > 0 && audio.muted) {
+                audio.muted = false;
+            }
+
+            if (volume.value <= 0 && !audio.muted) {
+                audio.muted = true;
+                volumeBtn.innerHTML = '<i class="ph ph-speaker-x"></i>';
+                volume.updateValue(0);
+            }
+            else {
+                audio.volume = volume.value / 100;
+                setVolumeIcon();
+            }
+
+        });
+
+        volumeBtn.addEventListener('click', () => {
+            if (!audio.muted) {
+                audio.muted = true;
+                volumeBtn.innerHTML = '<i class="ph ph-speaker-x"></i>';
+                volume.updateValue(0);
+            } else {
+                audio.muted = false;
+                if (audio.volume <= 0) {
+                    audio.volume = 1;
+                }
+                volume.updateValue(audio.volume * 100);
+                setVolumeIcon();
+            }
+        });
+
+        const setVolumeIcon = () => {
+            if (volume.value > 66) {
+                volumeBtn.innerHTML = '<i class="ph ph-speaker-high"></i>';
+            } else if (volume.value > 33 && volume.value <= 66) {
+                volumeBtn.innerHTML = '<i class="ph ph-speaker-low"></i>';
+            } else if (volume.value > 0 && volume.value <= 33) {
+                volumeBtn.innerHTML = '<i class="ph ph-speaker-none"></i>';
+            }
+            else {
+                volumeBtn.innerHTML = '<i class="ph ph-speaker-x"></i>';
+            }
+        }
     }
 }

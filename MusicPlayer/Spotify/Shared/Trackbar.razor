@@ -54,11 +54,11 @@
             </div>
         </div>
         <div class="slider-area">
-            <div @ref=CurrentTime class ="current-time">
+            <div @ref=CurrentTime class="current-time">
                 -:--
             </div>
             <div class="slider-container">
-                <input @ref=Slider type="range" class="slider" id="track-bar">
+                <input @ref=Slider type="range" class="slider">
             </div>
             <div @ref=DurationTime class="duration-time">
                 -:--
@@ -67,7 +67,39 @@
     </div>
 
     <div class="other-area">
+        <button class="button">
+            <i class="ph ph-film-script"></i>
+        </button>
 
+        <button class="button">
+            <i class="ph ph-microphone-stage"></i>
+        </button>
+
+        <button class="button">
+            <i class="ph-fill ph-queue"></i>
+        </button>
+
+        <button class="button">
+            <i class="ph ph-desktop-tower"></i>
+            @*<i class="ph-bold ph-devices"></i>*@
+        </button>
+
+        <div class="volume-slider-area">
+            <button @ref=VolumeButton class="button">
+                <i class="ph ph-speaker-high"></i>
+            </button>
+            <div @ref=VolumeSlider class="volume-slider-container">
+                <div @ref=VolumeOuter class="outer">
+                    <div @ref=VolumeInner class="inner">
+                    </div>
+                </div>
+                <div @ref=VolumeCircle class="circle"></div>
+            </div>
+        </div>
+
+        <button class="button">
+            <i class="ph-fill ph-picture-in-picture"></i>
+        </button>
 
     </div>
 </div>
@@ -77,12 +109,18 @@
     ElementReference Title;
     ElementReference Author;
     ElementReference Info;
+
     ElementReference Slider;
     ElementReference Audio;
     ElementReference CurrentTime;
     ElementReference DurationTime;
-    ElementReference Volume;
     ElementReference PlayButton;
+
+    ElementReference VolumeSlider;
+    ElementReference VolumeOuter;
+    ElementReference VolumeInner;
+    ElementReference VolumeCircle;
+    ElementReference VolumeButton;
 
     [Parameter]
     public TrackModel Track { get; set; }
@@ -99,7 +137,8 @@
             jsModule = await js.InvokeAsync<IJSObjectReference>("import", "./Shared/Trackbar.razor.js");
             await jsModule.InvokeVoidAsync("Trackbar.TrackInfoInit", Info, Title, Author);
             await jsModule.InvokeVoidAsync("Trackbar.SliderInit", Slider);
-            await jsModule.InvokeVoidAsync("Trackbar.AudioInit", Audio, Slider, PlayButton, CurrentTime, DurationTime, Volume);
+            await jsModule.InvokeVoidAsync("Trackbar.AudioInit", Audio, Slider, PlayButton, CurrentTime, DurationTime, VolumeSlider, VolumeButton);
+            await jsModule.InvokeVoidAsync("Trackbar.VolumeSliderInit", VolumeSlider, VolumeOuter, VolumeInner, VolumeCircle);
         }
     }
 

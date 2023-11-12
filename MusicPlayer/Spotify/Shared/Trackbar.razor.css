@@ -1,6 +1,10 @@
 ﻿:root {
     --track-info-width: 0;
     --slider-played-width: 0;
+    --volume-x: 0%;
+    --circle-x: 0px;
+    --volume-width: 100%;
+    --circle-radius: 7px;
 }
 
 a {
@@ -14,9 +18,10 @@ a {
     align-items: center;
 }
 
-    .trackbar .track-area, .trackbar .other-area {
-        width: 30%;
-        display: flex;
+
+    .trackbar .track-area {
+        min-width: 180px;
+        padding-left: 8px;
     }
 
     .trackbar .controls-area {
@@ -28,10 +33,16 @@ a {
         flex-direction: column;
     }
 
-    .trackbar .track-area {
-        min-width: 180px;
-        padding-left: 8px;
+    .trackbar .other-area {
+        justify-content: flex-end;
+        min-width: 300px;
     }
+
+    .trackbar .track-area, .trackbar .other-area {
+        width: 30%;
+        display: flex;
+    }
+
 
 .button {
     border: none;
@@ -40,6 +51,10 @@ a {
     height: 100%;
     cursor: pointer;
 }
+
+    .button:focus {
+        outline: none;
+    }
 
 .track-area .track-image {
     width: 56px;
@@ -117,10 +132,6 @@ a {
         color: #1e9ed7;
     }
 
-        .track-area .track-heart .heart-button:focus {
-            outline: none;
-        }
-
 .running-text {
     animation: moving 4s 2 linear alternate;
 }
@@ -167,10 +178,6 @@ a {
             color: #fff;
         }
 
-        .controls-area .buttons-area .button:focus {
-            outline: none;
-        }
-
     .controls-area .buttons-area .playpause-button {
         color: #fff;
         font-size: 32px;
@@ -197,7 +204,6 @@ a {
 .slider-area .slider-container {
     width: 100%;
     height: 20px;
-    /*flex-basis: 80%;*/
 }
 
 .slider-area .current-time, .slider-area .duration-time {
@@ -242,4 +248,86 @@ a {
         border-radius: 5px;
         background: transparent;
         border: none;
+    }
+
+.volume-slider-area {
+    display: flex;
+    flex: 0 1 125px;
+    --volume-width: 100%;
+    --circle-radius: 6px;
+    margin-right: 5px;
+}
+
+.volume-slider-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding-left: 5px;
+}
+
+    .volume-slider-container .outer {
+        width: 100%;
+        height: 3px;
+        background-color: #3a3a3a;
+        border-radius: 3px;
+        overflow: hidden;
+    }
+
+    .volume-slider-container .inner {
+        height: 3px;
+        background-color: #fff;
+        border-radius: 3px;
+        position: relative;
+        right: calc(var(--volume-width) - var(--volume-x));
+    }
+
+    .volume-slider-container .circle {
+        width: calc(var(--circle-radius) * 2);
+        height: calc(var(--circle-radius) * 2);
+        border-radius: var(--circle-radius);
+        display: none;
+        transform: translateX(calc(var(--circle-x) - var(--circle-radius)));
+        position: absolute;
+    }
+
+.inner-hover {
+    background-color: #1e9ed7 !important;
+}
+
+.circle-hover {
+    display: block !important;
+    background-color: #fff;
+    pointer-events: none;
+}
+
+
+.volume-slider-area:hover .inner, .volume-slider-area:hover .circle {
+    background-color: #1e9ed7;
+}
+
+.volume-slider-area:hover .circle {
+    display: block !important;
+    background-color: #fff;
+    pointer-events: none;
+}
+
+
+
+.other-area .button {
+    color: #9e9d9e;
+    font-size: 20px;
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+}
+
+
+    .other-area .button:hover {
+        color: #fff;
     }
