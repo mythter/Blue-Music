@@ -30,7 +30,7 @@
         const finishResizing = (e) => {
             resizing = false
             document.body.removeEventListener('mouseup', finishResizing)
-            resizer.removeEventListener('mousemove', resizingMove)
+            document.body.removeEventListener('mousemove', resizingMove)
         }
     }
 
