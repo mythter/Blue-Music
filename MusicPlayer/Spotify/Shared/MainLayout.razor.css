@@ -35,7 +35,7 @@
 }
 
 .favorites-area, .main-area {
-    transition: var(--var1) 0.5s;
+    transition: --var1 0.5s;
     transition-delay: 1s;
     overflow-y: scroll;
     overflow-x: hidden;
