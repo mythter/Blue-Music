@@ -1,0 +1,40 @@
+﻿<div class="track-entry" tabindex="-1">
+    <div class="track-number">
+        <p>
+            @Index         <i class="fa-solid fa-play"></i>
+        </p>
+    </div>
+    <div class="album-cover-info">
+        <div class="album-cover">
+            <img src=@Track.Cover>
+        </div>
+        <div class="album-info">
+            <div class="album-info-wrapper">
+                <span>@Track.Title</span>
+                <a href="#">@Track.Author</a>
+            </div>
+        </div>
+    </div>
+    <div class="album-name-link">
+        <a href="#">@Track.Album</a>
+    </div>
+    <div class="track-duration-like-options">
+        <div class="like-button">
+            <i class="ph ph-heart-straight"></i>
+        </div>
+        <div class="track-duration">
+            @Track.Duration
+        </div>
+        <div class="options">
+            <i class="ph ph-dots-three"></i>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int Index { get; set; }
+
+    [Parameter]
+    public TrackModel Track { get; set; }
+}

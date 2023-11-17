@@ -1,0 +1,171 @@
+﻿@font-face {
+    font-family: DmSans, sans-serif;
+    src: url("https://fonts.google.com/specimen/DM+Sans");
+}
+
+.track-entry {
+    display: grid;
+    grid-template-rows: 56px;
+    grid-template-columns:  16px [first] 4fr [var1] 2fr [last] minmax(120px,1fr);
+    grid-gap: 16px;
+    align-items: center;
+    padding-left: 16px;
+    padding-right: 16px;
+    border-radius: 5px;
+    min-width: 380px;
+    font-family: DmSans, sans-serif;
+    font-size: 14px;
+    background-color: #00000000;
+}
+
+    .track-entry:hover {
+        background-color: #314054;
+    }
+
+        .track-entry:hover a {
+            color: #ffffff;
+        }
+
+        .track-entry:hover i {
+            opacity: 1;
+        }
+
+
+    .track-entry:focus-within {
+        background-color: #475d7a;
+    }
+
+        .track-entry:focus-within a {
+            color: #ffffff;
+        }
+
+        .track-entry:focus-within i {
+            opacity: 1;
+        }
+
+.track-number {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-right: 8px;
+    margin-left: 8px;
+    align-items: center;
+    color: #ffffff;
+}
+
+.album-cover-info {
+    display: flex;
+}
+
+.album-cover {
+    margin-right: 16px;
+}
+
+    .album-cover img {
+        width: 40px;
+        height: 40px;
+    }
+
+.album-info {
+    width: 100%;
+    transition: 0.5s;
+}
+
+    .album-info .album-info-wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-right: 8px;
+        height: 100%;
+        max-width: 95%;
+        width: max-content;
+        overflow: hidden;
+    }
+
+    .album-info span {
+        width: max-content;
+        max-width: 100%;
+        font-size: 16px;
+        color: #ffffff;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .album-info a {
+        width: max-content;
+        max-width: 100%;
+        font-size: 14px;
+        color: #B3B3B3;
+        text-decoration: none;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+        .album-info a:hover {
+            text-decoration: underline;
+        }
+
+.album-name-link {
+    display: flex;
+    max-width: 95%;
+    width: max-content;
+    overflow: hidden;
+    transition: 0.5s;
+}
+
+    .album-name-link a {
+        width: max-content;
+        max-width: 100%;
+        font-size: 14px;
+        color: #B3B3B3;
+        text-decoration: none;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+        .album-name-link a:hover {
+            text-decoration: underline;
+        }
+
+.track-duration-like-options {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+
+.like-button {
+    margin-right: 16px;
+    font-size: 24px;
+    color: #242e3c;
+    opacity: 0;
+}
+
+    .like-button:hover {
+        color: #ffffff;
+        opacity: 1;
+        transform: scale(105%);
+        cursor: pointer;
+    }
+
+.track-duration {
+    margin-right: 16px;
+    font-size: 14px;
+    color: #ffffff;
+}
+
+.options {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    font-size: 24px;
+    color: #242e3c;
+    opacity: 0;
+}
+
+    .options:hover {
+        color: #ffffff;
+        opacity: 1;
+        cursor: pointer;
+    }
