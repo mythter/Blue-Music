@@ -1,5 +1,7 @@
-﻿<div class="menu">
-    <div class="menu-item">
+﻿@inject NavigationManager navigation
+
+<div class="menu">
+    <div class="menu-item" @onclick="HomePage">
         <i class="ph-fill ph-house"></i>
         <p>Home</p>
     </div>
@@ -10,5 +12,8 @@
 </div>
 
 @code {
-
+    private void HomePage()
+    {
+        navigation.NavigateTo($"/");
+    }
 }
