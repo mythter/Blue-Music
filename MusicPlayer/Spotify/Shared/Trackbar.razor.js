@@ -276,7 +276,7 @@
 
     }
 
-    static AudioInit(audio, slider, playBtn, currentTime, durationTime, volume, volumeBtn, volumeContainer) {
+    static AudioInit(audio, slider, playBtn, currentTime, durationTime, volume, volumeBtn, volumeContainer, backBtn) {
         let raf = null;
         let playState = 'play';
         let volumeScrollStep = 10;
@@ -292,6 +292,17 @@
                 playBtn.innerHTML = '<i class="fa-solid fa-circle-play"></i>';
                 cancelAnimationFrame(raf);
                 playState = 'play';
+            }
+        });
+
+        backBtn.addEventListener('click', () => {
+            if (audio.currentTime > 3) {
+                audio.currentTime = 0;
+                slider.value = audio.currentTime;
+                currentTime.textContent = calculateTime(slider.value);
+                setSliderPosition();
+            } else {
+                // TODO: back to previous track
             }
         });
 

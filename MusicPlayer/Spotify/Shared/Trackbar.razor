@@ -34,7 +34,7 @@
                 <button class="shuffle-button button">
                     <i class="ph-bold ph-shuffle"></i>
                 </button>
-                <button class="previous-button button">
+                <button @ref=BackwardButton class="previous-button button">
                     <i class="fa-solid fa-backward-step"></i>
                 </button>
             </div>
@@ -45,7 +45,7 @@
             </button>
 
             <div class="buttons-right-area">
-                <button class="next-button  button">
+                <button @ref=ForwardButton class="next-button  button">
                     <i class="fa-solid fa-forward-step"></i>
                 </button>
                 <button class="repeat-button button">
@@ -115,6 +115,8 @@
     ElementReference CurrentTime;
     ElementReference DurationTime;
     ElementReference PlayButton;
+    ElementReference BackwardButton;
+    ElementReference ForwardButton;
 
     ElementReference VolumeSlider;
     ElementReference VolumeOuter;
@@ -138,7 +140,7 @@
             jsModule = await js.InvokeAsync<IJSObjectReference>("import", "./Shared/Trackbar.razor.js");
             await jsModule.InvokeVoidAsync("Trackbar.TrackInfoInit", Info, Title, Author);
             await jsModule.InvokeVoidAsync("Trackbar.SliderInit", Slider);
-            await jsModule.InvokeVoidAsync("Trackbar.AudioInit", Audio, Slider, PlayButton, CurrentTime, DurationTime, VolumeSlider, VolumeButton, VolumeContainer);
+            await jsModule.InvokeVoidAsync("Trackbar.AudioInit", Audio, Slider, PlayButton, CurrentTime, DurationTime, VolumeSlider, VolumeButton, VolumeContainer, BackwardButton);
             await jsModule.InvokeVoidAsync("Trackbar.VolumeSliderInit", VolumeSlider, VolumeOuter, VolumeInner, VolumeCircle);
         }
     }
