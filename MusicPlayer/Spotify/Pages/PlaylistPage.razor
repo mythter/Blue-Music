@@ -47,7 +47,7 @@
             </button>
         </div>
     </div>
-    <div class="track-list">
+    <div class="track-list-header">
         <div class="track-info">
             <div class="track-number">#</div>
             <div class="track-title">Title</div>
@@ -56,6 +56,13 @@
                 <i class="ph ph-clock"></i>
             </div>
         </div>
+    </div>
+    <div class="track-list">
+        @foreach (var track in Playlist.TrackList)
+        {
+            <TrackRow Index="songNumber" Track="track"></TrackRow>
+            songNumber++;
+        }
     </div>
 </div>
 
@@ -69,5 +76,7 @@
     {
         Playlist = DataBaseMoq.Playlists.First(p => p.Id == Id);
     }
+
+    int songNumber = 1;
 
 }
