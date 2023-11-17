@@ -1,9 +1,4 @@
-﻿@font-face {
-    font-family: "DmSans";
-    src: url("https://fonts.google.com/specimen/DM+Sans");
-}
-
-.page-wrapper {
+﻿.page-wrapper {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
