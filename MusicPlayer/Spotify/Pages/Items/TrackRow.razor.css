@@ -9,11 +9,8 @@
     grid-template-columns: 16px [first] 4fr [var1] 2fr [last] minmax(120px,1fr);
     grid-gap: 16px;
     align-items: center;
-    padding-left: 16px;
-    padding-right: 16px;
+    padding: 0 16px;
     border-radius: 5px;
-    min-width: 400px;
-    overflow: hidden;
     font-family: DmSans, sans-serif;
     font-size: 14px;
     background-color: #00000000;
@@ -72,10 +69,8 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding-right: 8px;
-    max-width: 95%;
-    width: max-content;
-    min-width: 125px;
+    max-width: fit-content;
+    min-width: 90px;
     transition: 0.5s;
     overflow: hidden;
 }
