@@ -1,4 +1,8 @@
-﻿.page-wrapper {
+﻿.page-wrapper *:focus {
+    outline: none;
+}
+
+.page-wrapper {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -16,7 +20,7 @@
     height: 30vh;
     max-height: 400px;
     min-height: 340px;
-    border-radius: 5px 5px 0 0;
+    border-radius: 10px 10px 0 0;
     background-color: #1a1a1a;
 }
 
@@ -122,6 +126,7 @@
     flex-direction: row;
     justify-content: space-between;
     padding: 16px;
+    min-width: 450px;
 }
 
 .controls-left {
@@ -220,6 +225,7 @@
 .track-list-header {
     margin-bottom: 16px;
     padding: 0 24px;
+    min-width: 450px;
 }
 
 .track-info {
@@ -241,20 +247,22 @@
 
 .track-title {
     width: max-content;
+    /*min-width: 145px;*/
 }
 
 .track-album {
-    min-width: 0;
+    /*min-width: 50px;*/
     overflow: hidden;
 }
 
 .track-duration {
     justify-self: end;
-    margin-right: 32px;
+    margin-right: 45px;
     width: max-content;
     font-size: 16px;
 }
 
 .track-list {
     padding: 0 24px;
+    min-width: 450px;
 }

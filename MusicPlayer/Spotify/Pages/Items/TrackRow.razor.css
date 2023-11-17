@@ -1,44 +1,54 @@
-﻿@font-face {
-    font-family: DmSans, sans-serif;
-    src: url("https://fonts.google.com/specimen/DM+Sans");
-}
-
-.track-entry {
+﻿.track-entry {
     display: grid;
     grid-template-rows: 56px;
-    grid-template-columns: 16px [first] 4fr [var1] 2fr [last] minmax(120px,1fr);
+    grid-template-columns: [index] 16px [first] 4fr [var1] 2fr [last] minmax(120px,1fr);
     grid-gap: 16px;
     align-items: center;
     padding: 0 16px;
     border-radius: 5px;
     font-family: DmSans, sans-serif;
     font-size: 14px;
-    background-color: #00000000;
 }
 
     .track-entry:hover {
-        background-color: #314054;
+        background-color: #1e232a;
     }
 
         .track-entry:hover a {
-            color: #ffffff;
+            color: #fff;
         }
 
         .track-entry:hover i {
             opacity: 1;
         }
 
+        .track-entry:hover .track-number-index {
+            display: none;
+        }
+
+        .track-entry:hover .track-number-icon {
+            display: block;
+        }
+
 
     .track-entry:focus-within {
-        background-color: #475d7a;
+        background-color: #4d5666;
     }
 
         .track-entry:focus-within a {
-            color: #ffffff;
+            color: #fff;
         }
 
         .track-entry:focus-within i {
             opacity: 1;
+        }
+
+        .track-entry:focus-within .track-number-index {
+            display: none;
+        }
+
+        .track-entry:focus-within .track-number-icon {
+            display: block;
         }
 
 .track-number {
@@ -50,6 +60,12 @@
     align-items: center;
     color: #ffffff;
 }
+
+    .track-number .track-number-icon {
+        display: none;
+    }
+
+
 
 .album-cover-info {
     display: flex;
@@ -103,7 +119,7 @@
 .album-name-link {
     display: flex;
     max-width: 95%;
-    min-width: 0;
+    min-width: 50px;
     overflow: hidden;
     transition: 0.5s;
 }
