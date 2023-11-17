@@ -84,7 +84,7 @@
             @*<i class="ph-bold ph-devices"></i>*@
         </button>
 
-        <div class="volume-slider-area">
+        <div @ref=VolumeContainer class="volume-slider-area">
             <button @ref=VolumeButton class="button">
                 <i class="ph ph-speaker-high"></i>
             </button>
@@ -121,6 +121,7 @@
     ElementReference VolumeInner;
     ElementReference VolumeCircle;
     ElementReference VolumeButton;
+    ElementReference VolumeContainer;
 
     [Parameter]
     public TrackModel Track { get; set; }
@@ -137,7 +138,7 @@
             jsModule = await js.InvokeAsync<IJSObjectReference>("import", "./Shared/Trackbar.razor.js");
             await jsModule.InvokeVoidAsync("Trackbar.TrackInfoInit", Info, Title, Author);
             await jsModule.InvokeVoidAsync("Trackbar.SliderInit", Slider);
-            await jsModule.InvokeVoidAsync("Trackbar.AudioInit", Audio, Slider, PlayButton, CurrentTime, DurationTime, VolumeSlider, VolumeButton);
+            await jsModule.InvokeVoidAsync("Trackbar.AudioInit", Audio, Slider, PlayButton, CurrentTime, DurationTime, VolumeSlider, VolumeButton, VolumeContainer);
             await jsModule.InvokeVoidAsync("Trackbar.VolumeSliderInit", VolumeSlider, VolumeOuter, VolumeInner, VolumeCircle);
         }
     }

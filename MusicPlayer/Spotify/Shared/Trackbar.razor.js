@@ -166,7 +166,7 @@
         let moving = false;
         let entering = false;
         container.max = 100;
-        container.value = 0;
+        container.value = container.max;
         container.updateValue = (v) => {
             if (v < 0) {
                 container.value = 0;
@@ -276,9 +276,10 @@
 
     }
 
-    static AudioInit(audio, slider, playBtn, currentTime, durationTime, volume, volumeBtn) {
+    static AudioInit(audio, slider, playBtn, currentTime, durationTime, volume, volumeBtn, volumeContainer) {
         let raf = null;
         let playState = 'play';
+        let volumeScrollStep = 10;
 
         playBtn.addEventListener('click', () => {
             if (playState === 'play') {
@@ -371,20 +372,17 @@
 
             if (volume.value <= 0 && !audio.muted) {
                 audio.muted = true;
-                volumeBtn.innerHTML = '<i class="ph ph-speaker-x"></i>';
-                volume.updateValue(0);
             }
             else {
                 audio.volume = volume.value / 100;
-                setVolumeIcon();
             }
+            setVolumeIcon();
 
         });
 
         volumeBtn.addEventListener('click', () => {
             if (!audio.muted) {
                 audio.muted = true;
-                volumeBtn.innerHTML = '<i class="ph ph-speaker-x"></i>';
                 volume.updateValue(0);
             } else {
                 audio.muted = false;
@@ -392,8 +390,8 @@
                     audio.volume = 1;
                 }
                 volume.updateValue(audio.volume * 100);
-                setVolumeIcon();
             }
+            setVolumeIcon();
         });
 
         const setVolumeIcon = () => {
@@ -407,6 +405,53 @@
             else {
                 volumeBtn.innerHTML = '<i class="ph ph-speaker-x"></i>';
             }
+        }
+
+        const setAudioVolume = () => {
+            if (volume.value > 0 && audio.muted) {
+                audio.muted = false;
+            }
+
+            if (volume.value <= 0 && !audio.muted) {
+                audio.muted = true;
+            }
+            else {
+                audio.volume = volume.value / 100;
+            }
+            setVolumeIcon();
+        }
+
+        volumeContainer.addEventListener('wheel', volumeMouseWheel)
+        function volumeMouseWheel(e) {
+            // scroll Up
+            if (checkScrollDirectionIsUp(e)) {
+                if (volume.value <= volume.max - volumeScrollStep) {
+                    volume.value += volumeScrollStep;
+                }
+                else {
+                    volume.value = volume.max;
+                }
+
+            }
+            // scroll Down
+            else {
+                if (volume.value >= 0 + volumeScrollStep) {
+                    volume.value -= volumeScrollStep;
+                }
+                else {
+                    volume.value = 0;
+                }
+            }
+
+            setAudioVolume();
+            setVolumeIcon();
+            volume.updateValue(volume.value);
+        }
+        function checkScrollDirectionIsUp(e) {
+            if (e.wheelDelta) {
+                return e.wheelDelta > 0
+            }
+            return e.deltaY < 0
         }
     }
 }
