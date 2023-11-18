@@ -1,7 +1,7 @@
 ﻿@inject IJSRuntime js
 
 <div @ref=Card class="card">
-    <div class="card-image-area">
+    <div class="image-area">
         <div class="image">
             <img src="@Playlist.Image" />
             <div class="play-button">
@@ -9,11 +9,12 @@
             </div>
         </div>
     </div>
-    <div class="card-title-area">
-        <p class="card-title">@Playlist.Title</p>
-    </div>
-    <div class="card-author-area">
-        <p class="card-author">@Playlist.Author</p>
+    <div class="description-area">
+        <a class="title" href="#">@Playlist.Title</a>
+        <div class="author-area">
+            <a class="author" href="#">@Playlist.Author</a>
+            @* @Playlist.Author *@
+        </div>
     </div>
 </div>
 

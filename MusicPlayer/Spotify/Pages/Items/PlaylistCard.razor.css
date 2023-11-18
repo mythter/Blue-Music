@@ -1,8 +1,13 @@
-﻿.card {
+﻿a {
+    color: inherit;
+    text-decoration: inherit;
+}
+
+.card {
     position: relative;
     margin: 15px;
+    padding: 16px;
     max-width: 250px;
-    max-height: 350px;
     min-width: 150px;
     flex: 1 1 200px;
     background: #151515;
@@ -10,6 +15,7 @@
     transition: 0.3s;
     cursor: pointer;
     overflow: hidden;
+    font-family: DMSans, sans-serif;
     --x: calc(100% + 30px);
     --y: calc(100% + 30px);
     --w: calc(100% * 2);
@@ -38,9 +44,13 @@
         height: var(--w);
     }
 
-.card-image-area {
-    padding: 20px;
+.image-area {
     padding-bottom: 0;
+    margin-bottom: 16px;
+}
+
+.description-area {
+    min-height: 62px;
 }
 
 .image {
@@ -80,42 +90,31 @@
     .image i {
         transform: scale(1);
         font-size: 20px;
-        margin: auto
+        margin: auto;
     }
 
-p {
-    padding: 20px;
-    padding-top: 0;
-    padding-bottom: 0;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-}
-
-.card-title-area {
+.title {
     color: #FFFFFF;
-    font-size: 18px;
-    margin-top: 20px;
-    min-width: 0
+    /*font-size: 18px;*/
+    font-size: 1rem;
+    line-height: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+    z-index: 1;
 }
 
-.card-author-area {
-    color: #FFFFFF;
-    font-size: 18px;
-    margin-top: 10px;
-    margin-bottom: 20px;
-    min-width: 0
-}
-
-.card-title {
-    color: #FFFFFF;
-    font-size: 18px;
-}
-
-.card-author {
+.author-area {
+    /* font-size: 14px;*/
+    font-size: 0.875rem;
+    min-width: 0;
     color: #A7A7A7;
-    font-size: 14px;
+    z-index: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.author:hover {
+    text-decoration: underline;
 }
 
 .card:hover .play-button {
