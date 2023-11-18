@@ -1,4 +1,8 @@
-﻿.page {
+﻿:root {
+    --scroll-width: 10px;
+}
+
+.page {
     height: 100vh;
     box-sizing: border-box;
     display: flex;
@@ -50,7 +54,7 @@
     display: flex;
     flex-flow: column;
     overflow: hidden;
-    max-width:70%;
+    max-width: 70%;
 }
 
     .sidebar-area .menu-area {
@@ -63,20 +67,19 @@
         height: 100%;
         flex: 1;
         padding: 10px;
+        padding-right: 0px;
     }
 
 .main-area {
     flex: 1;
-    /*padding: 15px;*/
 }
 
 ::-webkit-scrollbar {
     width: 10px;
-    /*display: none;*/
 }
 
 ::-webkit-scrollbar-thumb {
-    border-radius: 4px;
+    border-radius: 5px;
     background: var(--var1);
 }
 
@@ -84,6 +87,21 @@
         background: #898889;
         transition: 0.5s;
     }
+
+.favorites-area::-webkit-scrollbar {
+    width: var( --scroll-width);
+}
+
+.favorites-area::-webkit-scrollbar-thumb {
+    border-radius: calc(var(--scroll-width) / 2);
+    background: var(--var1);
+}
+
+    .favorites-area::-webkit-scrollbar-thumb:hover {
+        background: #898889;
+        transition: 0.5s;
+    }
+
 
 @property --var1 {
     syntax: "<color>";

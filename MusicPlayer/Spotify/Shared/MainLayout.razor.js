@@ -2,6 +2,7 @@
 
     static ResizeInit(resizer, sidebarPanel, favouritesPanel) {
         let resizing = false
+        document.documentElement.style.setProperty("--scroll-width", "10px");
 
         resizer.addEventListener('mousedown', (e) => {
             resizing = true
@@ -14,12 +15,12 @@
                 if (event.clientX <= 150) {
                     sidebarPanel.style.width = 74 + "px"
                     favouritesPanel.style.paddingLeft = 5 + "px"
-                    favouritesPanel.style.paddingRight = 5 + "px"
+                    document.documentElement.style.setProperty("--scroll-width", "5px");
                 }
                 else {
                     sidebarPanel.style.width = event.clientX + "px"
                     favouritesPanel.style.paddingLeft = 10 + "px"
-                    favouritesPanel.style.paddingRight = 10 + "px"
+                    document.documentElement.style.setProperty("--scroll-width", "10px");
                 }
             }
             else {
