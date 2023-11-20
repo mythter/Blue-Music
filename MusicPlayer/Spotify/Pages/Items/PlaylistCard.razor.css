@@ -123,6 +123,10 @@
     transition: 0.3s;
 }
 
+.play-button {
+    transition: 0.3s;
+}
+
 .play-button:hover {
     transition: 0s;
     background: #1fa4df;
