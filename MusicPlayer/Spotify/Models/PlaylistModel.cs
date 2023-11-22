@@ -1,10 +1,29 @@
-﻿namespace Spotify.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Spotify.Models
 {
+    [Table("playlists")]
     public class PlaylistModel
     {
+        [Key]
+        [Column("playlist_id")]
         public Guid Id { get; set; }
-        public string Title { get; set; }
-        public string Author { get; set; }
-        public string Image { get; set; }
+
+        [Column("playlist_title")]
+        public string Title { get; set; } = null!;
+
+        [Column("playlist_id")]
+        public byte[]? Image { get; set; }
+
+
+        [Column("user_id")]
+        public Guid? UserId { get; set; }
+
+        [ForeignKey("UserId")]
+        public UserModel? User { get; set; }
+
+
+        public PlaylistTrackModel? PlaylistTrack { get; set; }
     }
 }
