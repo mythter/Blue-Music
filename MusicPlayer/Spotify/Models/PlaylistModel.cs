@@ -13,7 +13,7 @@ namespace Spotify.Models
         [Column("playlist_title")]
         public string Title { get; set; } = null!;
 
-        [Column("playlist_id")]
+        [Column("playlist_image")]
         public byte[]? Image { get; set; }
 
 

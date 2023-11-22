@@ -6,12 +6,10 @@ namespace Spotify.Models
     [Table("favorites")]
     public class FavoriteModel
     {
-        [Key]
-        [Column("user_id", Order = 0)]
+        [Column("user_id")]
         public Guid UserId { get; set; }
 
-        [Key]
-        [Column("track_id", Order = 1)]
+        [Column("track_id")]
         public Guid TrackId { get; set; }
 
         [ForeignKey("UserId")]

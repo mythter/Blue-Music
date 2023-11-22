@@ -10,7 +10,7 @@ namespace Spotify.Models
         DbSet<PlaylistModel> Playlists { get; set; } = null!;
         DbSet<FavoriteModel> Favorites { get; set; } = null!;
         DbSet<PlaylistTrackModel> PlaylistTracks { get; set; } = null!;
-        DbSet<UserModel> Usres { get; set; } = null!;
+        DbSet<UserModel> Users { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -22,6 +22,15 @@ namespace Spotify.Models
             string connectionString = builder.GetConnectionString("DefaultConnection");
 
             optionsBuilder.UseSqlServer(connectionString);
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<FavoriteModel>()
+                .HasKey(f => new { f.UserId, f.TrackId });
+
+            modelBuilder.Entity<PlaylistTrackModel>()
+                .HasKey(p => new { p.PlaylistId, p.TrackId });
         }
     }
 }

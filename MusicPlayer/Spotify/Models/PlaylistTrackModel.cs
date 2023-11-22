@@ -6,12 +6,10 @@ namespace Spotify.Models
     [Table("playlist_tracks")]
     public class PlaylistTrackModel
     {
-        [Key]
-        [Column("playlist_id", Order = 0)]
+        [Column("playlist_id")]
         public Guid PlaylistId { get; set; }
 
-        [Key]
-        [Column("track_id", Order = 1)]
+        [Column("track_id")]
         public Guid TrackId { get; set; }
 
         [ForeignKey("PlaylistId")]
