@@ -14,7 +14,7 @@ namespace Spotify.Models
         public string Title { get; set; } = null!;
 
         [Column("album_cover")]
-        public byte[]? Cover { get; set; }
+        public string? Cover { get; set; }
 
         [Column("album_release_date")]
         public DateTime? ReleaseDate { get; set; }

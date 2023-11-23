@@ -14,7 +14,7 @@ namespace Spotify.Models
         public string Name { get; set; } = null!;
 
         [Column("artist_image")]
-        public byte[]? Image { get; set; }
+        public string? Image { get; set; }
 
 
         public List<AlbumModel> Albums { get; } = new();

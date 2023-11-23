@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics;
 
 namespace Spotify.Models
 {
@@ -14,7 +15,7 @@ namespace Spotify.Models
         public string Name { get; set; } = null!;
 
         [Column("user_image")]
-        public byte[]? Image { get; set; }
+        public string? Image { get; set; }
 
         [Column("user_email")]
         public string? Email { get; set; }
