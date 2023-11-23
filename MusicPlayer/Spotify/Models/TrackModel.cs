@@ -14,7 +14,7 @@ namespace Spotify.Models
         public string Title { get; set; } = null!;
 
         [Column("track_duration")]
-        public string Duration { get; set; } = null!;
+        public int Duration { get; set; }
 
         [Column("track_source")]
         public string? Source { get; set; }
