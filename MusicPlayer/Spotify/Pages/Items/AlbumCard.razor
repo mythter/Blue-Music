@@ -5,9 +5,9 @@
 <div @ref=Card class="card" @onclick="OpenAlbumPage">
     <div class="image-area">
         <div class="image">
-            @if (!String.IsNullOrEmpty(Album?.Image))
+            @if (!String.IsNullOrEmpty(Album?.Cover))
             {
-                <img src="data:image/png;base64,@Album?.Image" />
+                <img src="data:image/png;base64,@Album?.Cover" />
             }
             else
             {
