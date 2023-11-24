@@ -37,51 +37,6 @@ namespace Spotify.Data
                new TrackModel()
                {
                    Id = Guid.NewGuid(),
-                   Cover = "https://i.scdn.co/image/ab67616d0000b27386a8061cdf26909ce5a31c0c",
-                   Title = "Big Chomper, Big Chomper",
-                   Author =  Authors[0],
-                   Album = "Dr Manhattan",
-                   Duration = "3:15"
-               },
-               new TrackModel()
-               {
-                   Id = Guid.NewGuid(),
-                   Cover = "https://i.scdn.co/image/ab67616d0000b273f2d4e8964965b4330ddc258f",
-                   Title = "This Is Gonna Hurt",
-                   Author = Authors[1],
-                   Album = "Fight or Flight",
-                   Duration = "3:50"
-               },
-               new TrackModel()
-               {
-                   Id = Guid.NewGuid(),
-                   Cover = "https://i.scdn.co/image/ab67616d0000b27383e260c313dc1ff1f17909cf",
-                   Title = "The Pretender",
-                   Author = Authors[2],
-                   Album = "Echoes, Silence, Patience & Grace",
-                   Duration = "4:29"
-               },
-               new TrackModel()
-               {
-                   Id = Guid.NewGuid(),
-                   Cover = "https://i.scdn.co/image/ab67616d0000b27386a8061cdf26909ce5a31c0c",
-                   Title = "Big Chomper, Big Chomper",
-                   Author =  Authors[0],
-                   Album = "Dr Manhattan",
-                   Duration = "3:15"
-               },
-               new TrackModel()
-               {
-                   Id = Guid.NewGuid(),
-                   Cover = "https://i.scdn.co/image/ab67616d0000b273f2d4e8964965b4330ddc258f",
-                   Title = "This Is Gonna Hurt",
-                   Author = Authors[1],
-                   Album = "Fight or Flight",
-                   Duration = "3:50"
-               },
-               new TrackModel()
-               {
-                   Id = Guid.NewGuid(),
                    Title = "Dr Manhattan",
                    //Author =  "Dr Manhattan",
                    //Image = "https://i.scdn.co/image/ab67616d0000b27386a8061cdf26909ce5a31c0c",

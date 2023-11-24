@@ -1,19 +1,28 @@
 ﻿@page "/playlist/{Id:guid}"
+@using Spotify.Data.Images
 
 <div class="page-wrapper">
     <div class="playlist-info-area">
         <div class="playlist-cover">
-            <img src=@Playlist.Image>
+            @if (!String.IsNullOrEmpty(Playlist?.Image))
+            {
+                <img src="data:image/png;base64,@Playlist.Image" />
+            }
+            else
+            {
+                <img src="data:image/png;base64,@PlaylistImages.DefaultImage" />
+            }
         </div>
         <div class="playlist-info">
             <div class="playlist-type">
                 <span>Playlist</span>
             </div>
             <div class="playlist-name">
-                <h1>@Playlist.Title</h1>
+
+                <h1>@Playlist?.Title</h1>
             </div>
             <div class="playlist-authors">
-                @Playlist.Author.Name
+                @Playlist?.User.Name
             </div>
             <div class="playlist-duration">
                 <div class="spotify-logo">
@@ -58,10 +67,13 @@
         </div>
     </div>
     <div class="track-list">
-        @foreach (var track in Playlist.TrackList)
+        @if (Tracks is not null)
         {
-            <TrackRow Index="songNumber" Track="track"></TrackRow>
-            songNumber++;
+            @foreach (var track in Tracks)
+            {
+                <TrackRow Index="songNumber" Track="track"></TrackRow>
+                songNumber++;
+            }
         }
     </div>
 </div>
@@ -70,11 +82,24 @@
     [Parameter]
     public Guid Id { get; set; }
 
-    public PlaylistModel Playlist { get; set; }
+    public PlaylistModel? Playlist { get; set; }
+
+    public List<TrackModel>? Tracks { get; set; }
 
     protected override void OnInitialized()
     {
-        Playlist = DataBaseMoq.Playlists.First(p => p.Id == Id);
+        using (var db = new PlayerContext())
+        {
+            Playlist = db.Playlists
+                        .Include(p => p.User)
+                        .FirstOrDefault(p => p.Id == Id);
+
+            Tracks = db.Tracks
+                        .Include(t => t.PlaylistTrack)
+                            .ThenInclude(p => p!.Playlist)
+                        .Where(t => t.Id == t.PlaylistTrack!.TrackId && t.PlaylistTrack.PlaylistId == Id)
+                        .ToList();
+        }
     }
 
     int songNumber = 1;

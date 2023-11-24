@@ -1,26 +1,27 @@
-﻿ @inject IJSRuntime js
- @inject NavigationManager navigation
+﻿@inject IJSRuntime js
+@inject NavigationManager navigation
+@using Spotify.Data.Images
 
-<div @ref=Card class="card">
+<div @ref=Card class="card" @onclick="OpenAlbumPage">
     <div class="image-area">
         <div class="image">
-            @* @if (!String.IsNullOrEmpty(Playlist.Image))
+            @if (!String.IsNullOrEmpty(Album?.Image))
             {
-            <img src="data:image/png;base64,@Playlist.Image" />
+                <img src="data:image/png;base64,@Album?.Image" />
             }
             else
             {
-            <img src="data:image/png;base64,@PlaylistImages.DefaultImage" />
-            } *@
+                <img src="data:image/png;base64,@AlbumCovers.DefaultCover" />
+            }
             <div class="play-button">
                 <i class="fa-solid fa-play"></i>
             </div>
         </div>
     </div>
     <div class="description-area">
-        <a class="title" href="#">@Album.Title</a>
+        <a class="title" href="#">@Album?.Title</a>
         <div class="author-area">
-            <a class="author" href="#">@Album.Author</a>
+            <a class="author" href="#">@Album?.Artist.Name</a>
         </div>
     </div>
 </div>
@@ -30,7 +31,7 @@
     ElementReference Card;
 
     [Parameter]
-    public AlbumModel Album { get; set; }
+    public AlbumModel? Album { get; set; }
 
     protected override async void OnAfterRender(bool firstRender)
     {
@@ -40,8 +41,9 @@
             await jsModule.InvokeVoidAsync("PlaylistCard.InitHover", Card);
         }
     }
-    private void OpenPlaylistPage()
+
+    private void OpenAlbumPage()
     {
-        navigation.NavigateTo($"/playlist/{Album.Id}");
+        navigation.NavigateTo($"/playlist/{Album?.Id}");
     }
 }

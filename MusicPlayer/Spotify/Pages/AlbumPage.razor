@@ -3,17 +3,17 @@
 <div class="page-wrapper">
     <div class="playlist-info-area">
         <div class="playlist-cover">
-            <img src=@Album.Image>
+            <img src="data:image/png;base64,@Album.Cover">
         </div>
         <div class="playlist-info">
             <div class="playlist-type">
-                <span>Playlist</span>
+                <span>Album</span>
             </div>
             <div class="playlist-name">
                 <h1>@Album.Title</h1>
             </div>
             <div class="playlist-authors">
-                @Album.Author.Name
+                @Album.Artist.Name
             </div>
             <div class="playlist-duration">
                 <div class="spotify-logo">
@@ -58,7 +58,7 @@
         </div>
     </div>
     <div class="track-list">
-        @foreach (var track in Album.TrackList)
+        @foreach (var track in Album.Tracks)
         {
             <TrackRow Index="songNumber" Track="track"></TrackRow>
             songNumber++;
@@ -74,7 +74,13 @@
 
     protected override void OnInitialized()
     {
-        Album = DataBaseMoq.Albums.First(p => p.Id == Id);
+        using (var db = new PlayerContext())
+        {
+            Album = db.Albums
+                        .Include(a => a.Artist)
+                        .FirstOrDefault(a => a.Id == Id);
+
+        }
     }
 
     int songNumber = 1;

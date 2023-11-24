@@ -18,10 +18,10 @@ namespace Spotify.Models
 
 
         [Column("user_id")]
-        public Guid? UserId { get; set; }
+        public Guid UserId { get; set; }
 
         [ForeignKey("UserId")]
-        public UserModel? User { get; set; }
+        public UserModel User { get; set; } = null!;
 
 
         public PlaylistTrackModel? PlaylistTrack { get; set; }

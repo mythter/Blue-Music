@@ -1,11 +1,11 @@
 ﻿@inject IJSRuntime js
-@using Spotify.Data.Images
 @inject NavigationManager navigation
+@using Spotify.Data.Images
 
 <div @ref=Card class="card" @onclick="OpenPlaylistPage">
     <div class="image-area">
         <div class="image">
-            @if (!String.IsNullOrEmpty(Playlist.Image))
+            @if (!String.IsNullOrEmpty(Playlist?.Image))
             {
                 <img src="data:image/png;base64,@Playlist.Image" />
             }
@@ -19,10 +19,9 @@
         </div>
     </div>
     <div class="description-area">
-        <a class="title" href="#">@Playlist.Title</a>
+        <a class="title" href="#">@Playlist?.Title</a>
         <div class="author-area">
-            <a class="author" href="#">@* @Playlist.Author *@</a>
-            @* @Playlist.Author *@
+            @Playlist?.User.Name
         </div>
     </div>
 </div>
@@ -32,7 +31,7 @@
     ElementReference Card;
 
     [Parameter]
-    public PlaylistModel Playlist { get; set; }
+    public PlaylistModel? Playlist { get; set; }
 
     protected override async void OnAfterRender(bool firstRender)
     {
@@ -42,8 +41,9 @@
             await jsModule.InvokeVoidAsync("PlaylistCard.InitHover", Card);
         }
     }
+
     private void OpenPlaylistPage()
     {
-        navigation.NavigateTo($"/playlist/{Playlist.Id}");
+        navigation.NavigateTo($"/playlist/{Playlist?.Id}");
     }
 }
