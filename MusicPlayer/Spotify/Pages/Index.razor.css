@@ -1,7 +1,7 @@
 ﻿.tracks-area {
     background: #121212;
-/*    display: flex;
-    flex-wrap: wrap;*/
+    display: flex;
+    flex-wrap: wrap;
 }
 
     .tracks-area a {
@@ -12,11 +12,20 @@
         color: #ffffff;
     }
 
-    .tracks-area a:hover{
-        text-decoration: underline;
-    }
+        .tracks-area a:hover {
+            text-decoration: underline;
+        }
 
-.albums-area{
+.albums-area, .playlist-area {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.title{
+    padding-left: 20px;
+}
+
+.albums-area {
 }
 
 .playlist-area {

@@ -2,27 +2,17 @@
 
 <PageTitle>Index</PageTitle>
 
-@*<div>
-     @if (Playlists is not null)
-    {
-        @foreach (var pl in Playlists)
-        {
-            <SidePlaylist Playlist="pl"></SidePlaylist>
-        }
-    }
-</div>*@
-
 <div class="tracks-area">
+    <a class="title">Albums</a>
     <div class="albums-area">
-        <a>Albums</a>
         @if (Layout.Albums is not null)
         {
             //for (int i = 0; i < 10; i++)
             //{
             @foreach (var album in Layout.Albums)
-                {
-                    <AlbumCard Album="album"></AlbumCard>
-                }
+            {
+                <AlbumCard Id=@album.Id></AlbumCard>
+            }
             //}
             @*@foreach (var track in Layout.Tracks)
         {
@@ -30,35 +20,28 @@
         }*@
         }
     </div>
+    <a class="title">Playlists</a>
     <div class="playlist-area">
-        <a>Playlists</a>
         @if (Layout.Playlists is not null)
         {
-           // for (int i = 0; i < 10; i++)
+            // for (int i = 0; i < 10; i++)
             //{
             @foreach (var playlist in Layout.Playlists)
-                {
-                    <PlaylistCard Playlist="playlist"></PlaylistCard>
-                }
-           // }
+            {
+                <PlaylistCard Id=@playlist.Id></PlaylistCard>
+            }
+            // }
             @*@foreach (var track in Layout.Tracks)
         {
         <PlaylistCard Track="track"></PlaylistCard>
         }*@
         }
-    </div>   
+    </div>
 </div>
-
 
 @code
 {
-    //List<TrackModel>? Tracks { get; set; }
     [CascadingParameter]
     public MainLayout Layout { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        //Tracks = DataBaseMoq.Tracks;
-    }
 }
 
