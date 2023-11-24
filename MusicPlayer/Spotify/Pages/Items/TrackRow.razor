@@ -1,4 +1,4 @@
-﻿<div class="track-entry" tabindex="-1">
+﻿<div class="track-entry" tabindex="-1" @onclick="PlayTrack">
     <div class="track-number">
         <div class="track-number-index">
             @Index
@@ -9,7 +9,15 @@
     </div>
     <div class="album-cover-info">
         <div class="album-cover">
-            <img src=@Track.Album.Cover>
+            @if (!String.IsNullOrEmpty(Track.Album.Cover))
+            {
+                <img src="data:image/png;base64,@Track.Album.Cover">
+
+            }
+            else
+            {
+                <img src="data:image/png;base64,@AlbumCovers.DefaultCover" />
+            }
         </div>
         <div class="album-info">
             <span>@Track.Title</span>
@@ -17,7 +25,7 @@
         </div>
     </div>
     <div class="album-name-link">
-        <a href="#">@Track.Album</a>
+        <a href="#">@Track.Album.Title</a>
     </div>
     <div class="track-duration-like-options">
         <div class="like-button">
@@ -37,5 +45,26 @@
     public int Index { get; set; }
 
     [Parameter]
+    public Guid Id { get; set; }
+
     public TrackModel Track { get; set; }
+
+    [CascadingParameter]
+    public MainLayout Layout { get; set; }
+
+    protected override void OnInitialized()
+    {
+        using (var db = new PlayerContext())
+        {
+            Track = db.Tracks
+                 .Include(t => t.Album)
+                     .ThenInclude(a => a.Artist)
+                 .FirstOrDefault(t => t.Id == Id);
+        }
+    }
+
+    void PlayTrack()
+    {
+        // Layout.PlayingTrackId = Id;
+    }
 }
