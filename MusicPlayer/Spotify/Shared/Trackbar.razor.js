@@ -276,10 +276,103 @@
 
     }
 
-    static AudioInit(audio, slider, playBtn, currentTime, durationTime, volume, volumeBtn, volumeContainer, backBtn) {
+    static VolumeInit(audio, volume, volumeBtn, volumeContainer) {
+        let volumeScrollStep = 10;
+
+        volume.addEventListener('input', () => {
+            if (volume.value > 0 && audio.muted) {
+                audio.muted = false;
+            }
+
+            if (volume.value <= 0 && !audio.muted) {
+                audio.muted = true;
+            }
+            else {
+                audio.volume = volume.value / 100;
+            }
+            setVolumeIcon();
+
+        });
+
+        volumeBtn.addEventListener('click', () => {
+            if (!audio.muted) {
+                audio.muted = true;
+                volume.updateValue(0);
+            } else {
+                audio.muted = false;
+                if (audio.volume <= 0) {
+                    audio.volume = 1;
+                }
+                volume.updateValue(audio.volume * 100);
+            }
+            setVolumeIcon();
+        });
+
+        const setVolumeIcon = () => {
+            if (volume.value > 66) {
+                volumeBtn.innerHTML = '<i class="ph ph-speaker-high"></i>';
+            } else if (volume.value > 33 && volume.value <= 66) {
+                volumeBtn.innerHTML = '<i class="ph ph-speaker-low"></i>';
+            } else if (volume.value > 0 && volume.value <= 33) {
+                volumeBtn.innerHTML = '<i class="ph ph-speaker-none"></i>';
+            }
+            else {
+                volumeBtn.innerHTML = '<i class="ph ph-speaker-x"></i>';
+            }
+        }
+
+        const setAudioVolume = () => {
+            if (volume.value > 0 && audio.muted) {
+                audio.muted = false;
+            }
+
+            if (volume.value <= 0 && !audio.muted) {
+                audio.muted = true;
+            }
+            else {
+                audio.volume = volume.value / 100;
+            }
+            setVolumeIcon();
+        }
+
+        volumeContainer.addEventListener('wheel', volumeMouseWheel)
+        function volumeMouseWheel(e) {
+            // scroll Up
+            if (checkScrollDirectionIsUp(e)) {
+                if (volume.value <= volume.max - volumeScrollStep) {
+                    volume.value += volumeScrollStep;
+                }
+                else {
+                    volume.value = volume.max;
+                }
+
+            }
+            // scroll Down
+            else {
+                if (volume.value >= 0 + volumeScrollStep) {
+                    volume.value -= volumeScrollStep;
+                }
+                else {
+                    volume.value = 0;
+                }
+            }
+
+            setAudioVolume();
+            setVolumeIcon();
+            volume.updateValue(volume.value);
+        }
+
+        function checkScrollDirectionIsUp(e) {
+            if (e.wheelDelta) {
+                return e.wheelDelta > 0
+            }
+            return e.deltaY < 0
+        }
+    }
+
+    static AudioInit(audio, slider, playBtn, currentTime, durationTime, backBtn) {
         let raf = null;
         let playState = 'play';
-        let volumeScrollStep = 10;
 
         playBtn.addEventListener('click', () => {
             if (playState === 'play') {
@@ -375,94 +468,5 @@
                 requestAnimationFrame(whilePlaying);
             }
         });
-
-        volume.addEventListener('input', () => {
-            if (volume.value > 0 && audio.muted) {
-                audio.muted = false;
-            }
-
-            if (volume.value <= 0 && !audio.muted) {
-                audio.muted = true;
-            }
-            else {
-                audio.volume = volume.value / 100;
-            }
-            setVolumeIcon();
-
-        });
-
-        volumeBtn.addEventListener('click', () => {
-            if (!audio.muted) {
-                audio.muted = true;
-                volume.updateValue(0);
-            } else {
-                audio.muted = false;
-                if (audio.volume <= 0) {
-                    audio.volume = 1;
-                }
-                volume.updateValue(audio.volume * 100);
-            }
-            setVolumeIcon();
-        });
-
-        const setVolumeIcon = () => {
-            if (volume.value > 66) {
-                volumeBtn.innerHTML = '<i class="ph ph-speaker-high"></i>';
-            } else if (volume.value > 33 && volume.value <= 66) {
-                volumeBtn.innerHTML = '<i class="ph ph-speaker-low"></i>';
-            } else if (volume.value > 0 && volume.value <= 33) {
-                volumeBtn.innerHTML = '<i class="ph ph-speaker-none"></i>';
-            }
-            else {
-                volumeBtn.innerHTML = '<i class="ph ph-speaker-x"></i>';
-            }
-        }
-
-        const setAudioVolume = () => {
-            if (volume.value > 0 && audio.muted) {
-                audio.muted = false;
-            }
-
-            if (volume.value <= 0 && !audio.muted) {
-                audio.muted = true;
-            }
-            else {
-                audio.volume = volume.value / 100;
-            }
-            setVolumeIcon();
-        }
-
-        volumeContainer.addEventListener('wheel', volumeMouseWheel)
-        function volumeMouseWheel(e) {
-            // scroll Up
-            if (checkScrollDirectionIsUp(e)) {
-                if (volume.value <= volume.max - volumeScrollStep) {
-                    volume.value += volumeScrollStep;
-                }
-                else {
-                    volume.value = volume.max;
-                }
-
-            }
-            // scroll Down
-            else {
-                if (volume.value >= 0 + volumeScrollStep) {
-                    volume.value -= volumeScrollStep;
-                }
-                else {
-                    volume.value = 0;
-                }
-            }
-
-            setAudioVolume();
-            setVolumeIcon();
-            volume.updateValue(volume.value);
-        }
-        function checkScrollDirectionIsUp(e) {
-            if (e.wheelDelta) {
-                return e.wheelDelta > 0
-            }
-            return e.deltaY < 0
-        }
     }
 }

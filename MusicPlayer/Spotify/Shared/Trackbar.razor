@@ -4,19 +4,28 @@
 <div class="trackbar">
     <div class="track-area">
         <div class="track-image">
-            @* <img src="data:image/png;base64,@Convert.ToBase64String(@Track.Image)" /> *@
+            @if (!String.IsNullOrEmpty(Track?.Album.Cover))
+            {
+                <img src="data:image/png;base64,@Track.Album.Cover" />
+            }
+            else
+            {
+                <img src="data:image/png;base64,@AlbumCovers.DefaultCover" />
+            }
         </div>
         <div @ref=Info class="track-info">
             <div class="track-title">
                 <div @ref=Title class="track-title-area">
                     @*<a href="#">Very Very Very Very Very Very Very Very Very V... Long tetle</a>*@
-                    <a href="#">Very Very Very Very Very Very Very Long Title</a>
+                    @* <a href="#">Very Very Very Very Very Very Very Long Title</a> *@
+                    <a href="#">@Track?.Title</a>
                 </div>
             </div>
             <div class="track-author">
                 <div @ref=Author class="track-author-area">
                     @*<a href="#">Very Very Very Very Very Very Very Very Very Vei.... Very Long Author</a>*@
-                    <a href="#">Very Very Very Very Very Very Very Very Very Very Very Very Long Author</a>
+                    @* <a href="#">Very Very Very Very Very Very Very Very Very Very Very Very Long Author</a> *@
+                    <a href="#">@Track?.Album.Artist.Name</a>
                 </div>
             </div>
         </div>
@@ -26,9 +35,8 @@
             </button>
         </div>
     </div>
-    @*@Track.Source*@
     <div class="controls-area">
-        <audio @ref=Audio src="@Track.Source"></audio>
+        <audio @ref=Audio src="@Track?.Source"></audio>
         <div class="buttons-area">
             <div class="buttons-left-area">
                 <button class="shuffle-button button">
@@ -125,12 +133,22 @@
     ElementReference VolumeButton;
     ElementReference VolumeContainer;
 
+    // [Parameter]
+    public TrackModel? Track { get; set; }
+
     [Parameter]
-    public TrackModel Track { get; set; }
+    public Guid Id { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        // Track = DataBaseMoq.Tracks[2];
+        using (var db = new PlayerContext())
+        {
+            Track = db.Tracks
+                        .Include(t => t.Album)
+                            .ThenInclude(a => a.Artist)
+                        .FirstOrDefault(t => t.Id == Id);
+
+        }
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -140,8 +158,9 @@
             jsModule = await js.InvokeAsync<IJSObjectReference>("import", "./Shared/Trackbar.razor.js");
             await jsModule.InvokeVoidAsync("Trackbar.TrackInfoInit", Info, Title, Author);
             await jsModule.InvokeVoidAsync("Trackbar.SliderInit", Slider);
-            await jsModule.InvokeVoidAsync("Trackbar.AudioInit", Audio, Slider, PlayButton, CurrentTime, DurationTime, VolumeSlider, VolumeButton, VolumeContainer, BackwardButton);
             await jsModule.InvokeVoidAsync("Trackbar.VolumeSliderInit", VolumeSlider, VolumeOuter, VolumeInner, VolumeCircle);
+            await jsModule.InvokeVoidAsync("Trackbar.VolumeInit", Audio, VolumeSlider, VolumeButton, VolumeContainer);
+            await jsModule.InvokeVoidAsync("Trackbar.AudioInit", Audio, Slider, PlayButton, CurrentTime, DurationTime, BackwardButton);
         }
     }
 
@@ -151,5 +170,28 @@
         {
             await jsModule.DisposeAsync();
         }
+    }
+
+    private async Task SetTrack()
+    {
+        using (var db = new PlayerContext())
+        {
+            Track = db.Tracks
+                        .Include(t => t.Album)
+                            .ThenInclude(a => a.Artist)
+                        .FirstOrDefault(t => t.Id == Id);
+
+        }
+
+        StateHasChanged();
+        // if (jsModule is not null)
+        // {
+        //     await jsModule.InvokeVoidAsync("Trackbar.AudioInit", Audio, Slider, PlayButton, CurrentTime, DurationTime, BackwardButton);
+        // }
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await SetTrack();
     }
 }
