@@ -4,7 +4,7 @@
 <div class="trackbar">
     <div class="track-area">
         <div class="track-image">
-            <img @* src="@Track.Image" *@ />
+            @* <img src="data:image/png;base64,@Convert.ToBase64String(@Track.Image)" /> *@
         </div>
         <div @ref=Info class="track-info">
             <div class="track-title">
@@ -28,7 +28,7 @@
     </div>
     @*@Track.Source*@
     <div class="controls-area">
-        <audio @ref=Audio src="@Track.Source" loop></audio>
+        <audio @ref=Audio src="@Track.Source"></audio>
         <div class="buttons-area">
             <div class="buttons-left-area">
                 <button class="shuffle-button button">
@@ -130,7 +130,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Track = DataBaseMoq.Tracks[2];
+        // Track = DataBaseMoq.Tracks[2];
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

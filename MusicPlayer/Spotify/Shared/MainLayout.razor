@@ -59,8 +59,11 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Tracks = DataBaseMoq.Tracks;
-        Playlists = DataBaseMoq.Playlists;
+        using(PlayerContext db = new PlayerContext())
+        {
+            Tracks = db.Tracks.ToList();
+            Playlists = db.Playlists.ToList();
+        }
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

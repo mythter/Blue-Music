@@ -47,7 +47,7 @@ namespace Spotify.Data
                    Id = Guid.NewGuid(),
                    Title = "Playlist 1",
                    //Author =  "Kapusta",
-                   //Image = "https://i.scdn.co/image/ab67616d0000b27386a8061cdf26909ce5a31c0c"
+                   Image = AlbumCovers.DefaultCover
                },
                new PlaylistModel()
                {
