@@ -1,6 +1,14 @@
-﻿<div class="playlist">
+﻿@using Spotify.Data.Images
+<div class="playlist">
     <div class="image-area">
-        <img src="@Playlist.Image" />
+        @if (!String.IsNullOrEmpty(Playlist.Image))
+        {
+            <img src="data:image/png;base64,@Playlist.Image" />
+        }
+        else
+        {
+            <img src="data:image/png;base64,@PlaylistImages.DefaultImage" />
+        }
     </div>
     <div class="description-area">
         <div class="title-area">

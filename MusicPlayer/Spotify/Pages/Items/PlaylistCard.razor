@@ -1,9 +1,17 @@
 ﻿@inject IJSRuntime js
+@using Spotify.Data.Images
 
 <div @ref=Card class="card">
     <div class="image-area">
         <div class="image">
-            <img src="@Playlist.Image" />
+            @if (!String.IsNullOrEmpty(Playlist.Image))
+            {
+                <img src="data:image/png;base64,@Playlist.Image" />
+            }
+            else
+            {
+                <img src="data:image/png;base64,@PlaylistImages.DefaultImage" />
+            }
             <div class="play-button">
                 <i class="fa-solid fa-play"></i>
             </div>
