@@ -113,10 +113,6 @@
     overflow: hidden;
 }
 
-.author:hover {
-    text-decoration: underline;
-}
-
 .card:hover .play-button {
     bottom: 15px;
     opacity: 1;
@@ -127,8 +123,8 @@
     transition: 0.3s;
 }
 
-.play-button:hover {
-    transition: 0s;
-    background: #1fa4df;
-    transform: scale(1.05);
-}
+    .play-button:hover {
+        transition: 0s;
+        background: #1fa4df;
+        transform: scale(1.05);
+    }

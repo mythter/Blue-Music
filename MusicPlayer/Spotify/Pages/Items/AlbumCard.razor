@@ -1,10 +1,17 @@
-﻿@inject IJSRuntime js
-@inject NavigationManager navigation
+﻿ @inject IJSRuntime js
+ @inject NavigationManager navigation
 
 <div @ref=Card class="card">
     <div class="image-area">
         <div class="image">
-            <img src="@Album.Cover" />
+            @* @if (!String.IsNullOrEmpty(Playlist.Image))
+            {
+            <img src="data:image/png;base64,@Playlist.Image" />
+            }
+            else
+            {
+            <img src="data:image/png;base64,@PlaylistImages.DefaultImage" />
+            } *@
             <div class="play-button">
                 <i class="fa-solid fa-play"></i>
             </div>
@@ -29,8 +36,12 @@
     {
         if (firstRender)
         {
-            jsModule = await js.InvokeAsync<IJSObjectReference>("import", "./Pages/Items/AlbumCard.razor.js");
+            jsModule = await js.InvokeAsync<IJSObjectReference>("import", "./Pages/Items/PlaylistCard.razor.js");
             await jsModule.InvokeVoidAsync("PlaylistCard.InitHover", Card);
         }
+    }
+    private void OpenPlaylistPage()
+    {
+        navigation.NavigateTo($"/playlist/{Album.Id}");
     }
 }
