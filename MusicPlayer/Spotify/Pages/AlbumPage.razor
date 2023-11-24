@@ -3,7 +3,14 @@
 <div class="page-wrapper">
     <div class="playlist-info-area">
         <div class="playlist-cover">
-            <img src="data:image/png;base64,@Album.Cover">
+            @if (!String.IsNullOrEmpty(Album?.Cover))
+            {
+                <img src="data:image/png;base64,@Album.Cover">
+            }
+            else
+            {
+                <img src="data:image/png;base64,@AlbumCovers.DefaultCover" />
+            }
         </div>
         <div class="playlist-info">
             <div class="playlist-type">
@@ -60,7 +67,7 @@
     <div class="track-list">
         @foreach (var track in Album.Tracks)
         {
-            <TrackRow Index="songNumber" Track="track"></TrackRow>
+            <TrackRow Index="songNumber" Id=@track.Id></TrackRow>
             songNumber++;
         }
     </div>
@@ -70,19 +77,19 @@
     [Parameter]
     public Guid Id { get; set; }
 
-    public AlbumModel Album { get; set; }
+    public AlbumModel? Album { get; set; }
+
+    int songNumber = 1;
 
     protected override void OnInitialized()
     {
         using (var db = new PlayerContext())
         {
             Album = db.Albums
-                        .Include(a => a.Artist)
-                        .FirstOrDefault(a => a.Id == Id);
+                       .Include(a => a.Artist)
+                       .Include(a => a.Tracks)
+                       .FirstOrDefault(a => a.Id == Id);
 
         }
     }
-
-    int songNumber = 1;
-
 }
