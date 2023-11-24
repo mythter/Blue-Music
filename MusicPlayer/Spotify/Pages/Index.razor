@@ -13,20 +13,40 @@
 </div>*@
 
 <div class="tracks-area">
-    @if (Playlists is not null)
-    {
-        for (int i = 0; i < 10; i++)
+    <div class="albums-area">
+        <a>Albums</a>
+        @if (Albums is not null)
         {
-            @foreach (var playlist in Playlists)
-            {
-                <PlaylistCard Playlist="playlist"></PlaylistCard>
-            }
+            //for (int i = 0; i < 10; i++)
+            //{
+                @foreach (var album in Albums)
+                {
+                    <AlbumCard Album="album"></AlbumCard>
+                }
+            //}
+            @*@foreach (var track in Layout.Tracks)
+        {
+        <PlaylistCard Track="track"></PlaylistCard>
+        }*@
         }
-        @*@foreach (var track in Layout.Tracks)
-    {
-    <PlaylistCard Track="track"></PlaylistCard>
-    }*@
-    }
+    </div>
+    <div class=".playlist-area">
+        <a>Playlists</a>
+        @if (Playlists is not null)
+        {
+           // for (int i = 0; i < 10; i++)
+            //{
+                @foreach (var playlist in Playlists)
+                {
+                    <PlaylistCard Playlist="playlist"></PlaylistCard>
+                }
+           // }
+            @*@foreach (var track in Layout.Tracks)
+        {
+        <PlaylistCard Track="track"></PlaylistCard>
+        }*@
+        }
+    </div>   
 </div>
 
 
@@ -35,6 +55,9 @@
     //List<TrackModel>? Tracks { get; set; }
     [CascadingParameter]
     public List<PlaylistModel> Playlists { get; set; }
+
+    [CascadingParameter]
+    public List<AlbumModel> Albums { get; set; }
 
     protected override async Task OnInitializedAsync()
     {

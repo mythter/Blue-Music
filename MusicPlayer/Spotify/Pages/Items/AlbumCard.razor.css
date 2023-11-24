@@ -1,0 +1,134 @@
+﻿a {
+    color: inherit;
+    text-decoration: inherit;
+}
+
+.card {
+    position: relative;
+    margin: 15px;
+    padding: 16px;
+    max-width: 250px;
+    min-width: 150px;
+    flex: 1 1 200px;
+    background: #151515;
+    border-radius: 10px;
+    transition: 0.3s;
+    cursor: pointer;
+    overflow: hidden;
+    font-family: DMSans, sans-serif;
+    --x: calc(100% + 30px);
+    --y: calc(100% + 30px);
+    --w: calc(100% * 2);
+}
+
+    .card::before {
+        content: "";
+        position: absolute;
+        left: var(--x);
+        top: var(--y);
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: #669ae730;
+        transition: 0.8s;
+        transform: translateX(-50%) translateY(-50%);
+        -moz-transform: translateX(-50%) translateY(-50%);
+        -ms-transform: translateX(-50%) translateY(-50%);
+        -o-transform: translateX(-50%) translateY(-50%);
+        pointer-events: none;
+        filter: blur(10px);
+    }
+
+    .card:hover::before {
+        width: var(--w);
+        height: var(--w);
+    }
+
+.image-area {
+    padding-bottom: 0;
+    margin-bottom: 16px;
+}
+
+.description-area {
+    min-height: 62px;
+}
+
+.image {
+    position: relative;
+    overflow: clip;
+    box-shadow: #181818 0px 10px 15px;
+    border-radius: 10px;
+    transition: 0.2s;
+}
+
+    .image img {
+        width: 100%;
+        border-radius: 10px;
+        transform: scale(1);
+        transition: 0.2s;
+        box-shadow: #181818 0px 10px 15px;
+        pointer-events: none;
+    }
+
+    .image:hover img {
+        transform: scale(1.025);
+        transition: 0.2s;
+    }
+
+    .image .play-button {
+        position: absolute;
+        opacity: 0;
+        width: 50px;
+        height: 50px;
+        background: #1e9ed7;
+        right: 10px;
+        bottom: 5px;
+        border-radius: 50%;
+        display: flex;
+    }
+
+    .image i {
+        transform: scale(1);
+        font-size: 20px;
+        margin: auto;
+    }
+
+.title {
+    color: #FFFFFF;
+    /*font-size: 18px;*/
+    font-size: 1rem;
+    line-height: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+    z-index: 1;
+}
+
+.author-area {
+    /* font-size: 14px;*/
+    font-size: 0.875rem;
+    min-width: 0;
+    color: #A7A7A7;
+    z-index: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.author:hover {
+    text-decoration: underline;
+}
+
+.card:hover .play-button {
+    bottom: 15px;
+    opacity: 1;
+    transition: 0.3s;
+}
+
+.play-button {
+    transition: 0.3s;
+}
+
+    .play-button:hover {
+        transition: 0s;
+        background: #1fa4df;
+        transform: scale(1.05);
+    }

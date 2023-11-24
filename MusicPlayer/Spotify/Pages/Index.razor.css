@@ -3,3 +3,21 @@
     display: flex;
     flex-wrap: wrap;
 }
+
+    .tracks-area a {
+        font-family: DmSans, sans-serif;
+        font-size: 24px;
+        font-weight: bold;
+        text-decoration: none;
+        color: #ffffff;
+    }
+
+    .tracks-area a:hover{
+        text-decoration: underline;
+    }
+
+.albums-area{
+}
+
+.playlist-area {
+}

@@ -5,7 +5,7 @@
 
 <PageTitle>Main Title</PageTitle>
 
-<CascadingValue Value="@Playlists">
+<CascadingValue Value="@this">
     <div class="page">
 
         <div class="page-area">
@@ -51,6 +51,7 @@
     IJSObjectReference? jsModule;
     List<TrackModel>? Tracks { get; set; }
     public List<PlaylistModel>? Playlists { get; set; }
+    public List<AlbumModel>? Albums { get; set; }
     public List<AuthorModel>? Authors { get; set; }
 
     ElementReference Resizer;
