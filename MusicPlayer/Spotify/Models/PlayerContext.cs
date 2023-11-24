@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Spotify.Data;
+using Spotify.Data.Images;
 
 namespace Spotify.Models
 {
@@ -844,6 +845,7 @@ namespace Spotify.Models
                 Id = Guid.NewGuid(),
                 UserId = ArkadiyUser.Id,
                 Title = "Michael Jackson Playlist",
+                Image = PlaylistImages.MichaelJackson,
             };
 
             // =============================================================================================

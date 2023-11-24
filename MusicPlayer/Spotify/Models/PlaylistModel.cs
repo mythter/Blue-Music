@@ -24,6 +24,6 @@ namespace Spotify.Models
         public UserModel User { get; set; } = null!;
 
 
-        public PlaylistTrackModel? PlaylistTrack { get; set; }
+        public List<PlaylistTrackModel> PlaylistTrack { get; } = new();
     }
 }

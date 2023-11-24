@@ -27,9 +27,9 @@ namespace Spotify.Models
         public AlbumModel Album { get; set; } = null!;
 
 
-        public FavoriteModel? Favorite { get; set; }
+        public List<FavoriteModel> Favorite { get; } = new();
 
-        public PlaylistTrackModel? PlaylistTrack { get; set; }
+        public List<PlaylistTrackModel> PlaylistTrack { get; } = new();
 
     }
 }
