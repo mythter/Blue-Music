@@ -21,7 +21,7 @@
     <div class="description-area">
         <a class="title" href="#">@Playlist?.Title</a>
         <div class="author-area">
-            @Playlist?.User.Name
+            @Playlist?.User?.Name
         </div>
     </div>
 </div>
@@ -30,8 +30,20 @@
     IJSObjectReference? jsModule;
     ElementReference Card;
 
-    [Parameter]
+    // [Parameter]
     public PlaylistModel? Playlist { get; set; }
+
+    [Parameter]
+    public Guid Id { get; set; }
+
+
+    protected override void OnInitialized()
+    {
+        using (var db = new PlayerContext())
+        {
+            Playlist = db.Playlists.Include(p => p.User).FirstOrDefault(p => p.Id == Id);
+        }
+    }
 
     protected override async void OnAfterRender(bool firstRender)
     {
@@ -44,6 +56,6 @@
 
     private void OpenPlaylistPage()
     {
-        navigation.NavigateTo($"/playlist/{Playlist?.Id}");
+        navigation.NavigateTo($"/playlist/{Id}");
     }
 }

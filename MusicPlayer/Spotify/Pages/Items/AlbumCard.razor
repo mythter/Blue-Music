@@ -5,9 +5,9 @@
 <div @ref=Card class="card" @onclick="OpenAlbumPage">
     <div class="image-area">
         <div class="image">
-            @if (!String.IsNullOrEmpty(Album?.Cover))
+            @if (!String.IsNullOrEmpty(Album.Cover))
             {
-                <img src="data:image/png;base64,@Album?.Cover" />
+                <img src="data:image/png;base64,@Album.Cover" />
             }
             else
             {
@@ -19,9 +19,9 @@
         </div>
     </div>
     <div class="description-area">
-        <a class="title" href="#">@Album?.Title</a>
+        <a class="title" href="#">@Album.Title</a>
         <div class="author-area">
-            <a class="author" href="#">@Album?.Artist.Name</a>
+            <a class="author" href="#">@Album.Artist.Name</a>
         </div>
     </div>
 </div>
@@ -30,8 +30,20 @@
     IJSObjectReference? jsModule;
     ElementReference Card;
 
+    // [Parameter]
+    public AlbumModel Album { get; set; }
+
     [Parameter]
-    public AlbumModel? Album { get; set; }
+    public Guid Id { get; set; }
+
+    protected override void OnInitialized()
+    {
+        using (var db = new PlayerContext())
+        {
+            Album = db.Albums.Include(a => a.Artist).FirstOrDefault(a => a.Id == Id);
+        }
+    }
+
 
     protected override async void OnAfterRender(bool firstRender)
     {
@@ -44,6 +56,6 @@
 
     private void OpenAlbumPage()
     {
-        navigation.NavigateTo($"/playlist/{Album?.Id}");
+        navigation.NavigateTo($"/album/{Id}");
     }
 }
