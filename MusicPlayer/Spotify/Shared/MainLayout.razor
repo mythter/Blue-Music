@@ -2,7 +2,6 @@
 @inject IJSRuntime js
 @implements IAsyncDisposable
 
-
 <PageTitle>Main Title</PageTitle>
 
 <CascadingValue Value="@this">
@@ -17,12 +16,9 @@
                 <div @ref=FavouritesPanel class="favorites-area">
                     @if (Playlists is not null)
                     {
-                        for (int i = 0; i < 10; i++)
+                        @foreach (var pl in Playlists)
                         {
-                            @foreach (var pl in Playlists)
-                            {
-                                <SidePlaylist Playlist="pl"></SidePlaylist>
-                            }
+                            <SidePlaylist Playlist="pl"></SidePlaylist>
                         }
                     }
                 </div>
@@ -38,10 +34,7 @@
         </div>
 
         <div class="trackbar-area">
-            @if (Tracks is not null)
-            {
-                <Trackbar Track="@Tracks[0]"></Trackbar>
-            }
+            <Trackbar Id=@PlayingTrackId></Trackbar>
         </div>
     </div>
 </CascadingValue>
@@ -49,23 +42,25 @@
 @code
 {
     IJSObjectReference? jsModule;
-    List<TrackModel>? Tracks { get; set; }
-    public List<PlaylistModel>? Playlists { get; set; }
-    public List<AlbumModel>? Albums { get; set; }
-    public List<AuthorModel>? Authors { get; set; }
+    public List<PlaylistModel> Playlists { get; set; }
+    public List<AlbumModel> Albums { get; set; }
+    public Guid PlayingTrackId { get; set; }
 
     ElementReference Resizer;
     ElementReference Sidebar;
     ElementReference FavouritesPanel;
     ElementReference MainPanel;
 
+
     protected override async Task OnInitializedAsync()
     {
-        using(PlayerContext db = new PlayerContext())
+        using (PlayerContext db = new PlayerContext())
         {
-            Tracks = db.Tracks.ToList();
             Playlists = db.Playlists.ToList();
+            Albums = db.Albums.Include(a => a.Tracks).ToList();
         }
+
+        PlayingTrackId = Albums[0].Tracks[0].Id;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
