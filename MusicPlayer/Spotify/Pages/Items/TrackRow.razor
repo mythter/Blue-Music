@@ -47,7 +47,7 @@
     [Parameter]
     public Guid Id { get; set; }
 
-    public TrackModel Track { get; set; }
+    public TrackModel? Track { get; set; }
 
     [CascadingParameter]
     public MainLayout Layout { get; set; }
