@@ -16,12 +16,13 @@
     display: flex;
     flex-direction: row;
     padding: 24px;
-    padding-top: 0px;
+    padding-top: 45px;
     height: 30vh;
     max-height: 400px;
     min-height: 340px;
     border-radius: 10px 10px 0 0;
     background-color: #1a1a1a;
+    box-sizing: border-box;
 }
 
 .playlist-info {
@@ -32,7 +33,7 @@
 }
 
 .playlist-cover {
-    display:flex;
+    display: flex;
     align-items: flex-end;
     margin-right: 16px;
 }
@@ -51,23 +52,31 @@
     color: #ffffff;
 }
 
-.playlist-name {
+.playlist-name-area {
     margin-top: 8px;
     margin-bottom: 12px;
     font-family: DmSans, sans-serif;
-    font-size: 32px;
+    font-size: 22px;
     color: #ffffff;
+    overflow: hidden;
 }
 
-    .playlist-name h1 {
+    .playlist-name-area .playlist-name {
         margin: 0;
         width: 100%;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        display: -webkit-box;
     }
 
 .playlist-authors {
     font-family: DmSans, sans-serif;
-    font-size: 16px;
+    font-size: 14px;
     color: #ffffffb2;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+    overflow: hidden;
 }
 
 .playlist-duration {

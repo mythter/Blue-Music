@@ -1,8 +1,8 @@
 ﻿@page "/album/{Id:guid}"
 
 <div class="page-wrapper">
-    <div class="playlist-info-area">
-        <div class="playlist-cover">
+    <div class="album-info-area">
+        <div class="album-cover">
             @if (!String.IsNullOrEmpty(Album?.Image))
             {
                 <img src="data:image/png;base64,@Album.Image">
@@ -12,17 +12,17 @@
                 <img src="data:image/png;base64,@AlbumCovers.DefaultCover" />
             }
         </div>
-        <div class="playlist-info">
-            <div class="playlist-type">
+        <div class="album-info">
+            <div class="album-type">
                 <span>Album</span>
             </div>
-            <div class="playlist-name">
-                <h1>@Album.Title</h1>
+            <div class="album-name-area">
+                <h1 class="album-name">@Album?.Title</h1>
             </div>
-            <div class="playlist-authors">
-                @Album.Artist.Name
+            <div class="album-authors">
+                @Album?.Artist.Name
             </div>
-            <div class="playlist-duration">
+            <div class="album-duration">
                 <div class="spotify-logo">
                     <i class="ph-fill ph-spotify-logo"></i>
                     <a href="#">Spotify</a>
@@ -65,10 +65,13 @@
         </div>
     </div>
     <div class="track-list">
-        @foreach (var track in Album.Tracks)
+        @if (Album is not null)
         {
-            <TrackRow Index="songNumber" Id=@track.Id></TrackRow>
-            songNumber++;
+            @foreach (var track in Album.Tracks)
+            {
+                <TrackRow Index="songNumber" Id=@track.Id></TrackRow>
+                songNumber++;
+            }
         }
     </div>
 </div>
