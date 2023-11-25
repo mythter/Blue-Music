@@ -34,7 +34,7 @@
         </div>
 
         <div class="trackbar-area">
-            <Trackbar Id=@PlayingTrackId></Trackbar>
+            <Trackbar></Trackbar>
         </div>
     </div>
 </CascadingValue>
@@ -42,25 +42,19 @@
 @code
 {
     IJSObjectReference? jsModule;
-    public List<PlaylistModel> Playlists { get; set; }
-    public List<AlbumModel> Albums { get; set; }
-    public Guid PlayingTrackId { get; set; }
+    public List<PlaylistModel>? Playlists { get; set; }
 
     ElementReference Resizer;
     ElementReference Sidebar;
     ElementReference FavouritesPanel;
     ElementReference MainPanel;
 
-
     protected override async Task OnInitializedAsync()
     {
         using (PlayerContext db = new PlayerContext())
         {
             Playlists = db.Playlists.ToList();
-            Albums = db.Albums.Include(a => a.Tracks).ToList();
         }
-
-        PlayingTrackId = Albums[0].Tracks[0].Id;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -76,13 +70,13 @@
     [JSInvokable]
     public async Task LoadNext()
     {
-        Playlists.Add(new PlaylistModel()
-            {
-                Id = Guid.NewGuid(),
-                Image = Playlists[0].Image,
-                Title = "Title"
-            });
-        StateHasChanged();
+        // Playlists.Add(new PlaylistModel()
+        //     {
+        //         Id = Guid.NewGuid(),
+        //         Image = Playlists[0].Image,
+        //         Title = "Title"
+        //     });
+        // StateHasChanged();
     }
 
     async ValueTask IAsyncDisposable.DisposeAsync()

@@ -1,6 +1,7 @@
 ﻿.tracks-area {
     background: #121212;
     display: flex;
+    flex-direction: column;
     flex-wrap: wrap;
 }
 
