@@ -4,9 +4,9 @@
 <div class="trackbar">
     <div class="track-area">
         <div class="track-image">
-            @if (!String.IsNullOrEmpty(Track?.Album.Cover))
+            @if (!String.IsNullOrEmpty(Track?.Album.Image))
             {
-                <img src="data:image/png;base64,@Track.Album.Cover" />
+                <img src="data:image/png;base64,@Track.Album.Image" />
             }
             else
             {
@@ -133,21 +133,20 @@
     ElementReference VolumeButton;
     ElementReference VolumeContainer;
 
-    // [Parameter]
-    public TrackModel? Track { get; set; }
-
     [Parameter]
-    public Guid Id { get; set; }
+    public TrackModel? Track { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        using (var db = new PlayerContext())
+        if (Track is not null)
         {
-            Track = db.Tracks
-                        .Include(t => t.Album)
-                            .ThenInclude(a => a.Artist)
-                        .FirstOrDefault(t => t.Id == Id);
+            using (var db = new PlayerContext())
+            {
+                Track = db.Tracks.Include(t => t.Album)
+                         .ThenInclude(a => a.Artist)
+                         .FirstOrDefault(t => t.Id == Track.Id);
 
+            }
         }
     }
 
@@ -174,16 +173,16 @@
 
     private async Task SetTrack()
     {
-        using (var db = new PlayerContext())
-        {
-            Track = db.Tracks
-                        .Include(t => t.Album)
-                            .ThenInclude(a => a.Artist)
-                        .FirstOrDefault(t => t.Id == Id);
+        // using (var db = new PlayerContext())
+        // {
+        //     Track = db.Tracks
+        //                 .Include(t => t.Album)
+        //                     .ThenInclude(a => a.Artist)
+        //                 .FirstOrDefault(t => t.Id == Id);
 
-        }
+        // }
 
-        StateHasChanged();
+        // StateHasChanged();
         // if (jsModule is not null)
         // {
         //     await jsModule.InvokeVoidAsync("Trackbar.AudioInit", Audio, Slider, PlayButton, CurrentTime, DurationTime, BackwardButton);
