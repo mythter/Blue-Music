@@ -1,17 +1,18 @@
 ﻿.main-area {
     display: flex;
-    flex: 1;
     overflow-y: scroll;
     overflow-x: hidden;
     height: 100%;
     padding-top: 64px;
     box-sizing: border-box;
+    padding-left: 10px;
 }
 
 .tracks-area {
     background: #121212;
     display: flex;
     flex-direction: column;
+    height: fit-content;
 }
 
     .tracks-area a {
