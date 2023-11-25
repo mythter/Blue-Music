@@ -35,13 +35,9 @@
                     <h1 class="name">@TrackCollection?.Title</h1>
                 </div>
                 <div class="authors">
-                    @if (TrackCollection is AlbumModel album)
+                    @if (!String.IsNullOrEmpty(AuthorName))
                     {
-                        <span>@album?.Artist.Name</span>
-                    }
-                    else if (TrackCollection is PlaylistModel playlist)
-                    {
-                        <span>@playlist.User.Name</span>
+                        <span>@AuthorName</span>
                     }
                 </div>
                 <div class="duration">
@@ -103,12 +99,25 @@
 
     public List<TrackModel> Tracks { get; set; } = new();
 
-    int songNumber = 1;
+    public string? AuthorName { get; set; }
+
+    int songNumber;
 
     protected override void OnInitialized()
     {
+        InitializeTrackList();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        InitializeTrackList();
+    }
+
+    private void InitializeTrackList()
+    {
         if (TrackCollection is not null)
         {
+            songNumber = 1;
             using (var db = new PlayerContext())
             {
                 if (TrackCollection is AlbumModel)
@@ -122,6 +131,7 @@
                     if (TrackCollection is not null)
                     {
                         Tracks = ((AlbumModel)TrackCollection).Tracks;
+                        AuthorName = ((AlbumModel)TrackCollection).Artist.Name;
                     }
                 }
                 else if (TrackCollection is PlaylistModel)
@@ -139,6 +149,8 @@
                                   where t.Id == pt.TrackId
                                   where pt.PlaylistId == TrackCollection.Id
                                   select t).ToList();
+
+                        AuthorName = ((PlaylistModel)TrackCollection).User.Name;
                     }
                 }
             }

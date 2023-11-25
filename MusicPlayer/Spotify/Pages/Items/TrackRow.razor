@@ -59,6 +59,23 @@
         }
     }
 
+    protected override async Task OnParametersSetAsync()
+    {
+        InitializeTrack();
+    }
+
+    private void InitializeTrack()
+    {
+        using (var db = new PlayerContext())
+        {
+            Track = db.Tracks
+                 .Include(t => t.Album)
+                     .ThenInclude(a => a.Artist)
+                 .FirstOrDefault(t => t.Id == Id);
+        }
+        StateHasChanged();
+    }
+
     void PlayTrack()
     {
         // Layout.PlayingTrackId = Id;

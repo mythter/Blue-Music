@@ -9,9 +9,17 @@
 
     public PlaylistModel? Playlist { get; set; }
 
-    int songNumber = 1;
-
     protected override void OnInitialized()
+    {
+        InitializePlaylist();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        InitializePlaylist();
+    }
+
+    private void InitializePlaylist()
     {
         using (var db = new PlayerContext())
         {

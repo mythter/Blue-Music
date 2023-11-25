@@ -11,17 +11,25 @@
 
     public AlbumModel? Album { get; set; }
 
-    int songNumber = 1;
-
     protected override void OnInitialized()
     {
         using (var db = new PlayerContext())
         {
-            Album = db.Albums
-                       .Include(a => a.Artist)
-                       .Include(a => a.Tracks)
-                       .FirstOrDefault(a => a.Id == Id);
+            Album = db.Albums.FirstOrDefault(a => a.Id == Id);
 
+        }
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        InitializePlaylist();
+    }
+
+    private void InitializePlaylist()
+    {
+        using (var db = new PlayerContext())
+        {
+            Album = db.Albums.FirstOrDefault(a => a.Id == Id);
         }
     }
 }
