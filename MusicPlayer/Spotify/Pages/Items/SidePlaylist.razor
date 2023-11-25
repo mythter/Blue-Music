@@ -1,7 +1,7 @@
 ﻿@using Spotify.Data.Images
 <div class="playlist">
     <div class="image-area">
-        @if (!String.IsNullOrEmpty(Playlist.Image))
+        @if (!String.IsNullOrEmpty(Playlist?.Image))
         {
             <img src="data:image/png;base64,@Playlist.Image" />
         }
@@ -12,11 +12,14 @@
     </div>
     <div class="description-area">
         <div class="title-area">
-            <p class="title">@Playlist.Title</p>
+            <p class="title">@Playlist?.Title</p>
         </div>
         <div class="author-area">
             <i class="ph-fill ph-push-pin"></i>
-            <p class="author">@* @Playlist.Author *@</p>
+            @if (!String.IsNullOrEmpty(UserName))
+            {
+                <p class="author">@UserName</p>
+            }
         </div>
     </div>
 </div>
@@ -24,5 +27,26 @@
 @code {
 
     [Parameter]
-    public PlaylistModel Playlist { get; set; }
+    public PlaylistModel? Playlist { get; set; }
+
+    public string? UserName { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if (Playlist is not null)
+        {
+            using (var db = new PlayerContext())
+            {
+
+                Playlist = db.Playlists
+                            .Include(p => p.User)
+                            .FirstOrDefault(p => p.Id == Playlist.Id);
+
+                if (Playlist is not null)
+                {
+                    UserName = Playlist.User.Name;
+                }
+            }
+        }
+    }
 }
