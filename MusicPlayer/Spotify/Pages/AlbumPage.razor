@@ -3,9 +3,9 @@
 <div class="page-wrapper">
     <div class="playlist-info-area">
         <div class="playlist-cover">
-            @if (!String.IsNullOrEmpty(Album?.Cover))
+            @if (!String.IsNullOrEmpty(Album?.Image))
             {
-                <img src="data:image/png;base64,@Album.Cover">
+                <img src="data:image/png;base64,@Album.Image">
             }
             else
             {
