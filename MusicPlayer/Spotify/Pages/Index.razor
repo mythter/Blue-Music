@@ -1,8 +1,10 @@
 ﻿@page "/"
+@inject IJSRuntime js
+@implements IAsyncDisposable
 
 <PageTitle>Index</PageTitle>
 
-<div class="main-area">
+<div @ref=MainPanel class="main-area">
     <div class="tracks-area">
         <a class="title">Albums</a>
         <div class="albums-area">
@@ -30,6 +32,9 @@
 
 @code
 {
+    IJSObjectReference? jsModule;
+    ElementReference MainPanel;
+
     public List<AlbumModel>? Albums { get; set; }
 
     public List<PlaylistModel>? Playlists { get; set; }
@@ -40,6 +45,35 @@
         {
             Playlists = db.Playlists.ToList();
             Albums = db.Albums.ToList();
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            jsModule = await js.InvokeAsync<IJSObjectReference>("import", "./Pages/Index.razor.js");
+            await jsModule.InvokeVoidAsync("Index.LoadNextInit", DotNetObjectReference.Create(this), MainPanel);
+        }
+    }
+
+    [JSInvokable]
+    public async Task LoadNext()
+    {
+        Playlists?.Add(new PlaylistModel()
+            {
+                Id = Guid.NewGuid(),
+                Image = Playlists[0].Image,
+                Title = "Title"
+            });
+        StateHasChanged();
+    }
+
+    async ValueTask IAsyncDisposable.DisposeAsync()
+    {
+        if (jsModule is not null)
+        {
+            await jsModule.DisposeAsync();
         }
     }
 }
