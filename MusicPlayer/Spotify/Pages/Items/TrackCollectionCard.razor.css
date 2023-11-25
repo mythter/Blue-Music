@@ -113,6 +113,10 @@
     overflow: hidden;
 }
 
+.author:hover {
+    text-decoration: underline;
+}
+
 .card:hover .play-button {
     bottom: 15px;
     opacity: 1;

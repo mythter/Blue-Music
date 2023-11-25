@@ -27,11 +27,11 @@
         <div class="author-area">
             @if (TrackCollection is AlbumModel album)
             {
-                <sapn>album.Artist.Name</sapn>
+                <a class="author" href="#">@album.Artist.Name</a>
             }
             else if (TrackCollection is PlaylistModel playlist)
             {
-                <sapn>playlist.User.Name</sapn>
+                <sapn>@playlist.User.Name</sapn>
             }
         </div>
     </div>
