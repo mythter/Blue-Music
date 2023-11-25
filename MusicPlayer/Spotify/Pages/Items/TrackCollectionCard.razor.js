@@ -1,4 +1,4 @@
-﻿export class PlaylistCard {
+﻿export class TrackCollectionCard {
     static InitHover(target) {
         target.addEventListener('mouseenter', function (e) {
             e.target.style.setProperty('--x', e.offsetX + 'px');
@@ -12,5 +12,6 @@
             e.target.style.setProperty('--x', offsetX + 'px');
             e.target.style.setProperty('--y', offsetY + 'px');
         });
+
     }
 }
