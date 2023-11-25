@@ -2,28 +2,31 @@
 
 <PageTitle>Index</PageTitle>
 
-<div class="tracks-area">
-    <a class="title">Albums</a>
-    <div class="albums-area">
-        @if (Albums is not null)
-        {
-            @foreach (var album in Albums)
+<div class="main-area">
+    <div class="tracks-area">
+        <a class="title">Albums</a>
+        <div class="albums-area">
+            @if (Albums is not null)
             {
-                <TrackCollectionCard TrackCollection=album></TrackCollectionCard>
+                @foreach (var album in Albums)
+                {
+                    <TrackCollectionCard TrackCollection=album></TrackCollectionCard>
+                }
             }
-        }
-    </div>
-    <a class="title">Playlists</a>
-    <div class="playlist-area">
-        @if (Playlists is not null)
-        {
-            @foreach (var playlist in Playlists)
+        </div>
+        <a class="title">Playlists</a>
+        <div class="playlist-area">
+            @if (Playlists is not null)
             {
-                <TrackCollectionCard TrackCollection=playlist></TrackCollectionCard>
+                @foreach (var playlist in Playlists)
+                {
+                    <TrackCollectionCard TrackCollection=playlist></TrackCollectionCard>
+                }
             }
-        }
+        </div>
     </div>
 </div>
+
 
 @code
 {
