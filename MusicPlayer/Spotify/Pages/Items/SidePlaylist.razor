@@ -1,5 +1,7 @@
-﻿@using Spotify.Data.Images
-<div class="playlist">
+﻿@inject NavigationManager navigation
+@using Spotify.Data.Images
+
+<div class="playlist" @onclick="OpenPlaylistPage">
     <div class="image-area">
         @if (!String.IsNullOrEmpty(Playlist?.Image))
         {
@@ -48,5 +50,10 @@
                 }
             }
         }
+    }
+
+    private void OpenPlaylistPage()
+    {
+        navigation.NavigateTo($"/playlist/{Playlist?.Id}");
     }
 }
