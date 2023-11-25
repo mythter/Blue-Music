@@ -4,40 +4,38 @@
 
 <PageTitle>Main Title</PageTitle>
 
-<CascadingValue Value="@this">
-    <div class="page">
+<div class="page">
 
-        <div class="page-area">
-            <div @ref=Sidebar class="sidebar-area">
-                <div class="menu-area">
-                    <Menu></Menu>
-                </div>
+    <div class="page-area">
+        <div @ref=Sidebar class="sidebar-area">
+            <div class="menu-area">
+                <Menu></Menu>
+            </div>
 
-                <div @ref=FavouritesPanel class="favorites-area">
-                    @if (Playlists is not null)
+            <div @ref=FavouritesPanel class="favorites-area">
+                @if (Playlists is not null)
+                {
+                    @foreach (var pl in Playlists)
                     {
-                        @foreach (var pl in Playlists)
-                        {
-                            <SidePlaylist Playlist="pl"></SidePlaylist>
-                        }
+                        <SidePlaylist Playlist="pl"></SidePlaylist>
                     }
-                </div>
+                }
             </div>
-
-            <div @ref=Resizer class="resizer"></div>
-
-            <div @ref=MainPanel class="main-area">
-                <Topbar></Topbar>
-                @Body
-            </div>
-
         </div>
 
-        <div class="trackbar-area">
-            <Trackbar></Trackbar>
+        <div @ref=Resizer class="resizer"></div>
+
+        <div @ref=MainPanel class="main-area">
+            <Topbar></Topbar>
+            @Body
         </div>
+
     </div>
-</CascadingValue>
+
+    <div class="trackbar-area">
+        <Trackbar></Trackbar>
+    </div>
+</div>
 
 @code
 {
