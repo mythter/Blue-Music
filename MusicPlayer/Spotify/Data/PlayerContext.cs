@@ -14,6 +14,11 @@ namespace Spotify.Models
         public DbSet<PlaylistTrackModel> PlaylistTracks { get; set; } = null!;
         public DbSet<UserModel> Users { get; set; } = null!;
 
+        public PlayerContext()
+        {
+            Database.EnsureCreated();
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var builder = new ConfigurationBuilder()
