@@ -25,7 +25,7 @@
 
         <div @ref=Resizer class="resizer"></div>
 
-        <div @ref=MainPanel class="main-area">
+        <div class="main-area">
             <Topbar></Topbar>
             @Body
         </div>
@@ -45,7 +45,6 @@
     ElementReference Resizer;
     ElementReference Sidebar;
     ElementReference FavouritesPanel;
-    ElementReference MainPanel;
 
     protected override async Task OnInitializedAsync()
     {
@@ -61,20 +60,7 @@
         {
             jsModule = await js.InvokeAsync<IJSObjectReference>("import", "./Shared/MainLayout.razor.js");
             await jsModule.InvokeVoidAsync("Main.ResizeInit", Resizer, Sidebar, FavouritesPanel);
-            await jsModule.InvokeVoidAsync("Main.LoadNextInit", DotNetObjectReference.Create(this), MainPanel);
         }
-    }
-
-    [JSInvokable]
-    public async Task LoadNext()
-    {
-        // Playlists.Add(new PlaylistModel()
-        //     {
-        //         Id = Guid.NewGuid(),
-        //         Image = Playlists[0].Image,
-        //         Title = "Title"
-        //     });
-        // StateHasChanged();
     }
 
     async ValueTask IAsyncDisposable.DisposeAsync()
