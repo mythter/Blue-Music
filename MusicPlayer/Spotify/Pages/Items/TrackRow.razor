@@ -9,10 +9,9 @@
     </div>
     <div class="album-cover-info">
         <div class="album-cover">
-            @if (!String.IsNullOrEmpty(Track.Album.Cover))
+            @if (!String.IsNullOrEmpty(Track?.Album.Image))
             {
-                <img src="data:image/png;base64,@Track.Album.Cover">
-
+                <img src="data:image/png;base64,@Track.Album.Image">
             }
             else
             {
@@ -20,19 +19,19 @@
             }
         </div>
         <div class="album-info">
-            <span>@Track.Title</span>
-            <a href="#">@Track.Album.Artist.Name</a>
+            <span>@Track?.Title</span>
+            <a href="#">@Track?.Album.Artist.Name</a>
         </div>
     </div>
     <div class="album-name-link">
-        <a href="#">@Track.Album.Title</a>
+        <a href="#">@Track?.Album.Title</a>
     </div>
     <div class="track-duration-like-options">
         <div class="like-button">
             <i class="ph ph-heart-straight"></i>
         </div>
         <div class="track-duration">
-            @Track.Duration
+            @Track?.DurationTime
         </div>
         <div class="options">
             <i class="ph ph-dots-three"></i>
@@ -48,9 +47,6 @@
     public Guid Id { get; set; }
 
     public TrackModel? Track { get; set; }
-
-    [CascadingParameter]
-    public MainLayout Layout { get; set; }
 
     protected override void OnInitialized()
     {
