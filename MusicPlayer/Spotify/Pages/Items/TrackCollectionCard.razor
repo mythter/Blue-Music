@@ -25,13 +25,9 @@
     <div class="description-area">
         <a class="title" href="#">@TrackCollection?.Title</a>
         <div class="author-area">
-            @if (TrackCollection is AlbumModel album)
+            @if (!String.IsNullOrEmpty(AuthorName))
             {
-                <a class="author" href="#">@album.Artist.Name</a>
-            }
-            else if (TrackCollection is PlaylistModel playlist)
-            {
-                <sapn>@playlist.User.Name</sapn>
+                <sapn>AuthorName</sapn>
             }
         </div>
     </div>
@@ -44,6 +40,8 @@
     [Parameter]
     public ITrackStorable? TrackCollection { get; set; }
 
+    public string? AuthorName { get; set; }
+
     protected override void OnInitialized()
     {
         using (var db = new PlayerContext())
@@ -55,6 +53,11 @@
                         .Include(p => p.PlaylistTrack)
                             .ThenInclude(pt => pt.Track)
                         .FirstOrDefault(p => p.Id == TrackCollection.Id);
+
+                if (TrackCollection is not null)
+                {
+                    AuthorName = ((PlaylistModel)TrackCollection).User.Name;
+                }
             }
             else if (TrackCollection is AlbumModel)
             {
@@ -62,6 +65,11 @@
                        .Include(a => a.Artist)
                        .Include(a => a.Tracks)
                        .FirstOrDefault(a => a.Id == TrackCollection.Id);
+
+                if (TrackCollection is not null)
+                {
+                    AuthorName = ((AlbumModel)TrackCollection).Artist.Name;
+                }
             }
         }
     }
