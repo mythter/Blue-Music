@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Spotify.Models
 {
     [Table("albums")]
-    public class AlbumModel : ITrackCollection
+    public class AlbumModel : ITrackStorable
     {
         [Key]
         [Column("album_id")]
@@ -14,7 +14,7 @@ namespace Spotify.Models
         public string Title { get; set; } = null!;
 
         [Column("album_cover")]
-        public string? Cover { get; set; }
+        public string? Image { get; set; }
 
         [Column("album_release_date")]
         public DateTime? ReleaseDate { get; set; }

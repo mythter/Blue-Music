@@ -139,7 +139,7 @@ namespace Spotify.Models
             {
                 Id = Guid.NewGuid(),
                 ArtistId = LedZeppelinArtist.Id,
-                Cover = AlbumCovers.LedZeppelinIII,
+                Image = AlbumCovers.LedZeppelinIII,
                 Title = "Led Zeppelin III",
             };
 
@@ -147,7 +147,7 @@ namespace Spotify.Models
             {
                 Id = Guid.NewGuid(),
                 ArtistId = PinkFloydArtist.Id,
-                Cover = AlbumCovers.TheDarkSideOfTheMoon,
+                Image = AlbumCovers.TheDarkSideOfTheMoon,
                 Title = "The Dark Side Of The Moon",
                 ReleaseDate = new DateTime(1973, 03, 01),
             };
@@ -156,7 +156,7 @@ namespace Spotify.Models
             {
                 Id = Guid.NewGuid(),
                 ArtistId = QueenArtist.Id,
-                Cover = AlbumCovers.NewsOfTheWorld,
+                Image = AlbumCovers.NewsOfTheWorld,
                 Title = "News Of The World",
                 ReleaseDate = new DateTime(1977, 10, 28),
             };
@@ -165,7 +165,7 @@ namespace Spotify.Models
             {
                 Id = Guid.NewGuid(),
                 ArtistId = ACDCArtist.Id,
-                Cover = AlbumCovers.BackInBlack,
+                Image = AlbumCovers.BackInBlack,
                 Title = "Back In Black",
                 ReleaseDate = new DateTime(1980, 07, 25),
             };
@@ -174,7 +174,7 @@ namespace Spotify.Models
             {
                 Id = Guid.NewGuid(),
                 ArtistId = TheAnimalsArtist.Id,
-                Cover = AlbumCovers.TheSinglesPlus,
+                Image = AlbumCovers.TheSinglesPlus,
                 Title = "The Singles Plus",
                 ReleaseDate = new DateTime(1987, 10, 19),
             };
@@ -183,7 +183,7 @@ namespace Spotify.Models
             {
                 Id = Guid.NewGuid(),
                 ArtistId = PinkFloydArtist.Id,
-                Cover = AlbumCovers.TheDivisionBell,
+                Image = AlbumCovers.TheDivisionBell,
                 Title = "The Division Bell",
                 ReleaseDate = new DateTime(1994, 03, 28),
             };
@@ -192,7 +192,7 @@ namespace Spotify.Models
             {
                 Id = Guid.NewGuid(),
                 ArtistId = TheBlackKeysArtist.Id,
-                Cover = AlbumCovers.Brothers,
+                Image = AlbumCovers.Brothers,
                 Title = "Brothers",
                 ReleaseDate = new DateTime(2010, 05, 18),
             };
@@ -201,7 +201,7 @@ namespace Spotify.Models
             {
                 Id = Guid.NewGuid(),
                 ArtistId = TheBlackKeysArtist.Id,
-                Cover = AlbumCovers.ElCamino,
+                Image = AlbumCovers.ElCamino,
                 Title = "El Camino",
                 ReleaseDate = new DateTime(2011, 12, 06),
             };
@@ -210,7 +210,7 @@ namespace Spotify.Models
             {
                 Id = Guid.NewGuid(),
                 ArtistId = MichaelJacksonArtist.Id,
-                Cover = AlbumCovers.OffTheWall,
+                Image = AlbumCovers.OffTheWall,
                 Title = "Off the Wall",
                 ReleaseDate = new DateTime(1979, 08, 10),
             };
@@ -219,7 +219,7 @@ namespace Spotify.Models
             {
                 Id = Guid.NewGuid(),
                 ArtistId = MichaelJacksonArtist.Id,
-                Cover = AlbumCovers.Thriller,
+                Image = AlbumCovers.Thriller,
                 Title = "Thriller",
                 ReleaseDate = new DateTime(1982, 11, 30),
             };
@@ -228,7 +228,7 @@ namespace Spotify.Models
             {
                 Id = Guid.NewGuid(),
                 ArtistId = MichaelJacksonArtist.Id,
-                Cover = AlbumCovers.Bad,
+                Image = AlbumCovers.Bad,
                 Title = "Bad",
                 ReleaseDate = new DateTime(1987, 08, 31),
             };
@@ -237,7 +237,7 @@ namespace Spotify.Models
             {
                 Id = Guid.NewGuid(),
                 ArtistId = MichaelJacksonArtist.Id,
-                Cover = AlbumCovers.Dangerous,
+                Image = AlbumCovers.Dangerous,
                 Title = "Dangerous",
                 ReleaseDate = new DateTime(1991, 11, 13),
             };
@@ -246,7 +246,7 @@ namespace Spotify.Models
             {
                 Id = Guid.NewGuid(),
                 ArtistId = MichaelJacksonArtist.Id,
-                Cover = AlbumCovers.History,
+                Image = AlbumCovers.History,
                 Title = "HIStory - PAST, PRESENT AND FUTURE - BOOK I",
                 ReleaseDate = new DateTime(1995, 06, 16),
             };
@@ -255,7 +255,7 @@ namespace Spotify.Models
             {
                 Id = Guid.NewGuid(),
                 ArtistId = MichaelJacksonArtist.Id,
-                Cover = AlbumCovers.BloodOnTheDanceFloor,
+                Image = AlbumCovers.BloodOnTheDanceFloor,
                 Title = "BLOOD ON THE DANCE FLOOR",
                 ReleaseDate = new DateTime(1997, 05, 11),
             };
@@ -264,7 +264,7 @@ namespace Spotify.Models
             {
                 Id = Guid.NewGuid(),
                 ArtistId = MichaelJacksonArtist.Id,
-                Cover = AlbumCovers.Invincible,
+                Image = AlbumCovers.Invincible,
                 Title = "Invincible",
                 ReleaseDate = new DateTime(2001, 10, 29),
             };
@@ -273,7 +273,7 @@ namespace Spotify.Models
             {
                 Id = Guid.NewGuid(),
                 ArtistId = TheScoreArtist.Id,
-                Cover = AlbumCovers.MythsAndLegends,
+                Image = AlbumCovers.MythsAndLegends,
                 Title = "Myths & Legends",
                 ReleaseDate = new DateTime(2017, 04, 14),
             };
@@ -282,7 +282,7 @@ namespace Spotify.Models
             {
                 Id = Guid.NewGuid(),
                 ArtistId = TheZealotsArtist.Id,
-                Cover = AlbumCovers.OnlyRocksLiveForever,
+                Image = AlbumCovers.OnlyRocksLiveForever,
                 Title = "Only Rocks Live Forever",
                 ReleaseDate = new DateTime(2018, 06, 01),
             };
@@ -291,7 +291,7 @@ namespace Spotify.Models
             {
                 Id = Guid.NewGuid(),
                 ArtistId = QueenArtist.Id,
-                Cover = AlbumCovers.Innuendo,
+                Image = AlbumCovers.Innuendo,
                 Title = "Innuendo",
                 ReleaseDate = new DateTime(1991, 02, 05),
             };
@@ -300,7 +300,7 @@ namespace Spotify.Models
             {
                 Id = Guid.NewGuid(),
                 ArtistId = OkeanElzyArtist.Id,
-                Cover = AlbumCovers.DolceVita,
+                Image = AlbumCovers.DolceVita,
                 Title = "Dolce vita",
                 ReleaseDate = new DateTime(2010, 03, 10),
             };
@@ -309,7 +309,7 @@ namespace Spotify.Models
             {
                 Id = Guid.NewGuid(),
                 ArtistId = MacQuayleArtist.Id,
-                Cover = AlbumCovers.MrRobotVol1,
+                Image = AlbumCovers.MrRobotVol1,
                 Title = "Mr. Robot, Vol. 1",
                 ReleaseDate = new DateTime(2016, 06, 03),
             };
@@ -318,7 +318,7 @@ namespace Spotify.Models
             {
                 Id = Guid.NewGuid(),
                 ArtistId = PinsArtist.Id,
-                Cover = AlbumCovers.Trouble,
+                Image = AlbumCovers.Trouble,
                 Title = "Trouble",
                 ReleaseDate = new DateTime(2016, 06, 17),
             };
@@ -327,7 +327,7 @@ namespace Spotify.Models
             {
                 Id = Guid.NewGuid(),
                 ArtistId = ForeignAirArtist.Id,
-                Cover = AlbumCovers.ForTheLight,
+                Image = AlbumCovers.ForTheLight,
                 Title = "For the Light",
                 ReleaseDate = new DateTime(2016, 09, 23),
             };
@@ -336,7 +336,7 @@ namespace Spotify.Models
             {
                 Id = Guid.NewGuid(),
                 ArtistId = PinsArtist.Id,
-                Cover = AlbumCovers.Aggrophobe,
+                Image = AlbumCovers.Aggrophobe,
                 Title = "Aggrophobe",
                 ReleaseDate = new DateTime(2017, 01, 26),
             };
@@ -345,7 +345,7 @@ namespace Spotify.Models
             {
                 Id = Guid.NewGuid(),
                 ArtistId = TheSeigeArtist.Id,
-                Cover = AlbumCovers.Duality,
+                Image = AlbumCovers.Duality,
                 Title = "Duality",
                 ReleaseDate = new DateTime(2019, 01, 10),
             };
@@ -354,7 +354,7 @@ namespace Spotify.Models
             {
                 Id = Guid.NewGuid(),
                 ArtistId = KomodoArtist.Id,
-                Cover = AlbumCovers.Komodo,
+                Image = AlbumCovers.Komodo,
                 Title = "Komodo",
                 ReleaseDate = new DateTime(2019, 02, 22),
             };
@@ -363,7 +363,7 @@ namespace Spotify.Models
             {
                 Id = Guid.NewGuid(),
                 ArtistId = QueenArtist.Id,
-                Cover = AlbumCovers.YourTouch,
+                Image = AlbumCovers.YourTouch,
                 Title = "Your Touch",
                 ReleaseDate = new DateTime(2021, 08, 06),
             };
@@ -372,7 +372,7 @@ namespace Spotify.Models
             {
                 Id = Guid.NewGuid(),
                 ArtistId = TheWeekndArtist.Id,
-                Cover = AlbumCovers.DawnFM,
+                Image = AlbumCovers.DawnFM,
                 Title = "Dawn FM",
                 ReleaseDate = new DateTime(2022, 01, 06),
             };

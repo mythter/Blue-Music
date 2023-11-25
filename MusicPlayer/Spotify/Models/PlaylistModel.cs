@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Spotify.Models
 {
     [Table("playlists")]
-    public class PlaylistModel : ITrackCollection
+    public class PlaylistModel : ITrackStorable
     {
         [Key]
         [Column("playlist_id")]
