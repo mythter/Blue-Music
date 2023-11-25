@@ -19,7 +19,12 @@ namespace Spotify.Models
         [NotMapped]
         public string DurationTime
         {
-            get => $"{TimeSpan.FromSeconds(Duration).Minutes}:{TimeSpan.FromSeconds(Duration).Seconds:ss}";
+            get
+            {
+                int min = TimeSpan.FromSeconds(Duration).Minutes;
+                int sec = TimeSpan.FromSeconds(Duration).Seconds;
+                return   $"{min}:{sec:d2}";
+            }
         }
 
         [Column("track_source")]
