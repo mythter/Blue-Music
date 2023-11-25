@@ -1,78 +1,84 @@
 ﻿@page "/album/{Id:guid}"
 
-<div class="page-wrapper">
-    <div class="album-info-area">
-        <div class="album-cover">
-            @if (!String.IsNullOrEmpty(Album?.Image))
-            {
-                <img src="data:image/png;base64,@Album.Image">
-            }
-            else
-            {
-                <img src="data:image/png;base64,@AlbumCovers.DefaultCover" />
-            }
-        </div>
-        <div class="album-info">
-            <div class="album-type">
-                <span>Album</span>
-            </div>
-            <div class="album-name-area">
-                <h1 class="album-name">@Album?.Title</h1>
-            </div>
-            <div class="album-authors">
-                @Album?.Artist.Name
-            </div>
-            <div class="album-duration">
-                <div class="spotify-logo">
-                    <i class="ph-fill ph-spotify-logo"></i>
-                    <a href="#">Spotify</a>
+<div class="main-area">
+    <div class="page-wrapper">
+        <div class="album-info-container">
+            <div class="background"></div>
+            <div class="album-info-area">
+                <div class="album-cover">
+                    @if (!String.IsNullOrEmpty(Album?.Image))
+                    {
+                        <img src="data:image/png;base64,@Album.Image">
+                    }
+                    else
+                    {
+                        <img src="data:image/png;base64,@AlbumCovers.DefaultCover" />
+                    }
                 </div>
-                <span class="dot-separator">•</span>
-                <span class="songs-count">
-                    x songs,
-                    <span class="songs-duration">about x hr</span>
-                </span>
+                <div class="album-info">
+                    <div class="album-type">
+                        <span>Album</span>
+                    </div>
+                    <div class="album-name-area">
+                        <h1 class="album-name">@Album?.Title</h1>
+                    </div>
+                    <div class="album-authors">
+                        @Album?.Artist.Name
+                    </div>
+                    <div class="album-duration">
+                        <div class="spotify-logo">
+                            <i class="ph-fill ph-spotify-logo"></i>
+                            <a href="#">Spotify</a>
+                        </div>
+                        <span class="dot-separator">•</span>
+                        <span class="songs-count">
+                            x songs,
+                            <span class="songs-duration">about x hr</span>
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="controls">
-        <div class="controls-left">
-            <button class="play-button">
-                <i class="ph-fill ph-play-circle"></i>
-            </button>
-            <button class="like-button">
-                <i class="ph ph-heart-straight"></i>
-            </button>
-            <button class="options-button">
-                <i class="ph-fill ph-dots-three-outline"></i>
-            </button>
-        </div>
-        <div class="controls-right">
-            <button class="display-mode-button">
-                <span>List</span>
-                <i class="ph-fill ph-list-dashes"></i>
-            </button>
-        </div>
-    </div>
-    <div class="track-list-header">
-        <div class="track-info">
-            <div class="track-number">#</div>
-            <div class="track-title">Title</div>
-            <div class="track-album">Album</div>
-            <div class="track-duration">
-                <i class="ph ph-clock"></i>
+
+        <div class="controls">
+            <div class="controls-left">
+                <button class="play-button">
+                    <i class="ph-fill ph-play-circle"></i>
+                </button>
+                <button class="like-button">
+                    <i class="ph ph-heart-straight"></i>
+                </button>
+                <button class="options-button">
+                    <i class="ph-fill ph-dots-three-outline"></i>
+                </button>
+            </div>
+            <div class="controls-right">
+                <button class="display-mode-button">
+                    <span>List</span>
+                    <i class="ph-fill ph-list-dashes"></i>
+                </button>
             </div>
         </div>
-    </div>
-    <div class="track-list">
-        @if (Album is not null)
-        {
-            @foreach (var track in Album.Tracks)
+        <div class="track-list-header">
+            <div class="track-info">
+                <div class="track-number">#</div>
+                <div class="track-title">Title</div>
+                <div class="track-album">Album</div>
+                <div class="track-duration">
+                    <i class="ph ph-clock"></i>
+                </div>
+            </div>
+        </div>
+        <div class="track-list">
+            @if (Album is not null)
             {
-                <TrackRow Index="songNumber" Id=@track.Id></TrackRow>
-                songNumber++;
+                @foreach (var track in Album.Tracks)
+                {
+                    <TrackRow Index="songNumber" Id=@track.Id></TrackRow>
+                    songNumber++;
+                }
             }
-        }
+        </div>
     </div>
 </div>
 
