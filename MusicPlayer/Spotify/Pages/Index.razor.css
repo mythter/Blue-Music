@@ -5,7 +5,8 @@
     height: 100%;
     padding-top: 64px;
     box-sizing: border-box;
-    padding-left: 10px;
+    padding-left: 25px;
+    padding-right: 15px;
 }
 
 .tracks-area {
@@ -13,6 +14,7 @@
     display: flex;
     flex-direction: column;
     height: fit-content;
+    width: 100%;
 }
 
     .tracks-area a {
@@ -28,12 +30,22 @@
         }
 
 .albums-area, .playlist-area {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    justify-items: center;
+    grid-gap: 15px;
+    justify-content: center;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    margin-bottom: 15px;
+}
+
+@media (max-width: 720px) {
+    .albums-area {
+        grid-template-columns: repeat(auto-fill, 720px);
+    }
 }
 
 .title{
-    padding-left: 20px;
+    margin-bottom: 15px;
 }
 
 .albums-area {
