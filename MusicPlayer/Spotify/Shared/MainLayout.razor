@@ -46,7 +46,7 @@
     ElementReference Sidebar;
     ElementReference FavouritesPanel;
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         using (PlayerContext db = new PlayerContext())
         {

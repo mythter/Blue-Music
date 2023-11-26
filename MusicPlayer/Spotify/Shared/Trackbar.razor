@@ -136,7 +136,7 @@
     [Parameter]
     public TrackModel? Track { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         if (Track is not null)
         {
@@ -171,8 +171,8 @@
         }
     }
 
-    private async Task SetTrack()
-    {
+    // private async Task SetTrack()
+    // {
         // using (var db = new PlayerContext())
         // {
         //     Track = db.Tracks
@@ -187,10 +187,10 @@
         // {
         //     await jsModule.InvokeVoidAsync("Trackbar.AudioInit", Audio, Slider, PlayButton, CurrentTime, DurationTime, BackwardButton);
         // }
-    }
+    // }
 
-    protected override async Task OnParametersSetAsync()
-    {
-        await SetTrack();
-    }
+    // protected override async Task OnParametersSetAsync()
+    // {
+    //     await SetTrack();
+    // }
 }
