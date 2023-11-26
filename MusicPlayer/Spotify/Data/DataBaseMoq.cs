@@ -7,30 +7,10 @@ namespace Spotify.Data
         public static List<TrackModel> Tracks { get; set; }
         public static List<PlaylistModel> Playlists { get; set; }
 
-        public static List<AuthorModel> Authors { get; set; }
-
         public static List<AlbumModel> Albums { get; set; }
 
         static DataBaseMoq()
         {
-            Authors = new List<AuthorModel>
-            {
-                new AuthorModel()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Dr Manhattan"
-                },
-                new AuthorModel()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Hoobastank"
-                },
-                new AuthorModel()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Foo Fighters"
-                }
-            };
 
             Tracks = new List<TrackModel>()
             {
