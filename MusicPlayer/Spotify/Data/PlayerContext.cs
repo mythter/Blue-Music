@@ -367,7 +367,7 @@ namespace Spotify.Models
             AlbumModel YourTouchAlbum = new()
             {
                 Id = Guid.NewGuid(),
-                ArtistId = QueenArtist.Id,
+                ArtistId = ForeignAirArtist.Id,
                 Image = AlbumCovers.YourTouch,
                 Title = "Your Touch",
                 ReleaseDate = new DateTime(2021, 08, 06),
