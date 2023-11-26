@@ -21,9 +21,11 @@ namespace Spotify.Models
         {
             get
             {
-                int min = TimeSpan.FromSeconds(Duration).Minutes;
-                int sec = TimeSpan.FromSeconds(Duration).Seconds;
-                return   $"{min}:{sec:d2}";
+                return Duration switch
+                {
+                    < 3600 => string.Format("{0:m\\:ss}", TimeSpan.FromSeconds(Duration)),
+                    _ => string.Format("{0:h\\:mm\\:ss}", TimeSpan.FromSeconds(Duration)),
+                };
             }
         }
 
