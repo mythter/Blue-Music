@@ -39,7 +39,7 @@
 
     public List<PlaylistModel>? Playlists { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         using (PlayerContext db = new PlayerContext())
         {
@@ -58,7 +58,7 @@
     }
 
     [JSInvokable]
-    public async Task LoadNext()
+    public void LoadNext()
     {
         Playlists?.Add(new PlaylistModel()
             {
