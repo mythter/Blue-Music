@@ -23,7 +23,9 @@
         </div>
     </div>
     <div class="description-area">
-        <a class="title" href="#">@TrackCollection?.Title</a>
+        <div class="title-area">
+            <a class="title" href="#">@TrackCollection?.Title</a>
+        </div>
         <div class="author-area">
             @if (TrackCollection is AlbumModel)
             {
@@ -31,7 +33,7 @@
             }
             else
             {
-                <span>@AuthorName</span>
+                <sapn class="author">@AuthorName</sapn>
             }
         </div>
     </div>
