@@ -46,10 +46,23 @@
                         <a href="#">Spotify</a>
                     </div>
                     <span class="dot-separator">•</span>
-                    <span class="songs-count">
-                        x songs,
-                        <span class="songs-duration">about x hr</span>
-                    </span>
+                    @if (TrackCount == 1)
+                    {
+                        <span class="songs-count"> @TrackCount song,&nbsp; </span>
+                    }
+                    else if (TrackCount > 1)
+                    {
+                        <span class="songs-count"> @TrackCount songs,&nbsp; </span>
+                    }
+
+                    @if (TotalDurationTime.Hours < 1)
+                    {
+                        <span class="songs-duration"> @TotalDurationTime.ToString("m' min 's' s'")</span>
+                    }
+                    else
+                    {
+                        <span class="songs-duration"> @TotalDurationTime.ToString("h' hr 'm' min'")</span>
+                    }
                 </div>
             </div>
         </div>
@@ -100,6 +113,16 @@
     public List<TrackModel> Tracks { get; set; } = new();
 
     public string? AuthorName { get; set; }
+
+    public TimeSpan TotalDurationTime
+    {
+        get => TimeSpan.FromSeconds(Tracks.Sum(t => t.Duration));
+    }
+
+    public int TrackCount
+    {
+        get => Tracks.Count();
+    }
 
     int songNumber;
 
