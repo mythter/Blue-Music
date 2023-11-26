@@ -4,6 +4,7 @@
 
 .main-area {
     display: flex;
+    flex-direction:column;
     overflow: hidden;
     overflow-y: scroll;
     overflow-x: hidden;

@@ -1,0 +1,13 @@
+﻿<div class="release-publisher-area">
+    <div class="release">
+        @ReleaseDate.Value.ToString("MMMM dd, yyyy", CultureInfo.CreateSpecificCulture("en-US"))
+    </div>
+    <div class="publisher">
+        ℗ @ReleaseDate.Value.ToString("yyyy") Roswell Records, Inc.
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public DateTime? ReleaseDate { get; set; }
+}
