@@ -1,5 +1,5 @@
 ﻿.author-albums-area {
-    margin-top: 50px;
+    margin-top: 48px;
     padding: 0 40px;
 }
 
@@ -35,6 +35,8 @@
             text-decoration: underline;
         }
 
-.albums{
+.albums {
     display: flex;
+    margin-top: 15px;
+    gap: 15px;
 }
