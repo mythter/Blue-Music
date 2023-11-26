@@ -18,8 +18,9 @@
             color: #fff;
         }
 
-        .track-entry:hover i {
+        .track-entry:hover .like-button {
             opacity: 1;
+            color: #B3B3B3;
         }
 
         .track-entry:hover .track-number-index {
@@ -28,6 +29,11 @@
 
         .track-entry:hover .track-number-icon {
             display: block;
+            color: #fff;
+        }
+
+        .track-entry:hover .options {
+            opacity: 1;
         }
 
 
@@ -39,8 +45,9 @@
             color: #fff;
         }
 
-        .track-entry:focus-within i {
+        .track-entry:focus-within .like-button {
             opacity: 1;
+            color: #B3B3B3;
         }
 
         .track-entry:focus-within .track-number-index {
@@ -49,6 +56,7 @@
 
         .track-entry:focus-within .track-number-icon {
             display: block;
+            color: #fff;
         }
 
 .track-number {
@@ -58,7 +66,7 @@
     margin-right: 8px;
     margin-left: 8px;
     align-items: center;
-    color: #ffffff;
+    color: #B3B3B3;
 }
 
     .track-number .track-number-icon {
@@ -93,7 +101,7 @@
         max-width: 100%;
         width: max-content;
         font-size: 16px;
-        color: #ffffff;
+        color: #fff;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -146,13 +154,13 @@
 
 .like-button {
     margin-right: 16px;
-    font-size: 24px;
+    font-size: 20px;
     color: #242e3c;
     opacity: 0;
 }
 
     .like-button:hover {
-        color: #ffffff;
+        color: #fff !important;
         opacity: 1;
         transform: scale(105%);
         cursor: pointer;
@@ -161,19 +169,19 @@
 .track-duration {
     margin-right: 16px;
     font-size: 14px;
-    color: #ffffff;
+    color: #B3B3B3;
 }
 
 .options {
     padding-top: 8px;
     padding-bottom: 8px;
     font-size: 24px;
-    color: #242e3c;
+    color: #fff;
     opacity: 0;
 }
 
     .options:hover {
-        color: #ffffff;
+        transform: scale(105%);
         opacity: 1;
         cursor: pointer;
     }
