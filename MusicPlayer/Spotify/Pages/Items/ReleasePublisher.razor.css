@@ -3,6 +3,9 @@
     padding: 0 40px;
     color: #b3b3b3;
     font-family: DmSans, sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
 }
 
 .release {

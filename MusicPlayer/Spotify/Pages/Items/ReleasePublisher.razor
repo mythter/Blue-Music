@@ -1,9 +1,17 @@
-﻿<div class="release-publisher-area">
+﻿@using System.Globalization
+
+<div class="release-publisher-area">
     <div class="release">
-        @ReleaseDate.Value.ToString("MMMM d, yyyy", CultureInfo.CreateSpecificCulture("en-US"))
+        @if (ReleaseDate is not null)
+        {
+            @ReleaseDate.Value.ToString("MMMM d, yyyy", CultureInfo.CreateSpecificCulture("en-US"))
+        }
     </div>
     <div class="publisher">
-        ℗ @ReleaseDate.Value.ToString("yyyy") Roswell Records, Inc.
+        @if (ReleaseDate is not null)
+        {
+            @($"℗ {ReleaseDate.Value.ToString("yyyy")} Roswell Records, Inc.")
+        }
     </div>
 </div>
 
