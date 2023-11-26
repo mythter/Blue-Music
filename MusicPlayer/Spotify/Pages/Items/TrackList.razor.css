@@ -264,11 +264,13 @@
 }
 
 .track-number {
-    width: max-content;
+    width: 100%;
+    text-align: center;
 }
 
 .track-title {
-    width: max-content;
+    width: 100%;
+    text-align: start;
     /*min-width: 145px;*/
 }
 
