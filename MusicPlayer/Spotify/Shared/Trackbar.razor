@@ -4,34 +4,36 @@
 <div class="trackbar">
     <div class="track-area">
         <div class="track-image">
-            @if (!String.IsNullOrEmpty(Track?.Album.Image))
+            @if (Track is not null)
             {
-                <img src="data:image/png;base64,@Track.Album.Image" />
-            }
-            else
-            {
-                <img src="data:image/png;base64,@AlbumCovers.DefaultCover" />
+                @if (!String.IsNullOrEmpty(Track?.Album.Image))
+                {
+                    <img src="data:image/png;base64,@Track.Album.Image" />
+                }
+                else
+                {
+                    <img src="data:image/png;base64,@AlbumCovers.DefaultCover" />
+                }
             }
         </div>
         <div @ref=Info class="track-info">
             <div class="track-title">
                 <div @ref=Title class="track-title-area">
-                    @*<a href="#">Very Very Very Very Very Very Very Very Very V... Long tetle</a>*@
-                    @* <a href="#">Very Very Very Very Very Very Very Long Title</a> *@
                     <a href="#">@Track?.Title</a>
                 </div>
             </div>
             <div class="track-author">
                 <div @ref=Author class="track-author-area">
-                    @*<a href="#">Very Very Very Very Very Very Very Very Very Vei.... Very Long Author</a>*@
-                    @* <a href="#">Very Very Very Very Very Very Very Very Very Very Very Very Long Author</a> *@
                     <a href="#">@Track?.Album.Artist.Name</a>
                 </div>
             </div>
         </div>
         <div class="track-heart">
             <button class="heart-button button" type="button">
-                <i class="ph-fill ph-heart-straight"></i>
+                @if (Track is not null)
+                {
+                    <i class="ph-fill ph-heart-straight"></i>
+                }
             </button>
         </div>
     </div>
@@ -43,18 +45,24 @@
                     <i class="ph-bold ph-shuffle"></i>
                 </button>
                 <button @ref=BackwardButton class="previous-button button">
-                    <i class="fa-solid fa-backward-step"></i>
+                    <i class="fa-solid fa-backward-step @(Track is null ? "inactive" : "")"></i>
                 </button>
             </div>
 
-            <button @ref=PlayButton class="playpause-button button">
-                <i class="fa-solid fa-circle-play"></i>
-                @*<i class="fa-solid fa-circle-pause"></i>*@
+            <button @ref=PlayButton class="playpause-button button @(Track is null ? "inactive" : "")">
+                @if (Track is not null)
+                {
+                    <i class="fa-solid fa-circle-play"></i>
+                }
+                else
+                {
+                    <i class="fa-solid fa-circle-pause"></i>
+                }
             </button>
 
             <div class="buttons-right-area">
-                <button @ref=ForwardButton class="next-button  button">
-                    <i class="fa-solid fa-forward-step"></i>
+                <button @ref=ForwardButton class="next-button button">
+                    <i class="fa-solid fa-forward-step @(Track is null ? "inactive" : "")"></i>
                 </button>
                 <button class="repeat-button button">
                     <i class="ph-bold ph-repeat"></i>
@@ -114,6 +122,7 @@
 
 @code {
     IJSObjectReference? jsModule;
+
     ElementReference Title;
     ElementReference Author;
     ElementReference Info;
@@ -136,7 +145,7 @@
     [Parameter]
     public TrackModel? Track { get; set; }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         if (Track is not null)
         {
@@ -147,6 +156,14 @@
                          .FirstOrDefault(t => t.Id == Track.Id);
 
             }
+        }
+
+        using (var db = new PlayerContext())
+        {
+            Track = db.Tracks.Include(t => t.Album)
+                     .ThenInclude(a => a.Artist)
+                     .FirstOrDefault();
+
         }
     }
 
@@ -173,20 +190,20 @@
 
     // private async Task SetTrack()
     // {
-        // using (var db = new PlayerContext())
-        // {
-        //     Track = db.Tracks
-        //                 .Include(t => t.Album)
-        //                     .ThenInclude(a => a.Artist)
-        //                 .FirstOrDefault(t => t.Id == Id);
+    // using (var db = new PlayerContext())
+    // {
+    //     Track = db.Tracks
+    //                 .Include(t => t.Album)
+    //                     .ThenInclude(a => a.Artist)
+    //                 .FirstOrDefault(t => t.Id == Id);
 
-        // }
+    // }
 
-        // StateHasChanged();
-        // if (jsModule is not null)
-        // {
-        //     await jsModule.InvokeVoidAsync("Trackbar.AudioInit", Audio, Slider, PlayButton, CurrentTime, DurationTime, BackwardButton);
-        // }
+    // StateHasChanged();
+    // if (jsModule is not null)
+    // {
+    //     await jsModule.InvokeVoidAsync("Trackbar.AudioInit", Audio, Slider, PlayButton, CurrentTime, DurationTime, BackwardButton);
+    // }
     // }
 
     // protected override async Task OnParametersSetAsync()
