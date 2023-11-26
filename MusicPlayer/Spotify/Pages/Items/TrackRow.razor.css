@@ -61,11 +61,8 @@
 
 .track-number {
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: end;
-    margin-right: 8px;
-    margin-left: 8px;
     color: #B3B3B3;
 }
 
@@ -85,6 +82,7 @@
     .album-cover img {
         width: 40px;
         height: 40px;
+        border-radius: 4px;
     }
 
 .album-info {
