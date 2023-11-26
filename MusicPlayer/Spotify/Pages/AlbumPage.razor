@@ -16,7 +16,6 @@
         using (var db = new PlayerContext())
         {
             Album = db.Albums.FirstOrDefault(a => a.Id == Id);
-
         }
     }
 
