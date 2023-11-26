@@ -36,7 +36,7 @@
     min-width: 0px;
 }
 
-    .description-area p {
+    .description-area .title, .description-area .author {
         line-height: 22px;
         margin: 0;
         padding: 0;
@@ -47,7 +47,7 @@
         white-space: nowrap;
     }
 
-    .description-area i {
+    .description-area .pin-icon {
         color: #1e9ed7;
         margin-right: 5px;
         align-self: center;
