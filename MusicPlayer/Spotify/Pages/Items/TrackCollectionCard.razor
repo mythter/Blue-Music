@@ -25,9 +25,13 @@
     <div class="description-area">
         <a class="title" href="#">@TrackCollection?.Title</a>
         <div class="author-area">
-            @if (!String.IsNullOrEmpty(AuthorName))
+            @if (TrackCollection is AlbumModel)
             {
-                <sapn>AuthorName</sapn>
+                <a class="author" href="#">@AuthorName</a>
+            }
+            else
+            {
+                <span>@AuthorName</span>
             }
         </div>
     </div>
