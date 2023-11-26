@@ -2,7 +2,8 @@
 
 <div class="main-area">
     <TrackList TrackCollection="Album"></TrackList>
-    <ReleasePublisher ReleaseDate="@Album.ReleaseDate"></ReleasePublisher>
+    <ReleasePublisher ReleaseDate="@Album?.ReleaseDate"></ReleasePublisher>
+    <AuthorAlbums AlbumId="@Album?.Id"></AuthorAlbums>
 </div>
 
 

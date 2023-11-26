@@ -1,0 +1,40 @@
+﻿.author-albums-area {
+    margin-top: 50px;
+    padding: 0 40px;
+}
+
+.info {
+    display: flex;
+    justify-content: space-between;
+    font-family: DmSans, sans-serif;
+}
+
+.more-by{
+    color: #ffffff;
+    font-size: 24px;
+}
+
+.more-by a{
+    text-decoration: none;
+}
+
+    .more-by a:hover {
+        text-decoration: underline;
+    }
+
+.see-discography {
+    color: #a9a9a9;
+    font-size: 14px;
+}
+
+    .see-discography a {
+        text-decoration: none;
+    }
+
+        .see-discography a:hover {
+            text-decoration: underline;
+        }
+
+.albums{
+    display: flex;
+}

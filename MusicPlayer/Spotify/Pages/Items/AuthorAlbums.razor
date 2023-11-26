@@ -1,0 +1,43 @@
+﻿<div class="author-albums-area">
+    <div class="info">
+        <div class="more-by"><a>More by @AuthorName</a></div>
+        <div class="see-discography"><a>See discography</a></div>
+    </div>
+    <div class="albums">
+        @if (Albums is not null)
+        {
+            @foreach (var album in Albums)
+            {
+                <TrackCollectionCard TrackCollection=album></TrackCollectionCard>
+            }
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Guid? AlbumId { get; set; }
+
+    public string? AuthorName { get; set; }
+
+    public List<AlbumModel>? Albums { get; set; }
+
+    protected override void OnInitialized()
+    {
+        using (var db = new PlayerContext())
+        {
+            var album = db.Albums
+                            .Include(a => a.Artist)
+                            .FirstOrDefault(a => a.Id == AlbumId);
+            if (album is not null)
+            {
+                Albums = db.Albums
+                               .Where(a => a.ArtistId == album.ArtistId)
+                               .Where(a => a.Id != album.Id)
+                               .ToList();
+                AuthorName = album.Artist.Name;
+            }
+        }
+    }
+}
+
