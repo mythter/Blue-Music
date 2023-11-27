@@ -31,28 +31,15 @@
 
 .albums-area, .playlist-area {
     display: grid;
-    justify-items: center;
     grid-gap: 15px;
-    justify-content: center;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    justify-items: center;
+    justify-content: center;
     margin-bottom: 15px;
 }
 
-@media (max-width: 720px) {
-    .albums-area {
-        grid-template-columns: repeat(auto-fill, 720px);
-    }
-}
-
-.title{
+.title {
     margin-bottom: 15px;
-}
-
-.albums-area {
-
-}
-
-.playlist-area {
 }
 
 ::-webkit-scrollbar {
