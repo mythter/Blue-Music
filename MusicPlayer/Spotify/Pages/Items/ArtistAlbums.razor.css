@@ -9,18 +9,18 @@
     font-family: DmSans, sans-serif;
 }
 
-.more-by{
+.more-by {
     color: #ffffff;
     font-size: 24px;
 }
 
-.more-by a{
-    text-decoration: none;
-}
-
-    .more-by a:hover {
-        text-decoration: underline;
+    .more-by a {
+        text-decoration: none;
     }
+
+        .more-by a:hover {
+            text-decoration: underline;
+        }
 
 .see-discography {
     color: #a9a9a9;
@@ -36,7 +36,10 @@
         }
 
 .albums {
-    display: flex;
     margin-top: 15px;
-    gap: 15px;
+    display: grid;
+    grid-gap: 15px;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    justify-items: center;
+    justify-content: center;
 }
