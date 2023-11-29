@@ -23,12 +23,11 @@
                 <div class="type">
                     @if (TrackCollection is AlbumModel)
                     {
-                        <span>Album</span>
-
+                        @("Album")
                     }
                     else if (TrackCollection is PlaylistModel)
                     {
-                        <span>Playlist</span>
+                        @("Playlist")
 
                     }
                 </div>
@@ -38,7 +37,7 @@
                 <div class="authors">
                     @if (!String.IsNullOrEmpty(AuthorName))
                     {
-                        <span>@AuthorName</span>
+                        @($"{AuthorName}")
                     }
                 </div>
                 <div class="duration">
@@ -125,17 +124,17 @@
 
     int songNumber;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        InitializeTrackList();
+        await InitializeTrackListAsync();
     }
 
-    protected override void OnParametersSet()
+    protected override async Task OnParametersSetAsync()
     {
-        InitializeTrackList();
+        await InitializeTrackListAsync();
     }
 
-    private void InitializeTrackList()
+    private async Task InitializeTrackListAsync()
     {
         if (TrackCollection is not null)
         {
@@ -145,10 +144,10 @@
                 if (TrackCollection is AlbumModel)
                 {
 
-                    TrackCollection = db.Albums
+                    TrackCollection = await db.Albums
                                 .Include(a => a.Artist)
                                 .Include(a => a.Tracks)
-                                .FirstOrDefault(a => a.Id == TrackCollection.Id);
+                                .FirstOrDefaultAsync(a => a.Id == TrackCollection.Id);
 
                     if (TrackCollection is not null)
                     {
@@ -158,19 +157,19 @@
                 }
                 else if (TrackCollection is PlaylistModel)
                 {
-                    TrackCollection = db.Playlists
+                    TrackCollection = await db.Playlists
                                 .Include(p => p.User)
                                 .Include(p => p.PlaylistTrack)
                                     .ThenInclude(pt => pt.Track)
-                                .FirstOrDefault(p => p.Id == TrackCollection.Id);
+                                .FirstOrDefaultAsync(p => p.Id == TrackCollection.Id);
 
                     if (TrackCollection is not null)
                     {
-                        Tracks = (from t in db.Tracks
-                                  from pt in db.PlaylistTracks
-                                  where t.Id == pt.TrackId
-                                  where pt.PlaylistId == TrackCollection.Id
-                                  select t).ToList();
+                        Tracks = await (from t in db.Tracks
+                                        from pt in db.PlaylistTracks
+                                        where t.Id == pt.TrackId
+                                        where pt.PlaylistId == TrackCollection.Id
+                                        select t).ToListAsync();
 
                         AuthorName = ((PlaylistModel)TrackCollection).User.Name;
                     }

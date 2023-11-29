@@ -22,46 +22,33 @@
 
     public List<AlbumModel> Albums { get; set; } = new();
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        using (var db = new PlayerContext())
-        {
-            var album = db.Albums
-                            .Include(a => a.Artist)
-                            .FirstOrDefault(a => a.Id == AlbumId);
-            if (album is not null)
-            {
-                Albums = db.Albums
-                               .Where(a => a.ArtistId == album.ArtistId)
-                               .Where(a => a.Id != album.Id)
-                               .ToList();
-                AuthorName = album.Artist.Name;
-            }
-        }
+        await InitializeAlbumsAsync();
     }
 
-    protected override void OnParametersSet()
+    protected override async Task OnParametersSetAsync()
     {
-        InitializeAlbums();
-    }
-
-    private void InitializeAlbums()
-    {
-        using (var db = new PlayerContext())
-        {
-            var album = db.Albums
-                            .Include(a => a.Artist)
-                            .FirstOrDefault(a => a.Id == AlbumId);
-            if (album is not null)
-            {
-                Albums = db.Albums
-                               .Where(a => a.ArtistId == album.ArtistId)
-                               .Where(a => a.Id != album.Id)
-                               .ToList();
-                AuthorName = album.Artist.Name;
-            }
-        }
+        await InitializeAlbumsAsync();
         StateHasChanged();
+    }
+
+    private async Task InitializeAlbumsAsync()
+    {
+        using (var db = new PlayerContext())
+        {
+            var album = await db.Albums
+                            .Include(a => a.Artist)
+                            .FirstOrDefaultAsync(a => a.Id == AlbumId);
+            if (album is not null)
+            {
+                Albums = await db.Albums
+                               .Where(a => a.ArtistId == album.ArtistId)
+                               .Where(a => a.Id != album.Id)
+                               .ToListAsync();
+                AuthorName = album.Artist.Name;
+            }
+        }
     }
 }
 

@@ -33,16 +33,16 @@
 
     public string? UserName { get; set; }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         if (Playlist is not null)
         {
             using (var db = new PlayerContext())
             {
 
-                Playlist = db.Playlists
+                Playlist = await db.Playlists
                             .Include(p => p.User)
-                            .FirstOrDefault(p => p.Id == Playlist.Id);
+                            .FirstOrDefaultAsync(p => p.Id == Playlist.Id);
 
                 if (Playlist is not null)
                 {

@@ -46,11 +46,11 @@
     ElementReference Sidebar;
     ElementReference FavouritesPanel;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         using (PlayerContext db = new PlayerContext())
         {
-            Playlists = db.Playlists.ToList();
+            Playlists = await db.Playlists.ToListAsync();
         }
     }
 

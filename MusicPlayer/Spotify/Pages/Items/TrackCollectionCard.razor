@@ -48,17 +48,17 @@
 
     public string? AuthorName { get; set; }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         using (var db = new PlayerContext())
         {
             if (TrackCollection is PlaylistModel)
             {
-                TrackCollection = db.Playlists
+                TrackCollection = await db.Playlists
                         .Include(p => p.User)
                         .Include(p => p.PlaylistTrack)
                             .ThenInclude(pt => pt.Track)
-                        .FirstOrDefault(p => p.Id == TrackCollection.Id);
+                        .FirstOrDefaultAsync(p => p.Id == TrackCollection.Id);
 
                 if (TrackCollection is not null)
                 {
@@ -67,10 +67,10 @@
             }
             else if (TrackCollection is AlbumModel)
             {
-                TrackCollection = db.Albums
+                TrackCollection = await db.Albums
                        .Include(a => a.Artist)
                        .Include(a => a.Tracks)
-                       .FirstOrDefault(a => a.Id == TrackCollection.Id);
+                       .FirstOrDefaultAsync(a => a.Id == TrackCollection.Id);
 
                 if (TrackCollection is not null)
                 {

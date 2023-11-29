@@ -48,32 +48,26 @@
 
     public TrackModel? Track { get; set; }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        using (var db = new PlayerContext())
-        {
-            Track = db.Tracks
-                 .Include(t => t.Album)
-                     .ThenInclude(a => a.Artist)
-                 .FirstOrDefault(t => t.Id == Id);
-        }
+        await InitializeTrackAsync();
     }
 
-    protected override void OnParametersSet()
+    protected override async Task OnParametersSetAsync()
     {
-        InitializeTrack();
-    }
-
-    private void InitializeTrack()
-    {
-        using (var db = new PlayerContext())
-        {
-            Track = db.Tracks
-                 .Include(t => t.Album)
-                     .ThenInclude(a => a.Artist)
-                 .FirstOrDefault(t => t.Id == Id);
-        }
+        await InitializeTrackAsync();
         StateHasChanged();
+    }
+
+    private async Task InitializeTrackAsync()
+    {
+        using (var db = new PlayerContext())
+        {
+            Track = await db.Tracks
+                 .Include(t => t.Album)
+                     .ThenInclude(a => a.Artist)
+                 .FirstOrDefaultAsync(t => t.Id == Id);
+        }
     }
 
     void PlayTrack()
