@@ -1,5 +1,5 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
+using Spotify.Interfaces;
+using Spotify.Services;
 
 namespace Spotify
 {
@@ -12,6 +12,8 @@ namespace Spotify
             // Add services to the container.
             builder.Services.AddRazorPages();
             builder.Services.AddServerSideBlazor();
+
+            builder.Services.AddScoped<IPlayerService, PlayerService>();
 
             var app = builder.Build();
 
