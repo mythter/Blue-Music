@@ -1,5 +1,4 @@
-﻿@using Spotify.Data.Images
-@using Humanizer
+﻿@using Humanizer
 
 <div class="page-wrapper">
     <div class="info-container">
@@ -96,10 +95,11 @@
         </div>
     </div>
     <div class="track-list">
+        @(SongNumber = 1)
         @foreach (var track in Tracks)
         {
-            <TrackRow Index="songNumber" Id=@track.Id></TrackRow>
-            songNumber++;
+            <TrackRow Index="SongNumber" Id=@track.Id></TrackRow>
+            SongNumber++;
         }
     </div>
 </div>
@@ -122,32 +122,31 @@
         get => Tracks.Count();
     }
 
-    int songNumber;
+    int SongNumber { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        await InitializeTrackListAsync();
+        InitializeTrackList();
     }
 
-    protected override async Task OnParametersSetAsync()
+    protected override void OnParametersSet()
     {
-        await InitializeTrackListAsync();
+        InitializeTrackList();
     }
 
-    private async Task InitializeTrackListAsync()
+    private void InitializeTrackList()
     {
         if (TrackCollection is not null)
         {
-            songNumber = 1;
             using (var db = new PlayerContext())
             {
                 if (TrackCollection is AlbumModel)
                 {
 
-                    TrackCollection = await db.Albums
+                    TrackCollection = db.Albums
                                 .Include(a => a.Artist)
                                 .Include(a => a.Tracks)
-                                .FirstOrDefaultAsync(a => a.Id == TrackCollection.Id);
+                                .FirstOrDefault(a => a.Id == TrackCollection.Id);
 
                     if (TrackCollection is not null)
                     {
@@ -157,19 +156,19 @@
                 }
                 else if (TrackCollection is PlaylistModel)
                 {
-                    TrackCollection = await db.Playlists
+                    TrackCollection = db.Playlists
                                 .Include(p => p.User)
                                 .Include(p => p.PlaylistTrack)
                                     .ThenInclude(pt => pt.Track)
-                                .FirstOrDefaultAsync(p => p.Id == TrackCollection.Id);
+                                .FirstOrDefault(p => p.Id == TrackCollection.Id);
 
                     if (TrackCollection is not null)
                     {
-                        Tracks = await (from t in db.Tracks
-                                        from pt in db.PlaylistTracks
-                                        where t.Id == pt.TrackId
-                                        where pt.PlaylistId == TrackCollection.Id
-                                        select t).ToListAsync();
+                        Tracks = (from t in db.Tracks
+                                  from pt in db.PlaylistTracks
+                                  where t.Id == pt.TrackId
+                                  where pt.PlaylistId == TrackCollection.Id
+                                  select t).ToList();
 
                         AuthorName = ((PlaylistModel)TrackCollection).User.Name;
                     }
