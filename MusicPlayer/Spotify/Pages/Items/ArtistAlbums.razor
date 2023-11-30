@@ -22,30 +22,30 @@
 
     public List<AlbumModel> Albums { get; set; } = new();
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        await InitializeAlbumsAsync();
+        InitializeAlbums();
     }
 
-    protected override async Task OnParametersSetAsync()
+    protected override void OnParametersSet()
     {
-        await InitializeAlbumsAsync();
+        InitializeAlbums();
         StateHasChanged();
     }
 
-    private async Task InitializeAlbumsAsync()
+    private void InitializeAlbums()
     {
         using (var db = new PlayerContext())
         {
-            var album = await db.Albums
+            var album = db.Albums
                             .Include(a => a.Artist)
-                            .FirstOrDefaultAsync(a => a.Id == AlbumId);
+                            .FirstOrDefault(a => a.Id == AlbumId);
             if (album is not null)
             {
-                Albums = await db.Albums
+                Albums = db.Albums
                                .Where(a => a.ArtistId == album.ArtistId)
                                .Where(a => a.Id != album.Id)
-                               .ToListAsync();
+                               .ToList();
                 AuthorName = album.Artist.Name;
             }
         }
