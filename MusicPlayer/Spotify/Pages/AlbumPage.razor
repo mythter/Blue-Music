@@ -13,21 +13,21 @@
 
     public AlbumModel? Album { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        await InitializePlaylistAsync();
+        InitializePlaylist();
     }
 
-    protected override async Task OnParametersSetAsync()
+    protected override void OnParametersSet()
     {
-        await InitializePlaylistAsync();
+        InitializePlaylist();
     }
 
-    private async Task InitializePlaylistAsync()
+    private void InitializePlaylist()
     {
         using (var db = new PlayerContext())
         {
-            Album = await db.Albums.FirstOrDefaultAsync(a => a.Id == Id);
+            Album = db.Albums.FirstOrDefault(a => a.Id == Id);
         }
     }
 }
