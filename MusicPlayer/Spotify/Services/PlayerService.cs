@@ -3,33 +3,60 @@ using Spotify.Interfaces;
 
 namespace Spotify.Services
 {
-    public delegate Task PlayerEventHandler(object sender, PlayEventArgs e);
+    public delegate Task StartEventHandler(object sender, StartTrackEventArgs e);
+
+    public delegate void PlayPauseEventHandler(object sender, PlayPauseTrackEventArgs e);
 
     public class PlayerService : IPlayerService
     {
-        public event PlayerEventHandler? PlayTrack;
+        public event PlayPauseEventHandler? PlayTrack;
 
-        public event PlayerEventHandler? PauseTrack;
+        public event PlayPauseEventHandler? PauseTrack;
 
-        public event PlayerEventHandler? TrackPaused;
+        public event PlayPauseEventHandler? TrackPaused;
 
-        public event PlayerEventHandler? StartPlayingTrack;
+        public event PlayPauseEventHandler? TrackPlaying;
 
-        public void StartTrack(ITrackStorable? trackCollection, int trackIndex)
+        public event StartEventHandler? StartTrack;
+
+        public event PlayPauseEventHandler? TrackChanged;
+
+        public void Start(ITrackStorable? trackCollection, int trackIndex)
         {
-            var args = new PlayEventArgs(trackCollection, trackIndex);
-            StartPlayingTrack?.Invoke(this, args);
+            var args = new StartTrackEventArgs(trackCollection, trackIndex);
+            StartTrack?.Invoke(this, args);
         }
 
-        public void Pause()
+        public void Pause(Guid collectionId, Guid trackId)
         {
-            PauseTrack?.Invoke(this, PlayEventArgs.Empty);
-            TrackPaused?.Invoke(this, PlayEventArgs.Empty);
+            var args = new PlayPauseTrackEventArgs(collectionId, collectionId);
+            PauseTrack?.Invoke(this, args);
+            TrackPaused?.Invoke(this, args);
         }
 
-        public void Play()
+        public void Play(Guid collectionId, Guid trackId)
         {
-            PlayTrack?.Invoke(this, PlayEventArgs.Empty);
+            var args = new PlayPauseTrackEventArgs(collectionId, collectionId);
+            PlayTrack?.Invoke(this, args);
+            TrackPlaying?.Invoke(this, args);
+        }
+
+        public void Paused(Guid collectionId, Guid trackId)
+        {
+            var args = new PlayPauseTrackEventArgs(collectionId, trackId);
+            TrackPaused?.Invoke(this, args);
+        }
+
+        public void Playing(Guid collectionId, Guid trackId)
+        {
+            var args = new PlayPauseTrackEventArgs(collectionId, trackId);
+            TrackPlaying?.Invoke(this, args);
+        }
+
+        public void Changed(Guid collectionId, Guid trackId)
+        {
+            var args = new PlayPauseTrackEventArgs(collectionId, trackId);
+            TrackChanged?.Invoke(this, args);
         }
     }
 }

@@ -1,20 +1,31 @@
-﻿using Spotify.Enums;
-using Spotify.Services;
+﻿using Spotify.Services;
 
 namespace Spotify.Interfaces
 {
     public interface IPlayerService
     {
-        event PlayerEventHandler? StartPlayingTrack;
+        event StartEventHandler? StartTrack;
 
-        event PlayerEventHandler? PlayTrack;
+        event PlayPauseEventHandler? PlayTrack;
 
-        event PlayerEventHandler? PauseTrack;
+        event PlayPauseEventHandler? PauseTrack;
 
-        void StartTrack(ITrackStorable? trackCollection, int trackIndex);
+        event PlayPauseEventHandler? TrackPaused;
 
-        void Play();
+        event PlayPauseEventHandler? TrackPlaying;
 
-        void Pause();
+        event PlayPauseEventHandler? TrackChanged;
+
+        void Start(ITrackStorable? trackCollection, int trackIndex);
+
+        void Play(Guid collectionId, Guid trackId);
+
+        void Pause(Guid collectionId, Guid trackId);
+
+        public void Playing(Guid collectionId, Guid trackId);
+
+        public void Paused(Guid collectionId, Guid trackId);
+
+        public void Changed(Guid collectionId, Guid trackId);
     }
 }
