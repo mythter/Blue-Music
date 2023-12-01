@@ -606,7 +606,7 @@ namespace Spotify.Models
                 AlbumId = BadAlbum.Id,
                 Title = "Bad",
                 Duration = 247,
-                Source = @"assets/audio/Bad.mp3",
+                Source = @"assets/audio/Bad - 2012 Remaster.mp3",
             };
 
             TrackModel BeatItTrack = new()
@@ -633,7 +633,7 @@ namespace Spotify.Models
                 AlbumId = BadAlbum.Id,
                 Title = "Dirty Diana",
                 Duration = 281,
-                Source = @"assets/audio/Dirty Diana.mp3",
+                Source = @"assets/audio/Dirty Diana - 2012 Remaster.mp3",
             };
 
             TrackModel BloodOnTheDanceFloorTrack = new()
@@ -687,7 +687,7 @@ namespace Spotify.Models
                 AlbumId = BadAlbum.Id,
                 Title = "Smooth Criminal",
                 Duration = 258,
-                Source = @"assets/audio/Smooth Criminal.mp3",
+                Source = @"assets/audio/Smooth Criminal - 2012 Remaster.mp3",
             };
 
             TrackModel SuperflySisterTrack = new()
@@ -768,7 +768,7 @@ namespace Spotify.Models
                 AlbumId = LedZeppelinIIIAlbum.Id,
                 Title = "Immigrant Song",
                 Duration = 146,
-                Source = @"assets/audio/Immigrant Song.mp3",
+                Source = @"assets/audio/Immigrant Song - Remaster.mp3",
             };
 
             TrackModel LonelyBoyTrack = new()
@@ -786,7 +786,7 @@ namespace Spotify.Models
                 AlbumId = TheDivisionBellAlbum.Id,
                 Title = "Marooned",
                 Duration = 330,
-                Source = @"assets/audio/Marooned.mp3",
+                Source = @"assets/audio/Marooned - 2011 Remaster.mp3",
             };
 
             TrackModel MoneyTrack = new()
@@ -795,7 +795,7 @@ namespace Spotify.Models
                 AlbumId = TheDarkSideOfTheMoonAlbum.Id,
                 Title = "Money",
                 Duration = 383,
-                Source = @"assets/audio/Money.mp3",
+                Source = @"assets/audio/Money - 2011 Remastered Version.mp3",
             };
 
             TrackModel TightenUpTrack = new()
@@ -813,7 +813,7 @@ namespace Spotify.Models
                 AlbumId = NewsOfTheWorldAlbum.Id,
                 Title = "We Will Rock You",
                 Duration = 122,
-                Source = @"assets/audio/We Will Rock You.mp3",
+                Source = @"assets/audio/We Will Rock You - Remastered 2011.mp3",
             };
 
             // =============================================================================================
