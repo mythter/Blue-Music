@@ -1,24 +1,35 @@
 ﻿using Spotify.Data;
 using Spotify.Interfaces;
-using Spotify.Models;
 
 namespace Spotify.Services
 {
+    public delegate Task PlayerEventHandler(object sender, PlayEventArgs e);
+
     public class PlayerService : IPlayerService
     {
-        public event EventHandler<PlayEventArgs>? PlayTrack;
+        public event PlayerEventHandler? PlayTrack;
 
-        public event EventHandler? PauseTrack;
+        public event PlayerEventHandler? PauseTrack;
 
-        public void Play(List<TrackModel> trackList, int trackIndex)
+        public event PlayerEventHandler? TrackPaused;
+
+        public event PlayerEventHandler? StartPlayingTrack;
+
+        public void StartTrack(ITrackStorable? trackCollection, int trackIndex)
         {
-            var args = new PlayEventArgs(trackList, trackIndex);
-            PlayTrack?.Invoke(this, args);
+            var args = new PlayEventArgs(trackCollection, trackIndex);
+            StartPlayingTrack?.Invoke(this, args);
         }
 
         public void Pause()
         {
-            PauseTrack?.Invoke(this, EventArgs.Empty);
+            PauseTrack?.Invoke(this, PlayEventArgs.Empty);
+            TrackPaused?.Invoke(this, PlayEventArgs.Empty);
+        }
+
+        public void Play()
+        {
+            PlayTrack?.Invoke(this, PlayEventArgs.Empty);
         }
     }
 }
