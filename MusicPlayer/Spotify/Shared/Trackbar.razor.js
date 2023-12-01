@@ -370,74 +370,40 @@
         }
     }
 
-    static AudioInit(audio, slider, playBtn, currentTime, durationTime, backBtn) {
+    static AudioInit(dotNet, audio, slider, playBtn, currentTime, durationTime, backBtn) {
         let raf = null;
-        let playState = 'pause';
 
         playBtn.addEventListener('click', () => {
 
-            if (!audioValid())
+            if (!isAudioValid())
                 return;
 
             // if audio valid do common logic
-            if (playState === 'pause') {
+            if (audio.paused) {
                 audio.play();
-                playBtn.innerHTML = '<i class="fa-solid fa-circle-pause"></i>';
-                requestAnimationFrame(whilePlaying);
-                playState = 'play';
             } else {
                 audio.pause();
-                playBtn.innerHTML = '<i class="fa-solid fa-circle-play"></i>';
-                cancelAnimationFrame(raf);
-                playState = 'pause';
             }
         });
 
         backBtn.addEventListener('click', () => {
 
-            if (!audioValid())
+            if (!isAudioValid())
                 return;
 
             if (audio.currentTime > 3) {
-                audio.currentTime = 0;
-                slider.value = audio.currentTime;
-                currentTime.textContent = calculateTime(slider.value);
-                setSliderPosition();
+                this.setTrackToStart(audio, slider, currentTime);
             } else {
-                // TODO: back to previous track
+                dotNet.invokeMethodAsync("PlayPrevious");
             }
         });
 
         const calculateTime = (secs) => {
-            const minutes = Math.floor(secs / 60);
-            const seconds = Math.floor(secs % 60);
-            const returnedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
-            return `${minutes}:${returnedSeconds}`;
+            return this.calculateTime(secs);
         }
 
         const setSliderPosition = () => {
-
-            let url = "url(" +
-                "\x22data:image/svg+xml,<svg xmlns='http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg' width='100%' height='8'><defs><linearGradient id='blue-grad'><stop stop-color='%231e9ed7' offset='0%'/><stop stop-color='white' offset='100%'/></linearGradient></defs><rect x='0' y='0' width='" +
-                slider.value * 100 / slider.max + "%" +
-                "' height='8' rx='4' fill='url(%23blue-grad)'/></svg>\x22" +
-                "), url(" +
-                "\x22data:image/svg+xml,<svg xmlns='http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg' width='100%' height='8'><rect x='0' y='0' width='100%' height='8' rx='4' fill='%234d4c4d'/></svg>\x22" +
-                ")";
-
-            slider.style.backgroundImage = url;
-            if (slider.value == slider.max) {
-
-                audio.currentTime = 0;
-                audio.pause();
-                playBtn.innerHTML = '<i class="fa-solid fa-circle-play"></i>';
-                cancelAnimationFrame(raf);
-                playState = 'pause';
-
-                slider.value = audio.currentTime;
-                currentTime.textContent = calculateTime(slider.value);
-                setSliderPosition();
-            }
+            this.setSliderPosition(slider);
         }
 
         const displayDuration = () => {
@@ -455,24 +421,51 @@
             setSliderPosition();
         }
 
-        const audioValid = () => {
+        const isAudioValid = () => {
             return audio.getAttribute("src") != null;
         }
 
-        if (audio.readyState > 0) {
-            currentTime.textContent = '0:00'
+        const setStartPosition = () => {
+            audio.currentTime = 0;
+            audio.pause();
+
+            slider.value = audio.currentTime;
+            currentTime.textContent = calculateTime(slider.value);
+            setSliderPosition();
+        }
+
+        audio.addEventListener('loadedmetadata', () => {
+            if (audio.readyState > 0) {
+                currentTime.textContent = '0:00'
+                slider.value = 0;
+                setSliderPosition();
+
+                if (audio.paused) {
+                    audio.play();
+                }
+            }
             displayDuration();
             setSliderMax();
-        } else {
-            audio.addEventListener('loadedmetadata', () => {
-                displayDuration();
-                setSliderMax();
-            });
-        }
+        });
+
+        audio.addEventListener('ended', () => {
+            setStartPosition();
+            dotNet.invokeMethodAsync("PlayNext");
+        });
+
+        audio.addEventListener('pause', () => {
+            playBtn.innerHTML = '<i class="fa-solid fa-circle-play"></i>';
+            cancelAnimationFrame(raf);
+        });
+
+        audio.addEventListener('play', () => {
+            playBtn.innerHTML = '<i class="fa-solid fa-circle-pause"></i>';
+            requestAnimationFrame(whilePlaying);
+        });
 
         slider.addEventListener('input', () => {
 
-            if (!audioValid())
+            if (!isAudioValid())
                 return;
 
             currentTime.textContent = calculateTime(slider.value);
@@ -483,7 +476,7 @@
 
         slider.addEventListener('change', () => {
 
-            if (!audioValid())
+            if (!isAudioValid())
                 return;
 
             audio.currentTime = slider.value;
@@ -491,5 +484,70 @@
                 requestAnimationFrame(whilePlaying);
             }
         });
+
+        let keyPressed = false;
+        document.body.addEventListener('keydown', (e) => {
+            if (e.code == "Space" && !keyPressed) {
+                if (!audio.paused) {
+                    audio.pause();
+                }
+                else {
+                    audio.play();
+                }
+            }
+            keyPressed = true;
+        })
+
+        document.body.addEventListener('keyup', () => {
+            keyPressed = false;
+        })
+    }
+
+    static Pause(audio) {
+        if (!audio.paused) {
+            audio.pause();
+        }
+    }
+
+    static Play(audio) {
+        if (audio.paused) {
+            audio.play();
+
+        }
+    }
+
+    static PlayPause(audio) {
+        if (!audio.paused) {
+            audio.pause();
+        }
+        else {
+            audio.play();
+        }
+    }
+
+    static setSliderPosition(slider) {
+        let url = "url(" +
+            "\x22data:image/svg+xml,<svg xmlns='http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg' width='100%' height='8'><defs><linearGradient id='blue-grad'><stop stop-color='%231e9ed7' offset='0%'/><stop stop-color='white' offset='100%'/></linearGradient></defs><rect x='0' y='0' width='" +
+            slider.value * 100 / slider.max + "%" +
+            "' height='8' rx='4' fill='url(%23blue-grad)'/></svg>\x22" +
+            "), url(" +
+            "\x22data:image/svg+xml,<svg xmlns='http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg' width='100%' height='8'><rect x='0' y='0' width='100%' height='8' rx='4' fill='%234d4c4d'/></svg>\x22" +
+            ")";
+
+        slider.style.backgroundImage = url;
+    }
+
+    static setTrackToStart(audio, slider, currentTime) {
+        audio.currentTime = 0;
+        slider.value = audio.currentTime;
+        currentTime.textContent = this.calculateTime(slider.value);
+        this.setSliderPosition(slider);
+    }
+
+    static calculateTime(secs) {
+        const minutes = Math.floor(secs / 60);
+        const seconds = Math.floor(secs % 60);
+        const returnedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
+        return `${minutes}:${returnedSeconds}`;
     }
 }
