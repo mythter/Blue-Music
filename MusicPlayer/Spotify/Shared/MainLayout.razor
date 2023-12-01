@@ -4,38 +4,37 @@
 
 <PageTitle>Main Title</PageTitle>
 
-<div class="page">
+    <div class="page">
+        <div class="page-area">
+            <div @ref=Sidebar class="sidebar-area">
+                <div class="menu-area">
+                    <Menu></Menu>
+                </div>
 
-    <div class="page-area">
-        <div @ref=Sidebar class="sidebar-area">
-            <div class="menu-area">
-                <Menu></Menu>
-            </div>
-
-            <div @ref=FavouritesPanel class="favorites-area">
-                @if (Playlists is not null)
-                {
-                    @foreach (var pl in Playlists)
+                <div @ref=FavouritesPanel class="favorites-area">
+                    @if (Playlists is not null)
                     {
-                        <SidePlaylist Playlist="pl"></SidePlaylist>
+                        @foreach (var pl in Playlists)
+                        {
+                            <SidePlaylist Playlist="pl"></SidePlaylist>
+                        }
                     }
-                }
+                </div>
             </div>
+
+            <div @ref=Resizer class="resizer"></div>
+
+            <div class="main-area">
+                <Topbar></Topbar>
+                @Body
+            </div>
+
         </div>
 
-        <div @ref=Resizer class="resizer"></div>
-
-        <div class="main-area">
-            <Topbar></Topbar>
-            @Body
+        <div class="trackbar-area">
+            <Trackbar></Trackbar>
         </div>
-
     </div>
-
-    <div class="trackbar-area">
-        <Trackbar></Trackbar>
-    </div>
-</div>
 
 @code
 {
