@@ -70,7 +70,14 @@
     <div class="controls">
         <div class="controls-left">
             <button class="play-button">
-                <i class="ph-fill ph-play-circle"></i>
+                @if (IsPlaying)
+                {
+                    <i class="ph-fill ph-pause-circle"></i>
+                }
+                else
+                {
+                    <i class="ph-fill ph-play-circle"></i>
+                }
             </button>
             <button class="like-button">
                 <i class="ph ph-heart-straight"></i>
@@ -102,7 +109,7 @@
         }
         @foreach (var track in Tracks)
         {
-            <TrackRow Index="songNumber" Id="@track.Id" CollectionId="@CollectionId" OnDoubleClickCallback="@Play"></TrackRow>
+            <TrackRow Index="songNumber" TrackId="@track.Id" Collection="@TrackCollection"></TrackRow>
             songNumber++;
         }
     </div>
@@ -114,11 +121,13 @@
     [Parameter]
     public ITrackStorable? TrackCollection { get; set; }
 
-    public Guid CollectionId { get; set; }
+    Guid CollectionId { get; set; }
 
-    public List<TrackModel> Tracks { get; set; } = new();
+    List<TrackModel> Tracks { get; set; } = new();
 
-    public string? AuthorName { get; set; }
+    string? AuthorName { get; set; }
+
+    bool IsPlaying { get; set; }
 
     public TimeSpan TotalDurationTime
     {
@@ -130,14 +139,33 @@
         get => Tracks.Count();
     }
 
-    public void Play(int index)
-    {
-        playerService.StartTrack(TrackCollection, index);
-    }
+    [CascadingParameter(Name = "Collection")]
+    public Guid CurrentPlayingCollectionId { get; set; }
+
+    [CascadingParameter(Name = "IsPaused")]
+    public bool IsPaused { get; set; }
+
+    // public void Play(int index)
+    // {
+    //     playerService.Start(TrackCollection, index);
+    // }
 
     protected override void OnInitialized()
     {
         InitializeTrackList();
+
+        playerService.TrackPaused += OnTrackPaused;
+        playerService.TrackPlaying += OnTrackPlaying;
+        playerService.TrackChanged += OnTrackChanged;
+
+        if (CollectionId == CurrentPlayingCollectionId && !IsPaused)
+        {
+            IsPlaying = true;
+        }
+        else
+        {
+            IsPlaying = false;
+        }
     }
 
     protected override void OnParametersSet()
@@ -205,5 +233,37 @@
                 }
             }
         }
+    }
+
+    public void OnTrackPaused(object sender, PlayPauseTrackEventArgs e)
+    {
+
+        if (CollectionId == e.TrackCollection.Id)
+        {
+            IsPlaying = false;
+        }
+        StateHasChanged();
+    }
+
+    public void OnTrackPlaying(object sender, PlayPauseTrackEventArgs e)
+    {
+        if (CollectionId == e.TrackCollection.Id)
+        {
+            IsPlaying = true;
+        }
+        StateHasChanged();
+    }
+
+    public void OnTrackChanged(object sender, PlayPauseTrackEventArgs e)
+    {
+        if (CollectionId == e.TrackCollection.Id)
+        {
+            IsPlaying = true;
+        }
+        else
+        {
+            IsPlaying = false;
+        }
+        StateHasChanged();
     }
 }

@@ -1,4 +1,6 @@
-﻿<div class="track-entry" tabindex="-1" @ondblclick="@(async() => await OnDoubleClickCallback.InvokeAsync(Index - 1))">
+﻿@inject IPlayerService playerService;
+
+<div class="track-entry" tabindex="-1" @ondblclick="@PlayTrack">
     <div class="track-number">
         <div class="track-number-index">
             @if (IsPlaying)
@@ -11,7 +13,14 @@
             }
         </div>
         <div class="track-number-icon">
-            <i class="fa-solid fa-play"></i>
+            @if (IsPlaying)
+            {
+                <i class="fa-solid fa-pause" @onclick="@PauseTrack"></i>
+            }
+            else
+            {
+                <i class="fa-solid fa-play" @onclick="@PlayTrack"></i>
+            }
         </div>
     </div>
     <div class="album-cover-info">
@@ -51,25 +60,55 @@
     public int Index { get; set; }
 
     [Parameter]
-    public Guid Id { get; set; }
+    public Guid TrackId { get; set; }
 
     [Parameter]
-    public Guid CollectionId { get; set; }
+    public ITrackStorable? Collection { get; set; }
 
-    [Parameter]
-    public EventCallback<int> OnDoubleClickCallback { get; set; }
+    // [Parameter]
+    // public EventCallback<int> OnDoubleClickCallback { get; set; }
 
     public bool IsPlaying { get; set; }
 
     public TrackModel? Track { get; set; }
 
+    public Guid CollectionId { get; set; }
+
+    [CascadingParameter(Name = "Track")]
+    public Guid CurrentPlayingTrackId { get; set; }
+
+    [CascadingParameter(Name = "Collection")]
+    public Guid CurrentPlayingCollectionId { get; set; }
+
+    [CascadingParameter(Name = "IsPaused")]
+    public bool IsPaused { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
+
+        playerService.TrackPaused += OnTrackPaused;
+        playerService.TrackPlaying += OnTrackPlaying;
+        playerService.TrackChanged += OnTrackChanged;
+
         await InitializeTrackAsync();
+
+        // if (CollectionId == CurrentPlayingCollectionId && TrackId == CurrentPlayingTrackId && !IsPaused)
+        // {
+        //     IsPlaying = true;
+        // }
+        // else
+        // {
+        //     IsPlaying = false;
+        // }
     }
 
     protected override async Task OnParametersSetAsync()
     {
+        if (Collection is not null)
+        {
+            CollectionId = Collection.Id;
+        }
+
         await InitializeTrackAsync();
     }
 
@@ -80,7 +119,69 @@
             Track = await db.Tracks
                  .Include(t => t.Album)
                      .ThenInclude(a => a.Artist)
-                 .FirstOrDefaultAsync(t => t.Id == Id);
+                 .FirstOrDefaultAsync(t => t.Id == TrackId);
         }
+
+        if (CollectionId == CurrentPlayingCollectionId && TrackId == CurrentPlayingTrackId && !IsPaused)
+        {
+            IsPlaying = true;
+        }
+        // else
+        // {
+        //     IsPlaying = false;
+        // }
+        StateHasChanged();
+    }
+
+    public void PlayTrack()
+    {
+        if (Collection is not null)
+        {
+            playerService.Play(Collection, TrackId);
+        }
+    }
+
+    public void PauseTrack()
+    {
+        if (Collection is not null)
+        {
+            playerService.Pause(Collection, TrackId);
+        }
+    }
+
+    public void OnTrackPaused(object sender, PlayPauseTrackEventArgs e)
+    {
+
+        if (CollectionId == e.TrackCollection.Id && TrackId == e.TrackId)
+        {
+            IsPlaying = false;
+        }
+        StateHasChanged();
+    }
+
+    public void OnTrackPlaying(object sender, PlayPauseTrackEventArgs e)
+    {
+        if (CollectionId == e.TrackCollection.Id && TrackId == e.TrackId)
+        {
+            IsPlaying = true;
+        }
+        // else
+        // {
+        //     IsPlaying = false;
+        // }
+        StateHasChanged();
+    }
+
+    public void OnTrackChanged(object sender, PlayPauseTrackEventArgs e)
+    {
+        if (CollectionId == e.TrackCollection.Id && TrackId == e.TrackId)
+        {
+            IsPlaying = true;
+        }
+        else
+        {
+            IsPlaying = false;
+        }
+        StateHasChanged();
     }
 }
