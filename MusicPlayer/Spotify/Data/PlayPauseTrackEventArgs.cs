@@ -1,4 +1,6 @@
-﻿namespace Spotify.Data
+﻿using Spotify.Interfaces;
+
+namespace Spotify.Data
 {
     public class PlayPauseTrackEventArgs : EventArgs
     {
@@ -6,13 +8,13 @@
         {
         }
 
-        public PlayPauseTrackEventArgs(Guid collectionId, Guid trackId)
+        public PlayPauseTrackEventArgs(ITrackStorable trackCollection, Guid trackId)
         {
-            CollectionId = collectionId;
+            TrackCollection = trackCollection;
             TrackId = trackId;
         }
 
-        public Guid CollectionId { get; set; }
+        public ITrackStorable TrackCollection { get; set; } = null!;
 
         public Guid TrackId { get; set; }
 
