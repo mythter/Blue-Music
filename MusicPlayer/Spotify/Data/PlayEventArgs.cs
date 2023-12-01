@@ -1,17 +1,25 @@
-﻿using Spotify.Models;
+﻿using Spotify.Enums;
+using Spotify.Interfaces;
+using Spotify.Models;
 
 namespace Spotify.Data
 {
     public class PlayEventArgs : EventArgs
     {
-        public PlayEventArgs(List<TrackModel> trackList, int trackIndex)
+        public PlayEventArgs()
         {
-            TrackList = trackList;
+        }
+
+        public PlayEventArgs(ITrackStorable? trackCollection, int trackIndex)
+        {
+            TrackCollection = trackCollection;
             TrackIndex = trackIndex;
         }
 
-        public List<TrackModel> TrackList { get; set; }
+        public ITrackStorable? TrackCollection { get; set; }
 
-        public int TrackIndex { get; set; }
+        public int TrackIndex { get; set; } = -1;
+
+        public static readonly new PlayEventArgs Empty = new PlayEventArgs();
     }
 }
