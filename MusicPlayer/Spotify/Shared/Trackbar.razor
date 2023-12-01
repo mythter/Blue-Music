@@ -1,14 +1,15 @@
 ﻿@inject IJSRuntime js
 @implements IAsyncDisposable
+@inject IPlayerService playerService;
 
 <div class="trackbar">
     <div class="track-area">
         <div class="track-image">
             @if (Track is not null)
             {
-                @if (!String.IsNullOrEmpty(Track?.Album.Image))
+                @if (!String.IsNullOrEmpty(Image))
                 {
-                    <img src="data:image/png;base64,@Track.Album.Image" />
+                    <img src="data:image/png;base64,@Image" />
                 }
                 else
                 {
@@ -18,13 +19,13 @@
         </div>
         <div @ref=Info class="track-info">
             <div class="track-title">
-                <div @ref=Title class="track-title-area">
-                    <a href="#">@Track?.Title</a>
+                <div @ref=TitleElement class="track-title-area">
+                    <a href="#">@Title</a>
                 </div>
             </div>
             <div class="track-author">
-                <div @ref=Author class="track-author-area">
-                    <a href="#">@Track?.Album.Artist.Name</a>
+                <div @ref=AuthorElement class="track-author-area">
+                    <a href="#">@Artist</a>
                 </div>
             </div>
         </div>
@@ -61,7 +62,7 @@
             </button>
 
             <div class="buttons-right-area">
-                <button @ref=ForwardButton class="next-button button">
+                <button @ref=ForwardButton class="next-button button" @onclick="@PlayNext">
                     <i class="fa-solid fa-forward-step @(Track is null ? "inactive" : "")"></i>
                 </button>
                 <button class="repeat-button button">
@@ -123,8 +124,8 @@
 @code {
     IJSObjectReference? jsModule;
 
-    ElementReference Title;
-    ElementReference Author;
+    ElementReference TitleElement;
+    ElementReference AuthorElement;
     ElementReference Info;
 
     ElementReference Slider;
@@ -143,28 +144,54 @@
     ElementReference VolumeContainer;
 
     [Parameter]
-    public TrackModel? Track { get; set; }
+    public EventCallback<Guid> OnTrackPlayStateChangedCallback { get; set; }
+
+    [Parameter]
+    public int TrackIndex { get; set; } = -1;
+
+    public ITrackStorable? TrackCollection { get; set; }
+
+    public List<TrackModel> Tracks { get; set; } = new();
+
+    TrackModel? Track { get; set; }
+
+    string? Image { get; set; }
+
+    string? Title { get; set; }
+
+    string? Artist { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        if (Track is not null)
-        {
-            using (var db = new PlayerContext())
-            {
-                Track = db.Tracks.Include(t => t.Album)
-                         .ThenInclude(a => a.Artist)
-                         .FirstOrDefault(t => t.Id == Track.Id);
+        ArgumentNullException.ThrowIfNull(Tracks);
 
-            }
+        if (Tracks.Count > 0 && TrackIndex >= 0 && TrackIndex < Tracks.Count)
+        {
+            Track = Tracks[TrackIndex];
         }
 
-        using (var db = new PlayerContext())
-        {
-            Track = db.Tracks.Include(t => t.Album)
-                     .ThenInclude(a => a.Artist)
-                     .FirstOrDefault();
+        playerService.StartPlayingTrack += StartPlayingTrack;
+        playerService.PlayTrack += PlayTrack;
+        playerService.PauseTrack += PauseTrack;
 
-        }
+        // if (Track is not null)
+        // {
+        //     using (var db = new PlayerContext())
+        //     {
+        //         Track = db.Tracks.Include(t => t.Album)
+        //                  .ThenInclude(a => a.Artist)
+        //                  .FirstOrDefault(t => t.Id == Track.Id);
+
+        //     }
+        // }
+
+        // using (var db = new PlayerContext())
+        // {
+        //     Track = db.Tracks.Include(t => t.Album)
+        //              .ThenInclude(a => a.Artist)
+        //              .FirstOrDefault();
+
+        // }
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -172,11 +199,11 @@
         if (firstRender)
         {
             jsModule = await js.InvokeAsync<IJSObjectReference>("import", "./Shared/Trackbar.razor.js");
-            await jsModule.InvokeVoidAsync("Trackbar.TrackInfoInit", Info, Title, Author);
+            await jsModule.InvokeVoidAsync("Trackbar.TrackInfoInit", Info, TitleElement, AuthorElement);
             await jsModule.InvokeVoidAsync("Trackbar.SliderInit", Slider);
             await jsModule.InvokeVoidAsync("Trackbar.VolumeSliderInit", VolumeSlider, VolumeOuter, VolumeInner, VolumeCircle);
             await jsModule.InvokeVoidAsync("Trackbar.VolumeInit", Audio, VolumeSlider, VolumeButton, VolumeContainer);
-            await jsModule.InvokeVoidAsync("Trackbar.AudioInit", Audio, Slider, PlayButton, CurrentTime, DurationTime, BackwardButton);
+            await jsModule.InvokeVoidAsync("Trackbar.AudioInit", DotNetObjectReference.Create(this), Audio, Slider, PlayButton, CurrentTime, DurationTime, BackwardButton);
         }
     }
 
@@ -188,26 +215,147 @@
         }
     }
 
-    // private async Task SetTrack()
-    // {
-    // using (var db = new PlayerContext())
-    // {
-    //     Track = db.Tracks
-    //                 .Include(t => t.Album)
-    //                     .ThenInclude(a => a.Artist)
-    //                 .FirstOrDefault(t => t.Id == Id);
+    private async Task StartPlayingTrack(object sender, PlayEventArgs e)
+    {
+        TrackCollection = e.TrackCollection;
+        TrackIndex = e.TrackIndex;
+        InitializeTrackList();
 
-    // }
+        if (TrackIndex >= 0 && TrackIndex < Tracks.Count)
+        {
+            await InitializeTrackAsync(Tracks[TrackIndex].Id);
+        }
 
-    // StateHasChanged();
-    // if (jsModule is not null)
-    // {
-    //     await jsModule.InvokeVoidAsync("Trackbar.AudioInit", Audio, Slider, PlayButton, CurrentTime, DurationTime, BackwardButton);
-    // }
-    // }
+        StateHasChanged();
+    }
 
-    // protected override async Task OnParametersSetAsync()
-    // {
-    //     await SetTrack();
-    // }
+    public async Task PauseTrack(object sender, PlayEventArgs e)
+    {
+        if (jsModule is not null)
+        {
+            await jsModule.InvokeVoidAsync("Trackbar.Pause", Audio);
+        }
+    }
+
+    public async Task PlayTrack(object sender, PlayEventArgs e)
+    {
+        if (jsModule is not null)
+        {
+            await jsModule.InvokeVoidAsync("Trackbar.Play", Audio);
+        }
+    }
+
+    [JSInvokable]
+    public async Task PlayNext()
+    {
+        if (TrackIndex < 0 || TrackIndex + 1 >= Tracks.Count)
+        {
+            return;
+        }
+
+        await InitializeTrackAsync(Tracks[++TrackIndex].Id);
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public async Task PlayPrevious()
+    {
+        if (TrackIndex - 1 < 0 || TrackIndex >= Tracks.Count)
+        {
+            return;
+        }
+
+        await InitializeTrackAsync(Tracks[--TrackIndex].Id);
+        StateHasChanged();
+    }
+
+    private async Task InitializeTrackAsync(Guid id)
+    {
+        using (var db = new PlayerContext())
+        {
+            Track = await db.Tracks
+                 .Include(t => t.Album)
+                     .ThenInclude(a => a.Artist)
+                 .FirstOrDefaultAsync(t => t.Id == id);
+
+            if (Track is not null)
+            {
+                Image = Track.Album.Image;
+                Title = Track.Title;
+                Artist = Track.Album.Artist.Name;
+                await OnTrackPlayStateChangedCallback.InvokeAsync(Track.Id);
+            }
+            else
+            {
+                await OnTrackPlayStateChangedCallback.InvokeAsync(Guid.Empty);
+            }
+        }
+    }
+
+    private void InitializeTrackList()
+    {
+        if (TrackCollection is not null)
+        {
+
+            if (TrackCollection.Type == TrackCollectionType.Album)
+            {
+                InitializeAlbum();
+            }
+            else if (TrackCollection.Type == TrackCollectionType.Playlist)
+            {
+                InitializePlaylist();
+            }
+        }
+    }
+
+    private void InitializeAlbum()
+    {
+        if (TrackCollection is not null)
+        {
+            using (var db = new PlayerContext())
+            {
+                TrackCollection = db.Albums
+                                       .Include(a => a.Artist)
+                                       .Include(a => a.Tracks)
+                                       .FirstOrDefault(a => a.Id == TrackCollection.Id);
+
+                if (TrackCollection is not null)
+                {
+                    Tracks = ((AlbumModel)TrackCollection).Tracks;
+                    Artist = ((AlbumModel)TrackCollection).Artist.Name;
+                }
+            }
+        }
+    }
+
+    private void InitializePlaylist()
+    {
+        if (TrackCollection is not null)
+        {
+            using (var db = new PlayerContext())
+            {
+                TrackCollection = db.Playlists
+                                .Include(p => p.User)
+                                .Include(p => p.PlaylistTrack)
+                                    .ThenInclude(pt => pt.Track)
+                                .FirstOrDefault(p => p.Id == TrackCollection.Id);
+
+                if (TrackCollection is not null)
+                {
+                    Tracks = (from t in db.Tracks
+                              from pt in db.PlaylistTracks
+                              where t.Id == pt.TrackId
+                              where pt.PlaylistId == TrackCollection.Id
+                              select t).ToList();
+
+                    Artist = ((PlaylistModel)TrackCollection).User.Name;
+                }
+                else
+                {
+                    Tracks = new List<TrackModel>();
+                }
+            }
+
+        }
+    }
 }
