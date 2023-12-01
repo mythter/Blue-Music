@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Spotify.Enums;
 using Spotify.Interfaces;
 
 namespace Spotify.Models
@@ -19,6 +20,9 @@ namespace Spotify.Models
 
         [Column("album_release_date")]
         public DateTime? ReleaseDate { get; set; }
+
+        [NotMapped]
+        public TrackCollectionType Type { get => TrackCollectionType.Album; }
 
 
         [Column("album_artist_id")]

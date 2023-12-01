@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Spotify.Enums;
 using Spotify.Interfaces;
 
 namespace Spotify.Models
@@ -16,6 +17,9 @@ namespace Spotify.Models
 
         [Column("playlist_image")]
         public string? Image { get; set; }
+
+        [NotMapped]
+        public TrackCollectionType Type { get => TrackCollectionType.Playlist; }
 
 
         [Column("user_id")]
