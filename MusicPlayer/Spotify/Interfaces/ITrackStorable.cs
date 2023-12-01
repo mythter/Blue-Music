@@ -1,4 +1,6 @@
-﻿namespace Spotify.Interfaces
+﻿using Spotify.Enums;
+
+namespace Spotify.Interfaces
 {
     public interface ITrackStorable
     {
@@ -7,5 +9,7 @@
         public string Title { get; set; }
 
         public string? Image { get; set; }
+
+        public TrackCollectionType Type { get; }
     }
 }
