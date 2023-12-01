@@ -16,16 +16,16 @@ namespace Spotify.Interfaces
 
         event PlayPauseEventHandler? TrackChanged;
 
-        void Start(ITrackStorable? trackCollection, int trackIndex);
+        void Start(ITrackStorable trackCollection, int trackIndex);
 
-        void Play(Guid collectionId, Guid trackId);
+        void Play(ITrackStorable trackCollection, Guid trackId);
 
-        void Pause(Guid collectionId, Guid trackId);
+        void Pause(ITrackStorable trackCollection, Guid trackId);
 
-        public void Playing(Guid collectionId, Guid trackId);
-
-        public void Paused(Guid collectionId, Guid trackId);
-
-        public void Changed(Guid collectionId, Guid trackId);
+        void Playing(ITrackStorable trackCollection, Guid trackId);
+        
+        void Paused(ITrackStorable trackCollection, Guid trackId);
+        
+        void Changed(ITrackStorable trackCollection, Guid trackId);
     }
 }

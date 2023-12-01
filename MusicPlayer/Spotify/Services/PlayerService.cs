@@ -21,41 +21,41 @@ namespace Spotify.Services
 
         public event PlayPauseEventHandler? TrackChanged;
 
-        public void Start(ITrackStorable? trackCollection, int trackIndex)
+        public void Start(ITrackStorable trackCollection, int trackIndex)
         {
             var args = new StartTrackEventArgs(trackCollection, trackIndex);
             StartTrack?.Invoke(this, args);
         }
 
-        public void Pause(Guid collectionId, Guid trackId)
+        public void Pause(ITrackStorable trackCollection, Guid trackId)
         {
-            var args = new PlayPauseTrackEventArgs(collectionId, collectionId);
+            var args = new PlayPauseTrackEventArgs(trackCollection, trackId);
             PauseTrack?.Invoke(this, args);
             TrackPaused?.Invoke(this, args);
         }
 
-        public void Play(Guid collectionId, Guid trackId)
+        public void Play(ITrackStorable trackCollection, Guid trackId)
         {
-            var args = new PlayPauseTrackEventArgs(collectionId, collectionId);
+            var args = new PlayPauseTrackEventArgs(trackCollection, trackId);
             PlayTrack?.Invoke(this, args);
             TrackPlaying?.Invoke(this, args);
         }
 
-        public void Paused(Guid collectionId, Guid trackId)
+        public void Paused(ITrackStorable trackCollection, Guid trackId)
         {
-            var args = new PlayPauseTrackEventArgs(collectionId, trackId);
+            var args = new PlayPauseTrackEventArgs(trackCollection, trackId);
             TrackPaused?.Invoke(this, args);
         }
 
-        public void Playing(Guid collectionId, Guid trackId)
+        public void Playing(ITrackStorable trackCollection, Guid trackId)
         {
-            var args = new PlayPauseTrackEventArgs(collectionId, trackId);
+            var args = new PlayPauseTrackEventArgs(trackCollection, trackId);
             TrackPlaying?.Invoke(this, args);
         }
 
-        public void Changed(Guid collectionId, Guid trackId)
+        public void Changed(ITrackStorable trackCollection, Guid trackId)
         {
-            var args = new PlayPauseTrackEventArgs(collectionId, trackId);
+            var args = new PlayPauseTrackEventArgs(trackCollection, trackId);
             TrackChanged?.Invoke(this, args);
         }
     }
