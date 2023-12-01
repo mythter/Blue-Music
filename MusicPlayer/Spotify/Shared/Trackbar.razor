@@ -143,8 +143,8 @@
     ElementReference VolumeButton;
     ElementReference VolumeContainer;
 
-    [Parameter]
-    public EventCallback<Guid> OnTrackPlayStateChangedCallback { get; set; }
+    // [Parameter]
+    // public EventCallback<Guid> OnTrackPlayStateChangedCallback { get; set; }
 
     [Parameter]
     public int TrackIndex { get; set; } = -1;
@@ -170,9 +170,9 @@
             Track = Tracks[TrackIndex];
         }
 
-        playerService.StartPlayingTrack += StartPlayingTrack;
-        playerService.PlayTrack += PlayTrack;
-        playerService.PauseTrack += PauseTrack;
+        // playerService.StartTrack += OnStartTrack;
+        playerService.PlayTrack += OnPlayTrack;
+        playerService.PauseTrack += OnPauseTrack;
 
         // if (Track is not null)
         // {
@@ -215,7 +215,7 @@
         }
     }
 
-    private async Task StartPlayingTrack(object sender, PlayEventArgs e)
+    private async Task OnStartTrack(object sender, StartTrackEventArgs e)
     {
         TrackCollection = e.TrackCollection;
         TrackIndex = e.TrackIndex;
@@ -223,71 +223,152 @@
 
         if (TrackIndex >= 0 && TrackIndex < Tracks.Count)
         {
-            await InitializeTrackAsync(Tracks[TrackIndex].Id);
+            InitializeTrack(Tracks[TrackIndex].Id);
         }
 
         StateHasChanged();
     }
 
-    public async Task PauseTrack(object sender, PlayEventArgs e)
+    private void OnPlayTrack(object sender, PlayPauseTrackEventArgs e)
     {
-        if (jsModule is not null)
+        // if (TrackCollection is null || (TrackCollection is not null && TrackCollection.Id != e.TrackCollection.Id))
+        // {
+        //     TrackCollection = e.TrackCollection;
+        //     InitializeTrackList();
+        // }
+
+        // if (Track is null || (Track is not null && Track.Id != e.TrackId))
+        // {
+        //     var track = Tracks.Find(t => t.Id == e.TrackId);
+        //     if (track is not null)
+        //     {
+        //         TrackIndex = Tracks.IndexOf(track);
+        //     }
+        //     else
+        //     {
+        //         TrackIndex = -1;
+        //     }
+
+        //     if (TrackIndex >= 0 && TrackIndex < Tracks.Count)
+        //     {
+        //         InitializeTrack(Tracks[TrackIndex].Id);
+        //     }
+
+        //     TrackChanged();
+        //     StateHasChanged();
+        // }
+
+        if ((TrackCollection is null || (TrackCollection is not null && TrackCollection.Id != e.TrackCollection.Id))
+            || (Track is null || (Track is not null && Track.Id != e.TrackId)))
         {
-            await jsModule.InvokeVoidAsync("Trackbar.Pause", Audio);
+            TrackCollection = e.TrackCollection;
+            InitializeTrackList();
+
+            var track = Tracks.Find(t => t.Id == e.TrackId);
+            if (track is not null)
+            {
+                TrackIndex = Tracks.IndexOf(track);
+            }
+            else
+            {
+                TrackIndex = -1;
+            }
+
+            if (TrackIndex >= 0 && TrackIndex < Tracks.Count)
+            {
+                InitializeTrack(Tracks[TrackIndex].Id);
+            }
+
+            TrackChanged();
+            StateHasChanged();
+        }
+        else
+        {
+            if (jsModule is not null)
+            {
+                jsModule.InvokeVoidAsync("Trackbar.Play", Audio);
+            }
         }
     }
 
-    public async Task PlayTrack(object sender, PlayEventArgs e)
+    public void OnPauseTrack(object sender, PlayPauseTrackEventArgs e)
     {
         if (jsModule is not null)
         {
-            await jsModule.InvokeVoidAsync("Trackbar.Play", Audio);
+            jsModule.InvokeVoidAsync("Trackbar.Pause", Audio);
         }
     }
 
     [JSInvokable]
-    public async Task PlayNext()
+    public void Playing()
+    {
+        if (TrackCollection is not null && Track is not null)
+        {
+            playerService.Playing(TrackCollection, Track.Id);
+        }
+    }
+
+    [JSInvokable]
+    public void Paused()
+    {
+        if (TrackCollection is not null && Track is not null)
+        {
+            playerService.Paused(TrackCollection, Track.Id);
+        }
+    }
+
+    [JSInvokable]
+    public void TrackChanged()
+    {
+        if (TrackCollection is not null && Track is not null)
+        {
+            playerService.Changed(TrackCollection, Track.Id);
+        }
+    }
+
+    [JSInvokable]
+    public void PlayNext()
     {
         if (TrackIndex < 0 || TrackIndex + 1 >= Tracks.Count)
         {
             return;
         }
 
-        await InitializeTrackAsync(Tracks[++TrackIndex].Id);
+        InitializeTrack(Tracks[++TrackIndex].Id);
         StateHasChanged();
     }
 
     [JSInvokable]
-    public async Task PlayPrevious()
+    public void PlayPrevious()
     {
         if (TrackIndex - 1 < 0 || TrackIndex >= Tracks.Count)
         {
             return;
         }
 
-        await InitializeTrackAsync(Tracks[--TrackIndex].Id);
+        InitializeTrack(Tracks[--TrackIndex].Id);
         StateHasChanged();
     }
 
-    private async Task InitializeTrackAsync(Guid id)
+    private void InitializeTrack(Guid id)
     {
         using (var db = new PlayerContext())
         {
-            Track = await db.Tracks
+            Track = db.Tracks
                  .Include(t => t.Album)
                      .ThenInclude(a => a.Artist)
-                 .FirstOrDefaultAsync(t => t.Id == id);
+                 .FirstOrDefault(t => t.Id == id);
 
             if (Track is not null)
             {
                 Image = Track.Album.Image;
                 Title = Track.Title;
                 Artist = Track.Album.Artist.Name;
-                await OnTrackPlayStateChangedCallback.InvokeAsync(Track.Id);
+                // await OnTrackPlayStateChangedCallback.InvokeAsync(Track.Id);
             }
             else
             {
-                await OnTrackPlayStateChangedCallback.InvokeAsync(Guid.Empty);
+                // await OnTrackPlayStateChangedCallback.InvokeAsync(Guid.Empty);
             }
         }
     }
@@ -296,7 +377,6 @@
     {
         if (TrackCollection is not null)
         {
-
             if (TrackCollection.Type == TrackCollectionType.Album)
             {
                 InitializeAlbum();
@@ -323,6 +403,10 @@
                 {
                     Tracks = ((AlbumModel)TrackCollection).Tracks;
                     Artist = ((AlbumModel)TrackCollection).Artist.Name;
+                }
+                else
+                {
+                    Tracks = new List<TrackModel>();
                 }
             }
         }

@@ -435,6 +435,8 @@
         }
 
         audio.addEventListener('loadedmetadata', () => {
+            console.log("loaded metadata");
+
             if (audio.readyState > 0) {
                 currentTime.textContent = '0:00'
                 slider.value = 0;
@@ -446,6 +448,7 @@
             }
             displayDuration();
             setSliderMax();
+            dotNet.invokeMethodAsync("TrackChanged");
         });
 
         audio.addEventListener('ended', () => {
@@ -456,11 +459,13 @@
         audio.addEventListener('pause', () => {
             playBtn.innerHTML = '<i class="fa-solid fa-circle-play"></i>';
             cancelAnimationFrame(raf);
+            dotNet.invokeMethodAsync("Paused");
         });
 
         audio.addEventListener('play', () => {
             playBtn.innerHTML = '<i class="fa-solid fa-circle-pause"></i>';
             requestAnimationFrame(whilePlaying);
+            dotNet.invokeMethodAsync("Playing");
         });
 
         slider.addEventListener('input', () => {
@@ -496,10 +501,12 @@
                 }
             }
             keyPressed = true;
+            console.log("keydown", keyPressed);
         })
 
         document.body.addEventListener('keyup', () => {
             keyPressed = false;
+            console.log("keyup", keyPressed);
         })
     }
 
@@ -512,7 +519,6 @@
     static Play(audio) {
         if (audio.paused) {
             audio.play();
-
         }
     }
 
@@ -525,6 +531,27 @@
         }
     }
 
+    static Start(audio, slider, currentTime, durationTime) {
+        console.log("loaded metadata method");
+
+        audio.currentTime = 0;
+        currentTime.textContent = '0:00'
+        slider.value = 0;
+        setSliderPosition();
+
+        if (audio.paused) {
+            audio.play();
+        }
+
+        this.displayDuration(audio, durationTime);
+        this.setSliderMax(slider);
+        dotNet.invokeMethodAsync("TrackChanged");
+    }
+
+    static displayDuration(audio, durationTime) {
+        durationTime.textContent = calculateTime(audio.duration);
+    }
+
     static setSliderPosition(slider) {
         let url = "url(" +
             "\x22data:image/svg+xml,<svg xmlns='http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg' width='100%' height='8'><defs><linearGradient id='blue-grad'><stop stop-color='%231e9ed7' offset='0%'/><stop stop-color='white' offset='100%'/></linearGradient></defs><rect x='0' y='0' width='" +
@@ -535,6 +562,10 @@
             ")";
 
         slider.style.backgroundImage = url;
+    }
+
+    static setSliderMax(slider) {
+        slider.max = Math.floor(audio.duration);
     }
 
     static setTrackToStart(audio, slider, currentTime) {
