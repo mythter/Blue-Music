@@ -1,4 +1,6 @@
 ﻿@using Humanizer
+@using Spotify.Services
+@inject IPlayerService playerService;
 
 <div class="page-wrapper">
     <div class="info-container">
@@ -95,18 +97,24 @@
         </div>
     </div>
     <div class="track-list">
-        @(SongNumber = 1)
+        @{
+            songNumber = 1;
+        }
         @foreach (var track in Tracks)
         {
-            <TrackRow Index="SongNumber" Id=@track.Id></TrackRow>
-            SongNumber++;
+            <TrackRow Index="songNumber" Id="@track.Id" CollectionId="@CollectionId" OnDoubleClickCallback="@Play"></TrackRow>
+            songNumber++;
         }
     </div>
 </div>
 
 @code {
+    int songNumber;
+
     [Parameter]
     public ITrackStorable? TrackCollection { get; set; }
+
+    public Guid CollectionId { get; set; }
 
     public List<TrackModel> Tracks { get; set; } = new();
 
@@ -122,7 +130,10 @@
         get => Tracks.Count();
     }
 
-    int SongNumber { get; set; }
+    public void Play(int index)
+    {
+        playerService.StartTrack(TrackCollection, index);
+    }
 
     protected override void OnInitialized()
     {
@@ -138,40 +149,59 @@
     {
         if (TrackCollection is not null)
         {
+            CollectionId = TrackCollection.Id;
+            if (TrackCollection.Type == TrackCollectionType.Album)
+            {
+                InitializeAlbum();
+            }
+            else if (TrackCollection.Type == TrackCollectionType.Playlist)
+            {
+                InitializePlaylist();
+            }
+        }
+    }
+
+    private void InitializeAlbum()
+    {
+        if (TrackCollection is not null)
+        {
             using (var db = new PlayerContext())
             {
-                if (TrackCollection is AlbumModel)
+                TrackCollection = db.Albums
+                                       .Include(a => a.Artist)
+                                       .Include(a => a.Tracks)
+                                       .FirstOrDefault(a => a.Id == TrackCollection.Id);
+
+                if (TrackCollection is not null)
                 {
-
-                    TrackCollection = db.Albums
-                                .Include(a => a.Artist)
-                                .Include(a => a.Tracks)
-                                .FirstOrDefault(a => a.Id == TrackCollection.Id);
-
-                    if (TrackCollection is not null)
-                    {
-                        Tracks = ((AlbumModel)TrackCollection).Tracks;
-                        AuthorName = ((AlbumModel)TrackCollection).Artist.Name;
-                    }
+                    Tracks = ((AlbumModel)TrackCollection).Tracks;
+                    AuthorName = ((AlbumModel)TrackCollection).Artist.Name;
                 }
-                else if (TrackCollection is PlaylistModel)
-                {
-                    TrackCollection = db.Playlists
+            }
+        }
+    }
+
+    private void InitializePlaylist()
+    {
+        if (TrackCollection is not null)
+        {
+            using (var db = new PlayerContext())
+            {
+                TrackCollection = db.Playlists
                                 .Include(p => p.User)
                                 .Include(p => p.PlaylistTrack)
                                     .ThenInclude(pt => pt.Track)
                                 .FirstOrDefault(p => p.Id == TrackCollection.Id);
 
-                    if (TrackCollection is not null)
-                    {
-                        Tracks = (from t in db.Tracks
-                                  from pt in db.PlaylistTracks
-                                  where t.Id == pt.TrackId
-                                  where pt.PlaylistId == TrackCollection.Id
-                                  select t).ToList();
+                if (TrackCollection is not null)
+                {
+                    Tracks = (from t in db.Tracks
+                              from pt in db.PlaylistTracks
+                              where t.Id == pt.TrackId
+                              where pt.PlaylistId == TrackCollection.Id
+                              select t).ToList();
 
-                        AuthorName = ((PlaylistModel)TrackCollection).User.Name;
-                    }
+                    AuthorName = ((PlaylistModel)TrackCollection).User.Name;
                 }
             }
         }

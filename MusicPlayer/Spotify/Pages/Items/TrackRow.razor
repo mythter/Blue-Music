@@ -1,7 +1,14 @@
-﻿<div class="track-entry" tabindex="-1" @onclick="PlayTrack">
+﻿<div class="track-entry" tabindex="-1" @ondblclick="@(async() => await OnDoubleClickCallback.InvokeAsync(Index - 1))">
     <div class="track-number">
         <div class="track-number-index">
-            @Index
+            @if (CurrentPlayingTrackId == Id)
+            {
+                <img height="14" src="/assets/gif/equaliser-animated.gif">
+            }
+            else
+            {
+                @Index
+            }
         </div>
         <div class="track-number-icon">
             <i class="fa-solid fa-play"></i>
@@ -46,6 +53,15 @@
     [Parameter]
     public Guid Id { get; set; }
 
+    [Parameter]
+    public Guid CollectionId { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnDoubleClickCallback { get; set; }
+
+    [CascadingParameter]
+    public Guid CurrentPlayingTrackId { get; set; }
+
     public TrackModel? Track { get; set; }
 
     protected override async Task OnInitializedAsync()
@@ -67,10 +83,5 @@
                      .ThenInclude(a => a.Artist)
                  .FirstOrDefaultAsync(t => t.Id == Id);
         }
-    }
-
-    void PlayTrack()
-    {
-        // Layout.PlayingTrackId = Id;
     }
 }
