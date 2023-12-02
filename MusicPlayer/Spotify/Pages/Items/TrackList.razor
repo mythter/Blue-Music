@@ -1,6 +1,7 @@
 ﻿@using Humanizer
 @using Spotify.Services
 @inject IPlayerService playerService;
+@implements IDisposable
 
 <div class="page-wrapper">
     <div class="info-container">
@@ -250,5 +251,10 @@
             IsPlaying = false;
         }
         StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        playerService.PlayStateChanged -= OnPlayStateChanged;
     }
 }

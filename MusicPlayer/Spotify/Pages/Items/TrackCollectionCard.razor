@@ -1,6 +1,7 @@
 ﻿@inject IJSRuntime js
 @inject NavigationManager navigation
 @inject IPlayerService playerService
+@implements IDisposable
 
 <div @ref=Card class="card" @onclick="OpenPage">
     <div class="image-area">
@@ -174,5 +175,10 @@
             IsPlaying = false;
         }
         StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        playerService.PlayStateChanged -= OnPlayStateChanged;
     }
 }

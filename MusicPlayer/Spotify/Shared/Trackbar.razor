@@ -192,6 +192,11 @@
         {
             await jsModule.DisposeAsync();
         }
+
+        playerService.StartTrack -= OnStartTrack;
+        playerService.StartCollection -= OnStartCollcetion;
+        playerService.PauseTrack -= OnPauseTrack;
+        playerService.PlayTrack -= OnPlayTrack;
     }
 
     private async Task OnStartCollcetion(object sender, StartCollectionEventArgs e)
