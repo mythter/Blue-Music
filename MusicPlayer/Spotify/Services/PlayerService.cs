@@ -11,6 +11,8 @@ namespace Spotify.Services
 
     public delegate void PlayStateChangedEventHandler(object sender, PlayStateChangedEventArgs e);
 
+    public delegate void TrackChangedEventHandler(object sender, TrackChangedEventArgs e);
+
     public class PlayerService : IPlayerService
     {
         public Guid CurrentPlayingTrackId { get; private set; }
@@ -29,7 +31,7 @@ namespace Spotify.Services
 
         public event StartCollectionEventHandler? StartCollection;
 
-        public event PlayPauseEventHandler? TrackChanged;
+        public event TrackChangedEventHandler? TrackChanged;
 
         public event PlayStateChangedEventHandler? PlayStateChanged;
 
@@ -71,9 +73,12 @@ namespace Spotify.Services
             StateChanged(trackCollection.Id, trackId, false);
         }
 
-        public void Changed(ITrackStorable trackCollection, Guid trackId)
+        public void Changed(Guid collectionId, Guid trackId)
         {
-            var args = new PlayPauseTrackEventArgs(trackCollection, trackId);
+            CurrentPlayingTrackId = trackId;
+            CurrentPlayingCollectionId = collectionId;
+
+            var args = new TrackChangedEventArgs(collectionId, trackId);
             TrackChanged?.Invoke(this, args);
         }
 

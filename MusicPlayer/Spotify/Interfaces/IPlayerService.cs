@@ -1,4 +1,5 @@
-﻿using Spotify.Services;
+﻿using Spotify.Data;
+using Spotify.Services;
 
 namespace Spotify.Interfaces
 {
@@ -23,7 +24,7 @@ namespace Spotify.Interfaces
 
         event PlayPauseEventHandler? TrackPlaying;
 
-        event PlayPauseEventHandler? TrackChanged;
+        event TrackChangedEventHandler? TrackChanged;
 
         event PlayStateChangedEventHandler? PlayStateChanged;
 
@@ -39,7 +40,7 @@ namespace Spotify.Interfaces
         
         void Paused(ITrackStorable trackCollection, Guid trackId);
         
-        void Changed(ITrackStorable trackCollection, Guid trackId);
+        void Changed(Guid collectionId, Guid trackId);
 
         void StateChanged(Guid collectionId, Guid trackId, bool isPaused);
     }
