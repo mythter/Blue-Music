@@ -59,6 +59,10 @@
             color: #fff;
         }
 
+.loaded {
+    color: #1e9ed7 !important;
+}
+
 .track-number {
     display: flex;
     justify-content: end;
@@ -95,7 +99,7 @@
     overflow: hidden;
 }
 
-    .album-info span {
+    .album-info .title {
         max-width: 100%;
         width: max-content;
         font-size: 16px;
@@ -105,7 +109,7 @@
         text-overflow: ellipsis;
     }
 
-    .album-info a {
+    .album-info .artist {
         max-width: 100%;
         width: max-content;
         font-size: 14px;
@@ -116,7 +120,7 @@
         text-overflow: ellipsis;
     }
 
-        .album-info a:hover {
+        .album-info .artist:hover {
             text-decoration: underline;
         }
 

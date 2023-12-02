@@ -2,7 +2,7 @@
 
 <div class="track-entry" tabindex="-1" @ondblclick="@StartTrack">
     <div class="track-number">
-        <div class="track-number-index">
+        <div class="track-number-index @(IsLoaded ? "loaded" : "")">
             @if (IsPlaying)
             {
                 <img height="14" src="/assets/gif/equaliser-animated.gif">
@@ -35,8 +35,8 @@
             }
         </div>
         <div class="album-info">
-            <span>@Track?.Title</span>
-            <a href="#">@Track?.Album.Artist.Name</a>
+            <span class="title @(IsLoaded ? "loaded" : "")">@Track?.Title</span>
+            <a class="artist" href="#">@Track?.Album.Artist.Name</a>
         </div>
     </div>
     <div class="album-name-link">
@@ -67,6 +67,8 @@
 
     public bool IsPlaying { get; set; }
 
+    public bool IsLoaded { get; set; }
+
     public TrackModel? Track { get; set; }
 
     public Guid CollectionId { get; set; }
@@ -74,6 +76,7 @@
     protected override async Task OnInitializedAsync()
     {
         playerService.PlayStateChanged += OnPlayStateChanged;
+        playerService.TrackChanged += OnTrackChanged;
 
         await InitializeTrackAsync();
     }
@@ -98,15 +101,24 @@
                  .FirstOrDefaultAsync(t => t.Id == TrackId);
         }
 
-        if (CollectionId == playerService.CurrentPlayingCollectionId 
-            && TrackId == playerService.CurrentPlayingTrackId 
-            && !playerService.IsPaused)
+        if (CollectionId == playerService.CurrentPlayingCollectionId
+            && TrackId == playerService.CurrentPlayingTrackId)
         {
-            IsPlaying = true;
+            IsLoaded = true;
+
+            if (!playerService.IsPaused)
+            {
+                IsPlaying = true;
+            }
+            else
+            {
+                IsPlaying = false;
+            }
         }
         else
         {
             IsPlaying = false;
+            IsLoaded = false;
         }
         StateHasChanged();
     }
@@ -133,6 +145,19 @@
         else
         {
             IsPlaying = false;
+        }
+        StateHasChanged();
+    }
+
+    public void OnTrackChanged(object sender, TrackChangedEventArgs e)
+    {
+        if (CollectionId == e.CollectionId && TrackId == e.TrackId)
+        {
+            IsLoaded = true;
+        }
+        else
+        {
+            IsLoaded = false;
         }
         StateHasChanged();
     }
