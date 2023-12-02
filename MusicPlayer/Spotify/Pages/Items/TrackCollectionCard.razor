@@ -134,13 +134,12 @@
         {
             using (var db = new PlayerContext())
             {
-                TrackCollection = db.Albums
-                                       .Include(a => a.Artist)
-                                       .FirstOrDefault(a => a.Id == TrackCollection.Id);
+                var temp = db.Albums.Include(a => a.Artist)
+                                    .FirstOrDefault(a => a.Id == TrackCollection.Id);
 
-                if (TrackCollection is not null)
+                if (temp is not null)
                 {
-                    AuthorName = ((AlbumModel)TrackCollection).Artist.Name;
+                    AuthorName = ((AlbumModel)temp).Artist.Name;
                 }
             }
         }
@@ -152,13 +151,13 @@
         {
             using (var db = new PlayerContext())
             {
-                TrackCollection = db.Playlists
+                var temp = db.Playlists
                                 .Include(p => p.User)
                                 .FirstOrDefault(p => p.Id == TrackCollection.Id);
 
-                if (TrackCollection is not null)
+                if (temp is not null)
                 {
-                    AuthorName = ((PlaylistModel)TrackCollection).User.Name;
+                    AuthorName = ((PlaylistModel)temp).User.Name;
                 }
             }
         }
