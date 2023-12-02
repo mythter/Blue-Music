@@ -1,5 +1,4 @@
-﻿using Spotify.Data;
-using Spotify.Services;
+﻿using Spotify.Services;
 
 namespace Spotify.Interfaces
 {
