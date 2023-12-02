@@ -228,7 +228,7 @@
             TrackCollection = e.TrackCollection;
             InitializeTrackList();
 
-            var track = Tracks.Find(t => t.Id == e.TrackId);
+            TrackModel? track = Tracks.Find(t => t.Id == e.TrackId);
             if (track is not null)
             {
                 TrackIndex = Tracks.IndexOf(track);
@@ -241,10 +241,15 @@
             if (TrackIndex >= 0 && TrackIndex < Tracks.Count)
             {
                 InitializeTrack(Tracks[TrackIndex].Id);
+
             }
 
-            TrackChanged();
             StateHasChanged();
+
+            if (jsModule is not null)
+            {
+                await jsModule.InvokeVoidAsync("Trackbar.Start", Audio);
+            }
         }
         else
         {

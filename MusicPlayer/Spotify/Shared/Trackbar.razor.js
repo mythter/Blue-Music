@@ -435,8 +435,6 @@
         }
 
         audio.addEventListener('loadedmetadata', () => {
-            console.log("loaded metadata");
-
             if (audio.readyState > 0) {
                 currentTime.textContent = '0:00'
                 slider.value = 0;
@@ -531,25 +529,12 @@
         }
     }
 
-    static Start(audio, slider, currentTime, durationTime) {
-        console.log("loaded metadata method");
-
-        audio.currentTime = 0;
-        currentTime.textContent = '0:00'
-        slider.value = 0;
-        setSliderPosition();
-
-        if (audio.paused) {
-            audio.play();
-        }
-
-        this.displayDuration(audio, durationTime);
-        this.setSliderMax(slider);
-        dotNet.invokeMethodAsync("TrackChanged");
+    static Start(audio) {
+        audio.load();
     }
 
     static displayDuration(audio, durationTime) {
-        durationTime.textContent = calculateTime(audio.duration);
+        durationTime.textContent = this.calculateTime(audio.duration);
     }
 
     static setSliderPosition(slider) {
@@ -564,7 +549,7 @@
         slider.style.backgroundImage = url;
     }
 
-    static setSliderMax(slider) {
+    static setSliderMax(slider, audio) {
         slider.max = Math.floor(audio.duration);
     }
 
