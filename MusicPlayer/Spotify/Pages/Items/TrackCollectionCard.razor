@@ -62,57 +62,16 @@
 
     bool IsPlaying { get; set; }
 
-    [CascadingParameter(Name = "Collection")]
-    public Guid CurrentPlayingCollectionId { get; set; }
-
-    [CascadingParameter(Name = "IsPaused")]
-    public bool IsPaused { get; set; }
-
     protected override async Task OnInitializedAsync()
     {
         InitializeTrackList();
 
-        // using (var db = new PlayerContext())
-        // {
-        //     if (TrackCollection is PlaylistModel)
-        //     {
-        //         TrackCollection = await db.Playlists
-        //                 .Include(p => p.User)
-        //                 .Include(p => p.PlaylistTrack)
-        //                     .ThenInclude(pt => pt.Track)
-        //                 .FirstOrDefaultAsync(p => p.Id == TrackCollection.Id);
+        playerService.PlayStateChanged += OnPlayStateChanged;
+    }
 
-        //         if (TrackCollection is not null)
-        //         {
-        //             AuthorName = ((PlaylistModel)TrackCollection).User.Name;
-        //         }
-        //     }
-        //     else if (TrackCollection is AlbumModel)
-        //     {
-        //         TrackCollection = await db.Albums
-        //                .Include(a => a.Artist)
-        //                .Include(a => a.Tracks)
-        //                .FirstOrDefaultAsync(a => a.Id == TrackCollection.Id);
-
-        //         if (TrackCollection is not null)
-        //         {
-        //             AuthorName = ((AlbumModel)TrackCollection).Artist.Name;
-        //         }
-        //     }
-        // }
-
-        playerService.TrackPaused += OnTrackPaused;
-        playerService.TrackPlaying += OnTrackPlaying;
-        playerService.TrackChanged += OnTrackChanged;
-
-        if (CollectionId == CurrentPlayingCollectionId && !IsPaused)
-        {
-            IsPlaying = true;
-        }
-        else
-        {
-            IsPlaying = false;
-        }
+    protected override void OnParametersSet()
+    {
+        InitializeTrackList();
     }
 
     protected override async void OnAfterRender(bool firstRender)
@@ -157,6 +116,16 @@
                 InitializePlaylist();
             }
         }
+
+        if (CollectionId == playerService.CurrentPlayingCollectionId && !playerService.IsPaused)
+        {
+            IsPlaying = true;
+        }
+        else
+        {
+            IsPlaying = false;
+        }
+        StateHasChanged();
     }
 
     private void InitializeAlbum()
@@ -195,27 +164,9 @@
         }
     }
 
-    public void OnTrackPaused(object sender, PlayPauseTrackEventArgs e)
+    public void OnPlayStateChanged(object sender, PlayStateChangedEventArgs e)
     {
-        if (CollectionId == e.TrackCollection.Id)
-        {
-            IsPlaying = false;
-        }
-        StateHasChanged();
-    }
-
-    public void OnTrackPlaying(object sender, PlayPauseTrackEventArgs e)
-    {
-        if (CollectionId == e.TrackCollection.Id)
-        {
-            IsPlaying = true;
-        }
-        StateHasChanged();
-    }
-
-    public void OnTrackChanged(object sender, PlayPauseTrackEventArgs e)
-    {
-        if (CollectionId == e.TrackCollection.Id)
+        if (CollectionId == e.CollectionId && !e.IsPaused)
         {
             IsPlaying = true;
         }

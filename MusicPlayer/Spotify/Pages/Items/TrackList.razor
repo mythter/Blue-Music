@@ -72,7 +72,7 @@
             @if (IsPlaying)
             {
                 <button class="play-button" @onclick="Pause">
-                    <i class="ph-fill ph-pause-circle" ></i>
+                    <i class="ph-fill ph-pause-circle"></i>
                 </button>
             }
             else
@@ -141,33 +141,11 @@
         get => Tracks.Count();
     }
 
-    [CascadingParameter(Name = "Collection")]
-    public Guid CurrentPlayingCollectionId { get; set; }
-
-    [CascadingParameter(Name = "IsPaused")]
-    public bool IsPaused { get; set; }
-
-    // public void Play(int index)
-    // {
-    //     playerService.Start(TrackCollection, index);
-    // }
-
     protected override void OnInitialized()
     {
         InitializeTrackList();
 
-        playerService.TrackPaused += OnTrackPaused;
-        playerService.TrackPlaying += OnTrackPlaying;
-        playerService.TrackChanged += OnTrackChanged;
-
-        if (CollectionId == CurrentPlayingCollectionId && !IsPaused)
-        {
-            IsPlaying = true;
-        }
-        else
-        {
-            IsPlaying = false;
-        }
+        playerService.PlayStateChanged += OnPlayStateChanged;
     }
 
     protected override void OnParametersSet()
@@ -189,6 +167,17 @@
                 InitializePlaylist();
             }
         }
+
+        if (CollectionId == playerService.CurrentPlayingCollectionId
+            && !playerService.IsPaused)
+        {
+            IsPlaying = true;
+        }
+        else
+        {
+            IsPlaying = false;
+        }
+        StateHasChanged();
     }
 
     private void InitializeAlbum()
@@ -250,28 +239,9 @@
         playerService.Pause();
     }
 
-    public void OnTrackPaused(object sender, PlayPauseTrackEventArgs e)
+    public void OnPlayStateChanged(object sender, PlayStateChangedEventArgs e)
     {
-
-        if (CollectionId == e.TrackCollection.Id)
-        {
-            IsPlaying = false;
-        }
-        StateHasChanged();
-    }
-
-    public void OnTrackPlaying(object sender, PlayPauseTrackEventArgs e)
-    {
-        if (CollectionId == e.TrackCollection.Id)
-        {
-            IsPlaying = true;
-        }
-        StateHasChanged();
-    }
-
-    public void OnTrackChanged(object sender, PlayPauseTrackEventArgs e)
-    {
-        if (CollectionId == e.TrackCollection.Id)
+        if (CollectionId == e.CollectionId && !e.IsPaused)
         {
             IsPlaying = true;
         }
