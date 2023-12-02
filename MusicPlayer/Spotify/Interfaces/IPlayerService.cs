@@ -4,11 +4,13 @@ namespace Spotify.Interfaces
 {
     public interface IPlayerService
     {
-        event StartEventHandler? StartTrack;
+        event StartTrackEventHandler? StartTrack;
 
-        event PlayPauseEventHandler? PlayTrack;
+        event StartCollectionEventHandler? StartCollection;
 
-        event PlayPauseEventHandler? PauseTrack;
+        event EventHandler? PlayTrack;
+
+        event EventHandler? PauseTrack;
 
         event PlayPauseEventHandler? TrackPaused;
 
@@ -16,11 +18,13 @@ namespace Spotify.Interfaces
 
         event PlayPauseEventHandler? TrackChanged;
 
-        void Start(ITrackStorable trackCollection, int trackIndex);
+        void Start(ITrackStorable trackCollection, Guid trackId);
 
-        void Play(ITrackStorable trackCollection, Guid trackId);
+        void Start(ITrackStorable trackCollection);
 
-        void Pause(ITrackStorable trackCollection, Guid trackId);
+        void Play();
+
+        void Pause();
 
         void Playing(ITrackStorable trackCollection, Guid trackId);
         

@@ -3,42 +3,48 @@ using Spotify.Interfaces;
 
 namespace Spotify.Services
 {
-    public delegate Task StartEventHandler(object sender, StartTrackEventArgs e);
+    public delegate Task StartTrackEventHandler(object sender, StartTrackEventArgs e);
+
+    public delegate Task StartCollectionEventHandler(object sender, StartCollectionEventArgs e);
 
     public delegate void PlayPauseEventHandler(object sender, PlayPauseTrackEventArgs e);
 
     public class PlayerService : IPlayerService
     {
-        public event PlayPauseEventHandler? PlayTrack;
+        public event EventHandler? PlayTrack;
 
-        public event PlayPauseEventHandler? PauseTrack;
+        public event EventHandler? PauseTrack;
 
         public event PlayPauseEventHandler? TrackPaused;
 
         public event PlayPauseEventHandler? TrackPlaying;
 
-        public event StartEventHandler? StartTrack;
+        public event StartTrackEventHandler? StartTrack;
+
+        public event StartCollectionEventHandler? StartCollection;
 
         public event PlayPauseEventHandler? TrackChanged;
 
-        public void Start(ITrackStorable trackCollection, int trackIndex)
+        public void Start(ITrackStorable trackCollection, Guid trackId)
         {
-            var args = new StartTrackEventArgs(trackCollection, trackIndex);
+            var args = new StartTrackEventArgs(trackCollection, trackId);
             StartTrack?.Invoke(this, args);
         }
 
-        public void Pause(ITrackStorable trackCollection, Guid trackId)
+        public void Start(ITrackStorable trackCollection)
         {
-            var args = new PlayPauseTrackEventArgs(trackCollection, trackId);
-            PauseTrack?.Invoke(this, args);
-            TrackPaused?.Invoke(this, args);
+            var args = new StartCollectionEventArgs(trackCollection);
+            StartCollection?.Invoke(this, args);
         }
 
-        public void Play(ITrackStorable trackCollection, Guid trackId)
+        public void Pause()
         {
-            var args = new PlayPauseTrackEventArgs(trackCollection, trackId);
-            PlayTrack?.Invoke(this, args);
-            TrackPlaying?.Invoke(this, args);
+            PauseTrack?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void Play()
+        {
+            PlayTrack?.Invoke(this, EventArgs.Empty);
         }
 
         public void Paused(ITrackStorable trackCollection, Guid trackId)
