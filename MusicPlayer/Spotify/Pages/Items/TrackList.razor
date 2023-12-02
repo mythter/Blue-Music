@@ -69,16 +69,18 @@
 
     <div class="controls">
         <div class="controls-left">
-            <button class="play-button">
-                @if (IsPlaying)
-                {
-                    <i class="ph-fill ph-pause-circle"></i>
-                }
-                else
-                {
+            @if (IsPlaying)
+            {
+                <button class="play-button" @onclick="Pause">
+                    <i class="ph-fill ph-pause-circle" ></i>
+                </button>
+            }
+            else
+            {
+                <button class="play-button" @onclick="StartCollection">
                     <i class="ph-fill ph-play-circle"></i>
-                }
-            </button>
+                </button>
+            }
             <button class="like-button">
                 <i class="ph ph-heart-straight"></i>
             </button>
@@ -233,6 +235,19 @@
                 }
             }
         }
+    }
+
+    public void StartCollection()
+    {
+        if (TrackCollection is not null)
+        {
+            playerService.Start(TrackCollection);
+        }
+    }
+
+    public void Pause()
+    {
+        playerService.Pause();
     }
 
     public void OnTrackPaused(object sender, PlayPauseTrackEventArgs e)

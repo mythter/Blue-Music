@@ -17,16 +17,19 @@
             {
                 <img src="data:image/png;base64,@PlaylistImages.DefaultImage" />
             }
-            <div class="play-button">
-                @if (IsPlaying)
-                {
+
+            @if (IsPlaying)
+            {
+                <div class="play-button" @onclick="Pause" @onclick:stopPropagation="true">
                     <i class="fa-solid fa-pause"></i>
-                }
-                else
-                {
+                </div>
+            }
+            else
+            {
+                <div class="play-button" @onclick="StartCollection" @onclick:stopPropagation="true">
                     <i class="fa-solid fa-play"></i>
-                }
-            </div>
+                </div>
+            }
         </div>
     </div>
     <div class="description-area">
@@ -127,6 +130,18 @@
         navigation.NavigateTo($"/{path}/{TrackCollection?.Id}");
     }
 
+    public void StartCollection()
+    {
+        if (TrackCollection is not null)
+        {
+            playerService.Start(TrackCollection);
+        }
+    }
+
+    public void Pause()
+    {
+        playerService.Pause();
+    }
 
     private void InitializeTrackList()
     {
