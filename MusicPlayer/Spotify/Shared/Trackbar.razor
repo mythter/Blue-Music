@@ -143,9 +143,6 @@
     ElementReference VolumeButton;
     ElementReference VolumeContainer;
 
-    // [Parameter]
-    // public EventCallback<Guid> OnTrackPlayStateChangedCallback { get; set; }
-
     [Parameter]
     public int TrackIndex { get; set; } = -1;
 
@@ -170,28 +167,10 @@
             Track = Tracks[TrackIndex];
         }
 
-        // playerService.StartTrack += OnStartTrack;
-        playerService.PlayTrack += OnPlayTrack;
+        playerService.StartTrack += OnStartTrack;
+        playerService.StartCollection += OnStartCollcetion;
         playerService.PauseTrack += OnPauseTrack;
-
-        // if (Track is not null)
-        // {
-        //     using (var db = new PlayerContext())
-        //     {
-        //         Track = db.Tracks.Include(t => t.Album)
-        //                  .ThenInclude(a => a.Artist)
-        //                  .FirstOrDefault(t => t.Id == Track.Id);
-
-        //     }
-        // }
-
-        // using (var db = new PlayerContext())
-        // {
-        //     Track = db.Tracks.Include(t => t.Album)
-        //              .ThenInclude(a => a.Artist)
-        //              .FirstOrDefault();
-
-        // }
+        playerService.PlayTrack += OnPlayTrack;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -215,49 +194,34 @@
         }
     }
 
-    private async Task OnStartTrack(object sender, StartTrackEventArgs e)
+    private async Task OnStartCollcetion(object sender, StartCollectionEventArgs e)
     {
-        TrackCollection = e.TrackCollection;
-        TrackIndex = e.TrackIndex;
-        InitializeTrackList();
-
-        if (TrackIndex >= 0 && TrackIndex < Tracks.Count)
+        if (TrackCollection is null || (TrackCollection is not null && TrackCollection.Id != e.TrackCollection.Id))
         {
-            InitializeTrack(Tracks[TrackIndex].Id);
-        }
+            TrackCollection = e.TrackCollection;
+            InitializeTrackList();
 
-        StateHasChanged();
+            TrackIndex = 0;
+
+            if (TrackIndex >= 0 && TrackIndex < Tracks.Count)
+            {
+                InitializeTrack(Tracks[TrackIndex].Id);
+            }
+
+            TrackChanged();
+            StateHasChanged();
+        }
+        else
+        {
+            if (jsModule is not null)
+            {
+                await jsModule.InvokeVoidAsync("Trackbar.Play", Audio);
+            }
+        }
     }
 
-    private void OnPlayTrack(object sender, PlayPauseTrackEventArgs e)
+    private async Task OnStartTrack(object sender, StartTrackEventArgs e)
     {
-        // if (TrackCollection is null || (TrackCollection is not null && TrackCollection.Id != e.TrackCollection.Id))
-        // {
-        //     TrackCollection = e.TrackCollection;
-        //     InitializeTrackList();
-        // }
-
-        // if (Track is null || (Track is not null && Track.Id != e.TrackId))
-        // {
-        //     var track = Tracks.Find(t => t.Id == e.TrackId);
-        //     if (track is not null)
-        //     {
-        //         TrackIndex = Tracks.IndexOf(track);
-        //     }
-        //     else
-        //     {
-        //         TrackIndex = -1;
-        //     }
-
-        //     if (TrackIndex >= 0 && TrackIndex < Tracks.Count)
-        //     {
-        //         InitializeTrack(Tracks[TrackIndex].Id);
-        //     }
-
-        //     TrackChanged();
-        //     StateHasChanged();
-        // }
-
         if ((TrackCollection is null || (TrackCollection is not null && TrackCollection.Id != e.TrackCollection.Id))
             || (Track is null || (Track is not null && Track.Id != e.TrackId)))
         {
@@ -286,16 +250,24 @@
         {
             if (jsModule is not null)
             {
-                jsModule.InvokeVoidAsync("Trackbar.Play", Audio);
+                await jsModule.InvokeVoidAsync("Trackbar.Play", Audio);
             }
         }
     }
 
-    public void OnPauseTrack(object sender, PlayPauseTrackEventArgs e)
+    public void OnPauseTrack(object? sender, EventArgs e)
     {
         if (jsModule is not null)
         {
             jsModule.InvokeVoidAsync("Trackbar.Pause", Audio);
+        }
+    }
+
+    public void OnPlayTrack(object? sender, EventArgs e)
+    {
+        if (jsModule is not null)
+        {
+            jsModule.InvokeVoidAsync("Trackbar.Play", Audio);
         }
     }
 
