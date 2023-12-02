@@ -1,6 +1,6 @@
 ﻿@inject IPlayerService playerService;
 
-<div class="track-entry" tabindex="-1" @ondblclick="@PlayTrack">
+<div class="track-entry" tabindex="-1" @ondblclick="@StartTrack">
     <div class="track-number">
         <div class="track-number-index">
             @if (IsPlaying)
@@ -19,7 +19,7 @@
             }
             else
             {
-                <i class="fa-solid fa-play" @onclick="@PlayTrack"></i>
+                <i class="fa-solid fa-play" @onclick="@StartTrack"></i>
             }
         </div>
     </div>
@@ -133,20 +133,17 @@
         StateHasChanged();
     }
 
-    public void PlayTrack()
+    public void StartTrack()
     {
         if (Collection is not null)
         {
-            playerService.Play(Collection, TrackId);
+            playerService.Start(Collection, TrackId);
         }
     }
 
     public void PauseTrack()
     {
-        if (Collection is not null)
-        {
-            playerService.Pause(Collection, TrackId);
-        }
+        playerService.Pause();
     }
 
     public void OnTrackPaused(object sender, PlayPauseTrackEventArgs e)
