@@ -8,15 +8,15 @@ namespace Spotify.Data
         {
         }
 
-        public StartTrackEventArgs(ITrackStorable? trackCollection, int trackIndex)
+        public StartTrackEventArgs(ITrackStorable trackCollection, Guid trackId)
         {
             TrackCollection = trackCollection;
-            TrackIndex = trackIndex;
+            TrackId = trackId;
         }
 
-        public ITrackStorable? TrackCollection { get; set; }
+        public ITrackStorable TrackCollection { get; set; } = null!;
 
-        public int TrackIndex { get; set; } = -1;
+        public Guid TrackId { get; set; }
 
         public static readonly new StartTrackEventArgs Empty = new StartTrackEventArgs();
     }
