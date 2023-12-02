@@ -9,8 +9,14 @@ namespace Spotify.Services
 
     public delegate void PlayPauseEventHandler(object sender, PlayPauseTrackEventArgs e);
 
+    public delegate void PlayStateChangedEventHandler(object sender, PlayStateChangedEventArgs e);
+
     public class PlayerService : IPlayerService
     {
+        public Guid CurrentPlayingTrackId { get; private set; }
+        public Guid CurrentPlayingCollectionId { get; private set; }
+        public bool IsPaused { get; private set; }
+
         public event EventHandler? PlayTrack;
 
         public event EventHandler? PauseTrack;
@@ -24,6 +30,8 @@ namespace Spotify.Services
         public event StartCollectionEventHandler? StartCollection;
 
         public event PlayPauseEventHandler? TrackChanged;
+
+        public event PlayStateChangedEventHandler? PlayStateChanged;
 
         public void Start(ITrackStorable trackCollection, Guid trackId)
         {
@@ -49,20 +57,34 @@ namespace Spotify.Services
 
         public void Paused(ITrackStorable trackCollection, Guid trackId)
         {
-            var args = new PlayPauseTrackEventArgs(trackCollection, trackId);
-            TrackPaused?.Invoke(this, args);
+            var args1 = new PlayPauseTrackEventArgs(trackCollection, trackId);
+            TrackPaused?.Invoke(this, args1);
+
+            StateChanged(trackCollection.Id, trackId, true);
         }
 
         public void Playing(ITrackStorable trackCollection, Guid trackId)
         {
-            var args = new PlayPauseTrackEventArgs(trackCollection, trackId);
-            TrackPlaying?.Invoke(this, args);
+            var args1 = new PlayPauseTrackEventArgs(trackCollection, trackId);
+            TrackPlaying?.Invoke(this, args1);
+
+            StateChanged(trackCollection.Id, trackId, false);
         }
 
         public void Changed(ITrackStorable trackCollection, Guid trackId)
         {
             var args = new PlayPauseTrackEventArgs(trackCollection, trackId);
             TrackChanged?.Invoke(this, args);
+        }
+
+        public void StateChanged(Guid collectionId, Guid trackId, bool isPaused)
+        {
+            CurrentPlayingTrackId = trackId;
+            CurrentPlayingCollectionId = collectionId;
+            IsPaused = isPaused;
+
+            var args = new PlayStateChangedEventArgs(collectionId, trackId, isPaused);
+            PlayStateChanged?.Invoke(this, args);
         }
     }
 }
