@@ -5,43 +5,38 @@
 
 <PageTitle>Main Title</PageTitle>
 
-<CascadingValue Value="@CurrentPlayingTrackId" Name="Track">
-    <CascadingValue Value="@CurrentPlayingCollectionId" Name="Collection">
-        <CascadingValue Value="@IsPaused" Name="IsPaused">
-            <div class="page">
-                <div class="page-area">
-                    <div @ref=Sidebar class="sidebar-area">
-                        <div class="menu-area">
-                            <Menu></Menu>
-                        </div>
 
-                        <div @ref=FavouritesPanel class="favorites-area">
-                            @if (Playlists is not null)
-                            {
-                                @foreach (var pl in Playlists)
-                                {
-                                    <SidePlaylist Playlist="pl"></SidePlaylist>
-                                }
-                            }
-                        </div>
-                    </div>
-
-                    <div @ref=Resizer class="resizer"></div>
-
-                    <div class="main-area">
-                        <Topbar></Topbar>
-                        @Body
-                    </div>
-
-                </div>
-
-                <div class="trackbar-area">
-                    <Trackbar></Trackbar>
-                </div>
+<div class="page">
+    <div class="page-area">
+        <div @ref=Sidebar class="sidebar-area">
+            <div class="menu-area">
+                <Menu></Menu>
             </div>
-        </CascadingValue>
-    </CascadingValue>
-</CascadingValue>
+
+            <div @ref=FavouritesPanel class="favorites-area">
+                @if (Playlists is not null)
+                {
+                    @foreach (var pl in Playlists)
+                    {
+                        <SidePlaylist Playlist="pl"></SidePlaylist>
+                    }
+                }
+            </div>
+        </div>
+
+        <div @ref=Resizer class="resizer"></div>
+
+        <div class="main-area">
+            <Topbar></Topbar>
+            @Body
+        </div>
+
+    </div>
+
+    <div class="trackbar-area">
+        <Trackbar></Trackbar>
+    </div>
+</div>
 
 @code
 {
@@ -64,10 +59,6 @@
         {
             Playlists = await db.Playlists.ToListAsync();
         }
-
-        playerService.TrackChanged += OnTrackChanged;
-        playerService.TrackPaused += OnTrackPaused;
-        playerService.TrackPlaying += OnTrackPlaying;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -85,22 +76,5 @@
         {
             await jsModule.DisposeAsync();
         }
-    }
-
-    public void OnTrackChanged(object sender, PlayPauseTrackEventArgs e)
-    {
-        CurrentPlayingCollectionId = e.TrackCollection.Id;
-        CurrentPlayingTrackId = e.TrackId;
-        IsPaused = false;
-    }
-
-    public void OnTrackPaused(object sender, PlayPauseTrackEventArgs e)
-    {
-        IsPaused = true;
-    }
-
-    public void OnTrackPlaying(object sender, PlayPauseTrackEventArgs e)
-    {
-        IsPaused = false;
     }
 }
