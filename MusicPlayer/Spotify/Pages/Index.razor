@@ -63,7 +63,7 @@
         Playlists?.Add(new PlaylistModel()
             {
                 Id = Guid.NewGuid(),
-                Image = Playlists[0].Image,
+                Image = PlaylistImages.DefaultImage,
                 Title = "Title"
             });
         StateHasChanged();
