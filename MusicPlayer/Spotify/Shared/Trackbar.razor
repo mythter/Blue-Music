@@ -233,15 +233,7 @@
             TrackCollection = e.TrackCollection;
             InitializeTrackList();
 
-            TrackModel? track = Tracks.Find(t => t.Id == e.TrackId);
-            if (track is not null)
-            {
-                TrackIndex = Tracks.IndexOf(track);
-            }
-            else
-            {
-                TrackIndex = -1;
-            }
+            TrackIndex = Tracks.FindIndex(t => t.Id == e.TrackId);
 
             if (TrackIndex >= 0 && TrackIndex < Tracks.Count)
             {
