@@ -14,7 +14,7 @@
     transition: 0.3s;
     cursor: pointer;
     overflow: hidden;
-    font-family: DMSans, sans-serif;
+    font-family: 'Rubik', sans-serif;
     --x: calc(100% + 30px);
     --y: calc(100% + 30px);
     --w: calc(100% * 2);
