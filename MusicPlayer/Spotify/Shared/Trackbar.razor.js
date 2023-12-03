@@ -435,6 +435,7 @@
         }
 
         audio.addEventListener('loadedmetadata', () => {
+            cancelAnimationFrame(raf);
             if (audio.readyState > 0) {
                 currentTime.textContent = '0:00'
                 slider.value = 0;
@@ -467,9 +468,9 @@
         });
 
         slider.addEventListener('input', () => {
-
-            if (!isAudioValid())
+            if (!isAudioValid()) {
                 return;
+            }
 
             currentTime.textContent = calculateTime(slider.value);
             if (!audio.paused) {
@@ -478,9 +479,9 @@
         });
 
         slider.addEventListener('change', () => {
-
-            if (!isAudioValid())
+            if (!isAudioValid()) {
                 return;
+            }
 
             audio.currentTime = slider.value;
             if (!audio.paused) {
