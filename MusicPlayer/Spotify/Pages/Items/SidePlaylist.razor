@@ -1,58 +1,168 @@
 ﻿@inject NavigationManager navigation
+@inject IPlayerService playerService;
+@implements IDisposable
 
-<div class="playlist" @onclick="OpenPlaylistPage">
+<div class="playlist" @onclick="OpenPage">
     <div class="image-area">
-        @if (!String.IsNullOrEmpty(Playlist?.Image))
+        @if (!String.IsNullOrEmpty(TrackCollection?.Image))
         {
-            <img src="data:image/png;base64,@Playlist.Image" />
+            <img src="data:image/png;base64,@TrackCollection.Image" />
+        }
+        else if (TrackCollection is AlbumModel)
+        {
+            <img src="data:image/png;base64,@AlbumCovers.DefaultCover" />
         }
         else
         {
             <img src="data:image/png;base64,@PlaylistImages.DefaultImage" />
         }
     </div>
-    <div class="description-area">
-        <div class="title-area">
-            <p class="title">@Playlist?.Title</p>
+    <div class="description-container">
+        <div class="description-area">
+            <div class="title-area">
+                <p class="title @(IsLoaded ? "loaded" : "")">@TrackCollection?.Title</p>
+            </div>
+            <div class="author-area">
+                <i class="ph-fill ph-push-pin pin-icon"></i>
+                <p class="author"> @(TrackCollection?.Type == TrackCollectionType.Album ? "Album •" : "Playlist •") @AuthorName</p>
+            </div>
         </div>
-        <div class="author-area">
-            <i class="ph-fill ph-push-pin pin-icon"></i>
-            @if (!String.IsNullOrEmpty(UserName))
-            {
-                <p class="author">@UserName</p>
-            }
-        </div>
+        @if (IsPlaying)
+        {
+            <div class="description-playing-icon">
+                <span class="icon-span">
+                <i class="ph-fill ph-speaker-simple-high"></i>
+                </span>
+            </div>
+        }
     </div>
 </div>
 
 @code {
 
     [Parameter]
-    public PlaylistModel? Playlist { get; set; }
+    public ITrackStorable? TrackCollection { get; set; }
 
-    public string? UserName { get; set; }
+    public string? AuthorName { get; set; }
+
+    Guid CollectionId { get; set; }
+
+    bool IsPlaying { get; set; }
+
+    public bool IsLoaded { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        if (Playlist is not null)
+        playerService.PlayStateChanged += OnPlayStateChanged;
+        playerService.TrackChanged += OnTrackChanged;
+
+        InitializeTrackList();
+    }
+
+    protected override void OnParametersSet()
+    {
+        InitializeTrackList();
+    }
+
+    private void OpenPage()
+    {
+        if (TrackCollection is not null)
+        {
+            string path = TrackCollection.Type == TrackCollectionType.Album ? "album" : "playlist";
+            navigation.NavigateTo($"/{path}/{TrackCollection.Id}");
+        }
+    }
+
+    private void InitializeTrackList()
+    {
+        if (TrackCollection is not null)
+        {
+            CollectionId = TrackCollection.Id;
+            if (TrackCollection.Type == TrackCollectionType.Album)
+            {
+                InitializeAlbum();
+            }
+            else if (TrackCollection.Type == TrackCollectionType.Playlist)
+            {
+                InitializePlaylist();
+            }
+        }
+
+        if (CollectionId == playerService.CurrentPlayingCollectionId && !playerService.IsPaused)
+        {
+            IsPlaying = true;
+        }
+        else
+        {
+            IsPlaying = false;
+        }
+        StateHasChanged();
+    }
+
+    private void InitializeAlbum()
+    {
+        if (TrackCollection is not null)
         {
             using (var db = new PlayerContext())
             {
+                var temp = db.Albums.Include(a => a.Artist)
+                                    .FirstOrDefault(a => a.Id == TrackCollection.Id);
 
-                Playlist = await db.Playlists
-                            .Include(p => p.User)
-                            .FirstOrDefaultAsync(p => p.Id == Playlist.Id);
-
-                if (Playlist is not null)
+                if (temp is not null)
                 {
-                    UserName = Playlist.User.Name;
+                    AuthorName = ((AlbumModel)temp).Artist.Name;
                 }
             }
         }
     }
 
-    private void OpenPlaylistPage()
+    private void InitializePlaylist()
     {
-        navigation.NavigateTo($"/playlist/{Playlist?.Id}");
+        if (TrackCollection is not null)
+        {
+            using (var db = new PlayerContext())
+            {
+                var temp = db.Playlists
+                                .Include(p => p.User)
+                                .FirstOrDefault(p => p.Id == TrackCollection.Id);
+
+                if (temp is not null)
+                {
+                    AuthorName = ((PlaylistModel)temp).User.Name;
+                }
+            }
+        }
+    }
+
+    public void OnPlayStateChanged(object sender, PlayStateChangedEventArgs e)
+    {
+        if (CollectionId == e.CollectionId && !e.IsPaused)
+        {
+            IsPlaying = true;
+        }
+        else
+        {
+            IsPlaying = false;
+        }
+        StateHasChanged();
+    }
+
+    public void OnTrackChanged(object sender, TrackChangedEventArgs e)
+    {
+        if (CollectionId == e.CollectionId)
+        {
+            IsLoaded = true;
+        }
+        else
+        {
+            IsLoaded = false;
+        }
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        playerService.PlayStateChanged -= OnPlayStateChanged;
+        playerService.TrackChanged -= OnTrackChanged;
     }
 }

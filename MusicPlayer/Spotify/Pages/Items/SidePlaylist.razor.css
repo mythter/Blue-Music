@@ -31,6 +31,14 @@
         pointer-events: none;
     }
 
+.description-container {
+    display: flex;
+    gap: 12px;
+    min-width: 0px;
+    justify-content: space-between;
+    width: 100%;
+}
+
 .description-area {
     margin-left: 12px;
     min-width: 0px;
@@ -47,6 +55,14 @@
         white-space: nowrap;
     }
 
+    .description-area .title {
+        font-size: 16px;
+    }
+
+    .description-area .author {
+        font-size: 14px;
+    }
+
     .description-area .pin-icon {
         color: #1e9ed7;
         margin-right: 5px;
@@ -54,8 +70,24 @@
         /*display: none;*/
     }
 
+.description-playing-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #1e9ed7;
+}
+
+    .description-playing-icon .icon-span {
+        display: block;
+        padding: 8px;
+    }
+
 .title-area .title {
     color: #ffffff;
+}
+
+.loaded {
+    color: #1e9ed7 !important;
 }
 
 .author-area {
