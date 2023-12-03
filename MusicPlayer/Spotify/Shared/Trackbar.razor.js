@@ -491,6 +491,7 @@
         let keyPressed = false;
         document.body.addEventListener('keydown', (e) => {
             if (e.code == "Space" && !keyPressed) {
+                e.preventDefault();
                 if (!audio.paused) {
                     audio.pause();
                 }
