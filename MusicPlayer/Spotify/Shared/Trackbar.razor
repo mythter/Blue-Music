@@ -42,8 +42,8 @@
         <audio @ref=Audio src="@Track?.Source"></audio>
         <div class="buttons-area">
             <div class="buttons-left-area">
-                <button class="shuffle-button button">
-                    <i class="ph-bold ph-shuffle"></i>
+                <button class="shuffle-button button" @onclick="@(IsShuffle ? TurnShuffleOff : TurnShuffleOn)">
+                    <i class="ph-bold ph-shuffle @(IsShuffle ? "shuffle-on" : "")"></i>
                 </button>
                 <button @ref=BackwardButton class="previous-button button">
                     <i class="fa-solid fa-backward-step @(Track is null ? "inactive" : "")"></i>
@@ -66,7 +66,7 @@
                     <i class="fa-solid fa-forward-step @(Track is null ? "inactive" : "")"></i>
                 </button>
                 <button class="repeat-button button">
-                    <i class="ph-bold ph-repeat"></i>
+                    <i class="ph-bold ph-repeat @(IsRepeat ? "repeat-on" : "")"></i>
                 </button>
             </div>
         </div>
@@ -158,6 +158,10 @@
 
     string? Artist { get; set; }
 
+    bool IsShuffle { get; set; }
+
+    bool IsRepeat { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         ArgumentNullException.ThrowIfNull(Tracks);
@@ -206,14 +210,19 @@
             TrackCollection = e.TrackCollection;
             InitializeTrackList();
 
-            TrackIndex = 0;
+            TrackIndex = GetInitialTrackIndex();
+
+            if (IsShuffle && Tracks.Count > 1)
+            {
+                Tracks.ShuffleAndSetFirst(TrackIndex);
+                TrackIndex = 0;
+            }
 
             if (TrackIndex >= 0 && TrackIndex < Tracks.Count)
             {
                 InitializeTrack(Tracks[TrackIndex].Id);
             }
 
-            TrackChanged();
             StateHasChanged();
         }
         else
@@ -227,18 +236,36 @@
 
     private async Task OnStartTrack(object sender, StartTrackEventArgs e)
     {
-        if ((TrackCollection is null || (TrackCollection is not null && TrackCollection.Id != e.TrackCollection.Id))
-            || (Track is null || (Track is not null && Track.Id != e.TrackId)))
+        if (Track?.Id == e.TrackId && TrackCollection?.Id == e.TrackCollection.Id)
         {
-            TrackCollection = e.TrackCollection;
-            InitializeTrackList();
-
-            TrackIndex = Tracks.FindIndex(t => t.Id == e.TrackId);
-
-            if (TrackIndex >= 0 && TrackIndex < Tracks.Count)
+            if (jsModule is not null)
             {
-                InitializeTrack(Tracks[TrackIndex].Id);
+                await jsModule.InvokeVoidAsync("Trackbar.Play", Audio);
+            }
+        }
+        else
+        {
+            if (TrackCollection is null || TrackCollection.Id != e.TrackCollection.Id)
+            {
+                TrackCollection = e.TrackCollection;
+                InitializeTrackList();
+            }
 
+            TrackIndex = GetTrackIndexById(e.TrackId);
+
+            if (IsShuffle && Tracks.Count > 1)
+            {
+                Tracks.ShuffleAndSetFirst(TrackIndex);
+                TrackIndex = 0;
+            }
+
+            if (Track is null || Track.Id != e.TrackId)
+            {
+                if (TrackIndex >= 0 && TrackIndex < Tracks.Count)
+                {
+                    InitializeTrack(Tracks[TrackIndex].Id);
+
+                }
             }
 
             StateHasChanged();
@@ -248,16 +275,9 @@
                 await jsModule.InvokeVoidAsync("Trackbar.Start", Audio);
             }
         }
-        else
-        {
-            if (jsModule is not null)
-            {
-                await jsModule.InvokeVoidAsync("Trackbar.Play", Audio);
-            }
-        }
     }
 
-    public void OnPauseTrack(object? sender, EventArgs e)
+    private void OnPauseTrack(object? sender, EventArgs e)
     {
         if (jsModule is not null)
         {
@@ -265,7 +285,7 @@
         }
     }
 
-    public void OnPlayTrack(object? sender, EventArgs e)
+    private void OnPlayTrack(object? sender, EventArgs e)
     {
         if (jsModule is not null)
         {
@@ -338,11 +358,6 @@
                 Image = Track.Album.Image;
                 Title = Track.Title;
                 Artist = Track.Album.Artist.Name;
-                // await OnTrackPlayStateChangedCallback.InvokeAsync(Track.Id);
-            }
-            else
-            {
-                // await OnTrackPlayStateChangedCallback.InvokeAsync(Guid.Empty);
             }
         }
     }
@@ -376,11 +391,11 @@
                 if (TrackCollection is not null)
                 {
                     Tracks = ((AlbumModel)TrackCollection).Tracks;
-                    Artist = ((AlbumModel)TrackCollection).Artist.Name;
                 }
                 else
                 {
-                    Tracks = new List<TrackModel>();
+                    Tracks = new List<TrackModel>
+    ();
                 }
             }
         }
@@ -393,10 +408,10 @@
             using (var db = new PlayerContext())
             {
                 TrackCollection = db.Playlists
-                                .Include(p => p.User)
-                                .Include(p => p.PlaylistTrack)
-                                    .ThenInclude(pt => pt.Track)
-                                .FirstOrDefault(p => p.Id == TrackCollection.Id);
+                .Include(p => p.User)
+                .Include(p => p.PlaylistTrack)
+                .ThenInclude(pt => pt.Track)
+                .FirstOrDefault(p => p.Id == TrackCollection.Id);
 
                 if (TrackCollection is not null)
                 {
@@ -405,15 +420,80 @@
                               where t.Id == pt.TrackId
                               where pt.PlaylistId == TrackCollection.Id
                               select t).ToList();
-
-                    Artist = ((PlaylistModel)TrackCollection).User.Name;
                 }
                 else
                 {
-                    Tracks = new List<TrackModel>();
+                    Tracks = new List<TrackModel>
+                        ();
                 }
             }
 
+        }
+    }
+
+    private void TurnShuffleOn()
+    {
+        IsShuffle = true;
+        if (Tracks.Count > 1)
+        {
+            Tracks.ShuffleAndSetFirst(TrackIndex);
+            TrackIndex = 0;
+        }
+    }
+
+    private void TurnShuffleOff()
+    {
+        IsShuffle = false;
+        InitializeTrackList();
+        if (Track is not null)
+        {
+            TrackIndex = GetTrackIndexById(Track.Id);
+        }
+    }
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <returns>
+    /// 0 if tracks count greater than 0
+    /// -1 if tracks count is 0;
+    /// random index if tracks count greater than 1 and shuffle mode is on.
+    /// </returns>
+    private int GetInitialTrackIndex()
+    {
+        if (Tracks.Count > 0)
+        {
+            if (IsShuffle && Tracks.Count > 1)
+            {
+                Random r = new();
+                return r.Next(Tracks.Count);
+            }
+            else
+            {
+                return 0;
+            }
+
+        }
+        else
+        {
+            return -1;
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="trackId"> Id of track which index it needs to find in a collection. </param>
+    /// <returns></returns>
+    private int GetTrackIndexById(Guid trackId)
+    {
+        if (Tracks.Count > 0)
+        {
+            return Tracks.FindIndex(t => t.Id == trackId);
+        }
+        else
+        {
+            return -1;
         }
     }
 }
