@@ -12,7 +12,7 @@
 
         function resizingMove(event) {
             if (resizing) {
-                if (event.clientX <= 150) {
+                if (event.clientX <= 200) {
                     sidebarPanel.style.width = 74 + "px"
                     favouritesPanel.style.paddingLeft = 5 + "px"
                     document.documentElement.style.setProperty("--scroll-width", "5px");
