@@ -21,15 +21,15 @@
 
             @if (IsPlaying)
             {
-                <div class="play-button" @onclick="Pause" @onclick:stopPropagation="true">
-                    <i class="fa-solid fa-pause"></i>
-                </div>
+                <button class="play-button" @onclick="Pause" @onclick:stopPropagation="true">
+                    <i class="ph-fill ph-pause-circle"></i>
+                </button>
             }
             else
             {
-                <div class="play-button" @onclick="StartCollection" @onclick:stopPropagation="true">
-                    <i class="fa-solid fa-play"></i>
-                </div>
+                <button class="play-button" @onclick="StartCollection" @onclick:stopPropagation="true">
+                    <i class="ph-fill ph-play-circle"></i>
+                </button>
             }
         </div>
     </div>
