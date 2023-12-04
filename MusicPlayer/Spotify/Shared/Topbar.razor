@@ -1,10 +1,22 @@
-﻿<header class="header">
+﻿@inject NavigationService navigationService
+@inject NavigationManager navigation
+@implements IDisposable
+
+<header class="header">
     <div class="navigation-controls">
-        <button class="button back-icon">
+        <button class="button back-icon @(navigationService.CanNavigateBack ? "" : "inactive")"
+                @onclick=@(e =>
+                {
+                    if (navigationService.CanNavigateBack) GoBack();
+                })>
             <i class="ph ph-caret-left"></i>
         </button>
 
-        <button class="button forward-icon">
+        <button class="button forward-icon @(navigationService.CanNavigateForward ? "" : "inactive")"
+                @onclick=@(e =>
+                {
+                    if (navigationService.CanNavigateForward) GoForward();
+                })>
             <i class="ph ph-caret-right"></i>
         </button>
     </div>
@@ -26,5 +38,28 @@
 </header>
 
 @code {
+    protected override void OnInitialized()
+    {
+        navigation.LocationChanged += LocationChanged;
+    }
 
+    private void GoBack()
+    {
+        navigationService.NavigateBack();
+    }
+
+    private void GoForward()
+    {
+        navigationService.NavigateForward();
+    }
+
+    private void LocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        navigation.LocationChanged -= LocationChanged;
+    }
 }

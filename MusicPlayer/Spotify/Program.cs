@@ -14,6 +14,7 @@ namespace Spotify
             builder.Services.AddServerSideBlazor();
 
             builder.Services.AddScoped<IPlayerService, PlayerService>();
+            builder.Services.AddScoped<NavigationService>();
 
             var app = builder.Build();
 

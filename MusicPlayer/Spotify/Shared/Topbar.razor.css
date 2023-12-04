@@ -11,6 +11,10 @@
     box-sizing: border-box;
 }
 
+    .header *:focus {
+        outline: none;
+    }
+
 .button {
     border: none;
     width: 100%;
@@ -31,12 +35,16 @@
     justify-content: space-between;
 }
 
+.inactive {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
 .other-controls {
     display: flex;
     height: max-content;
     gap: 8px;
 }
-
 
 .back-icon, .forward-icon, .notify-icon, .profile-icon {
     min-width: 32px;
