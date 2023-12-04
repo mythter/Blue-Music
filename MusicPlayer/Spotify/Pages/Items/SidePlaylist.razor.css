@@ -10,6 +10,7 @@
 
     .playlist:hover {
         background: #1a1a1a;
+        cursor: pointer;
     }
 
 .image-area {
