@@ -110,6 +110,10 @@
                 await InitializePlaylist();
             }
         }
+        else
+        {
+            AuthorName = null;
+        }
 
         if (TrackCollection?.Id == playerService.CurrentPlayingCollectionId && !playerService.IsPaused)
         {

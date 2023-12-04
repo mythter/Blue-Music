@@ -43,6 +43,10 @@
         height: var(--w);
     }
 
+    .card *:focus {
+        outline: none;
+    }
+
 .image-area {
     padding-bottom: 0;
     margin-bottom: 16px;
@@ -108,9 +112,9 @@
     display: -webkit-box;
 }
 
-.author:hover {
-    text-decoration: underline;
-}
+    .author:hover {
+        text-decoration: underline;
+    }
 
 .card:hover .play-button {
     bottom: 15px;

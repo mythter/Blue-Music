@@ -35,9 +35,9 @@
     IJSObjectReference? jsModule;
     ElementReference MainPanel;
 
-    public List<AlbumModel>? Albums { get; set; }
+    public List<AlbumModel> Albums { get; set; } = new();
 
-    public List<PlaylistModel>? Playlists { get; set; }
+    public List<PlaylistModel> Playlists { get; set; } = new();
 
     protected override void OnInitialized()
     {

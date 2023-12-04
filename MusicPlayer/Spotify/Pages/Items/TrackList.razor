@@ -23,14 +23,13 @@
             </div>
             <div class="info">
                 <div class="type">
-                    @if (TrackCollection is AlbumModel)
+                    @if (TrackCollection?.Type == TrackCollectionType.Album)
                     {
                         @("Album")
                     }
-                    else if (TrackCollection is PlaylistModel)
+                    else if (TrackCollection?.Type == TrackCollectionType.Playlist)
                     {
                         @("Playlist")
-
                     }
                 </div>
                 <div class="name-area">
@@ -124,8 +123,6 @@
     [Parameter]
     public ITrackStorable? TrackCollection { get; set; }
 
-    Guid CollectionId { get; set; }
-
     List<TrackModel> Tracks { get; set; } = new();
 
     string? AuthorName { get; set; }
@@ -158,7 +155,6 @@
     {
         if (TrackCollection is not null)
         {
-            CollectionId = TrackCollection.Id;
             if (TrackCollection.Type == TrackCollectionType.Album)
             {
                 InitializeAlbum();
@@ -168,8 +164,13 @@
                 InitializePlaylist();
             }
         }
+        else
+        {
+            Tracks = new List<TrackModel>();
+            AuthorName = null;
+        }
 
-        if (CollectionId == playerService.CurrentPlayingCollectionId
+        if (TrackCollection?.Id == playerService.CurrentPlayingCollectionId
             && !playerService.IsPaused)
         {
             IsPlaying = true;
@@ -242,7 +243,7 @@
 
     public void OnPlayStateChanged(object sender, PlayStateChangedEventArgs e)
     {
-        if (CollectionId == e.CollectionId && !e.IsPaused)
+        if (TrackCollection?.Id == e.CollectionId && !e.IsPaused)
         {
             IsPlaying = true;
         }

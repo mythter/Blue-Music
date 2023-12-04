@@ -45,11 +45,9 @@
 
     public string? AuthorName { get; set; }
 
-    Guid CollectionId { get; set; }
-
     bool IsPlaying { get; set; }
 
-    public bool IsLoaded { get; set; }
+    bool IsLoaded { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -59,9 +57,9 @@
         await InitializeTrackList();
     }
 
-    protected override void OnParametersSet()
+    protected override async Task OnParametersSetAsync()
     {
-        InitializeTrackList();
+        await InitializeTrackList();
     }
 
     private void OpenPage()
@@ -77,7 +75,6 @@
     {
         if (TrackCollection is not null)
         {
-            CollectionId = TrackCollection.Id;
             if (TrackCollection.Type == TrackCollectionType.Album)
             {
                 await InitializeAlbum();
@@ -87,8 +84,12 @@
                 await InitializePlaylist();
             }
         }
+        else
+        {
+            AuthorName = null;
+        }
 
-        if (CollectionId == playerService.CurrentPlayingCollectionId && !playerService.IsPaused)
+        if (TrackCollection?.Id == playerService.CurrentPlayingCollectionId && !playerService.IsPaused)
         {
             IsPlaying = true;
         }
@@ -136,7 +137,7 @@
 
     public void OnPlayStateChanged(object sender, PlayStateChangedEventArgs e)
     {
-        if (CollectionId == e.CollectionId && !e.IsPaused)
+        if (TrackCollection?.Id == e.CollectionId && !e.IsPaused)
         {
             IsPlaying = true;
         }
@@ -149,7 +150,7 @@
 
     public void OnTrackChanged(object sender, TrackChangedEventArgs e)
     {
-        if (CollectionId == e.CollectionId)
+        if (TrackCollection?.Id == e.CollectionId)
         {
             IsLoaded = true;
         }
