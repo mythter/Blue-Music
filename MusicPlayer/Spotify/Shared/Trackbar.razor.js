@@ -434,7 +434,6 @@
 
         audio.addEventListener('loadedmetadata', () => {
             cancelAnimationFrame(raf);
-            console.log("loadedmetadata");
             if (audio.readyState > 0) {
                 currentTime.textContent = '0:00'
                 slider.value = 0;
@@ -530,10 +529,8 @@
     }
 
     static SetStartTrack(audio) {
-        audio.load();
         this.returnedToStart = true;
-        console.log("set track to start");
-        console.log(this.returnedToStart);
+        audio.load();
     }
 
     static displayDuration(audio, durationTime) {

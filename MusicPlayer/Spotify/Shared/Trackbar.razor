@@ -327,6 +327,7 @@
         {
             TrackIndex = 0;
             InitializeTrack(Tracks[TrackIndex].Id);
+            StateHasChanged();
             if (jsModule is not null)
             {
                 await jsModule.InvokeVoidAsync("Trackbar.SetStartTrack", Audio);
