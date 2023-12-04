@@ -161,7 +161,7 @@
 
     bool IsPlaying { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         ArgumentNullException.ThrowIfNull(Tracks);
 

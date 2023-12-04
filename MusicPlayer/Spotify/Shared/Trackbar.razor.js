@@ -348,13 +348,11 @@
 
             }
             // scroll Down
+            else if (volume.value >= 0 + volumeScrollStep) {
+                volume.value -= volumeScrollStep;
+            }
             else {
-                if (volume.value >= 0 + volumeScrollStep) {
-                    volume.value -= volumeScrollStep;
-                }
-                else {
-                    volume.value = 0;
-                }
+                volume.value = 0;
             }
 
             setAudioVolume();
