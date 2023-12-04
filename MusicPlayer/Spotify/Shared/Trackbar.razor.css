@@ -192,12 +192,30 @@ a {
     gap: 8px;
 }
 
+.repeat-button, .shuffle-button{
+    position: relative;
+}
+
 .shuffle-on, .repeat-on {
     color: #1e9ed7;
 }
 
     .shuffle-on:hover, .repeat-on:hover {
         color: #1fa8e5;
+    }
+
+    .shuffle-on::after, .repeat-on::after {
+        background-color: currentcolor;
+        border-radius: 50%;
+        bottom: 0;
+        left: 50%;
+        content: "";
+        display: block;
+        height: 4px;
+        position: absolute;
+        -webkit-transform: translateX(-50%);
+        transform: translateX(-50%);
+        width: 4px;
     }
 
 .slider-area {
