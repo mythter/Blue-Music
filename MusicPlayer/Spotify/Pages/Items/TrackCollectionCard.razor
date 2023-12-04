@@ -50,8 +50,6 @@
 
     public string? AuthorName { get; set; }
 
-    Guid CollectionId { get; set; }
-
     bool IsPlaying { get; set; }
 
     protected override async Task OnInitializedAsync()
@@ -67,7 +65,12 @@
         {
             jsModule = await js.InvokeAsync<IJSObjectReference>("import", "./Pages/Items/TrackCollectionCard.razor.js");
             await jsModule.InvokeVoidAsync("TrackCollectionCard.InitHover", Card);
-        }
+        }      
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await InitializeTrackList();
     }
 
     private void OpenPage()
@@ -98,7 +101,6 @@
                 return;
             }
 
-            CollectionId = TrackCollection.Id;
             if (TrackCollection.Type == TrackCollectionType.Album)
             {
                 await InitializeAlbum();
@@ -109,7 +111,7 @@
             }
         }
 
-        if (CollectionId == playerService.CurrentPlayingCollectionId && !playerService.IsPaused)
+        if (TrackCollection?.Id == playerService.CurrentPlayingCollectionId && !playerService.IsPaused)
         {
             IsPlaying = true;
         }
@@ -157,7 +159,7 @@
 
     public void OnPlayStateChanged(object sender, PlayStateChangedEventArgs e)
     {
-        if (CollectionId == e.CollectionId && !e.IsPaused)
+        if (TrackCollection?.Id == e.CollectionId && !e.IsPaused)
         {
             IsPlaying = true;
         }
