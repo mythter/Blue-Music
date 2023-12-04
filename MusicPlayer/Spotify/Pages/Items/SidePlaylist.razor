@@ -56,7 +56,7 @@
         playerService.PlayStateChanged += OnPlayStateChanged;
         playerService.TrackChanged += OnTrackChanged;
 
-        InitializeTrackList();
+        await InitializeTrackList();
     }
 
     protected override void OnParametersSet()
@@ -73,18 +73,18 @@
         }
     }
 
-    private void InitializeTrackList()
+    private async Task InitializeTrackList()
     {
         if (TrackCollection is not null)
         {
             CollectionId = TrackCollection.Id;
             if (TrackCollection.Type == TrackCollectionType.Album)
             {
-                InitializeAlbum();
+                await InitializeAlbum();
             }
             else if (TrackCollection.Type == TrackCollectionType.Playlist)
             {
-                InitializePlaylist();
+                await InitializePlaylist();
             }
         }
 
@@ -99,14 +99,14 @@
         StateHasChanged();
     }
 
-    private void InitializeAlbum()
+    private async Task InitializeAlbum()
     {
         if (TrackCollection is not null)
         {
             using (var db = new PlayerContext())
             {
-                var temp = db.Albums.Include(a => a.Artist)
-                                    .FirstOrDefault(a => a.Id == TrackCollection.Id);
+                var temp = await db.Albums.Include(a => a.Artist)
+                                    .FirstOrDefaultAsync(a => a.Id == TrackCollection.Id);
 
                 if (temp is not null)
                 {
@@ -116,15 +116,15 @@
         }
     }
 
-    private void InitializePlaylist()
+    private async Task InitializePlaylist()
     {
         if (TrackCollection is not null)
         {
             using (var db = new PlayerContext())
             {
-                var temp = db.Playlists
+                var temp = await db.Playlists
                                 .Include(p => p.User)
-                                .FirstOrDefault(p => p.Id == TrackCollection.Id);
+                                .FirstOrDefaultAsync(p => p.Id == TrackCollection.Id);
 
                 if (temp is not null)
                 {

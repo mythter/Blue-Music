@@ -14,14 +14,9 @@
             }
         </div>
         <div class="track-number-icon">
-            @if (IsPlaying)
-            {
-                <i class="fa-solid fa-pause" @onclick="@PauseTrack"></i>
-            }
-            else
-            {
-                <i class="fa-solid fa-play" @onclick="@StartTrack"></i>
-            }
+            <i class="fa-solid @(IsPlaying ? "fa-pause" : "fa-play")"
+               @onclick="@(IsPlaying ? PauseTrack : StartTrack)">
+            </i>
         </div>
     </div>
     <div class="album-cover-info">
