@@ -7,7 +7,7 @@
             const clientHeight = mainPanel.clientHeight
             let percent = scrollTop * 100 / (scrollHeigth - clientHeight)
 
-            if (percent > 80) {
+            if (percent > 75) {
                 dotNet.invokeMethodAsync("LoadNext")
             }
         })
