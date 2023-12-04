@@ -10,7 +10,7 @@
             {
                 <img src="data:image/png;base64,@TrackCollection.Image" />
             }
-            else if (TrackCollection is AlbumModel)
+            else if (TrackCollection?.Type == TrackCollectionType.Album)
             {
                 <img src="data:image/png;base64,@AlbumCovers.DefaultCover" />
             }
@@ -19,18 +19,9 @@
                 <img src="data:image/png;base64,@PlaylistImages.DefaultImage" />
             }
 
-            @if (IsPlaying)
-            {
-                <button class="play-button" @onclick="Pause" @onclick:stopPropagation="true">
-                    <i class="ph-fill ph-pause-circle"></i>
-                </button>
-            }
-            else
-            {
-                <button class="play-button" @onclick="StartCollection" @onclick:stopPropagation="true">
-                    <i class="ph-fill ph-play-circle"></i>
-                </button>
-            }
+            <button class="play-button" @onclick="@(IsPlaying ? Pause : StartCollection)" @onclick:stopPropagation="true">
+                <i class="ph-fill @(IsPlaying ? "ph-pause-circle" : "ph-play-circle")"></i>
+            </button>
         </div>
     </div>
     <div class="description-area">
@@ -38,13 +29,13 @@
             <a class="title" href="#">@TrackCollection?.Title</a>
         </div>
         <div class="author-area">
-            @if (TrackCollection is AlbumModel)
+            @if (TrackCollection?.Type == TrackCollectionType.Album)
             {
                 <a class="author" href="#">@AuthorName</a>
             }
             else
             {
-                <sapn class="author">@AuthorName</sapn>
+                @AuthorName
             }
         </div>
     </div>
@@ -65,14 +56,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        InitializeTrackList();
+        await InitializeTrackList();
 
         playerService.PlayStateChanged += OnPlayStateChanged;
-    }
-
-    protected override void OnParametersSet()
-    {
-        InitializeTrackList();
     }
 
     protected override async void OnAfterRender(bool firstRender)
@@ -103,18 +89,23 @@
         playerService.Pause();
     }
 
-    private void InitializeTrackList()
+    private async Task InitializeTrackList()
     {
         if (TrackCollection is not null)
         {
+            if (TrackCollection.Id == Guid.Empty)
+            {
+                return;
+            }
+
             CollectionId = TrackCollection.Id;
             if (TrackCollection.Type == TrackCollectionType.Album)
             {
-                InitializeAlbum();
+                await InitializeAlbum();
             }
             else if (TrackCollection.Type == TrackCollectionType.Playlist)
             {
-                InitializePlaylist();
+                await InitializePlaylist();
             }
         }
 
@@ -129,14 +120,14 @@
         StateHasChanged();
     }
 
-    private void InitializeAlbum()
+    private async Task InitializeAlbum()
     {
         if (TrackCollection is not null)
         {
             using (var db = new PlayerContext())
             {
-                var temp = db.Albums.Include(a => a.Artist)
-                                    .FirstOrDefault(a => a.Id == TrackCollection.Id);
+                var temp = await db.Albums.Include(a => a.Artist)
+                                    .FirstOrDefaultAsync(a => a.Id == TrackCollection.Id);
 
                 if (temp is not null)
                 {
@@ -146,15 +137,15 @@
         }
     }
 
-    private void InitializePlaylist()
+    private async Task InitializePlaylist()
     {
         if (TrackCollection is not null)
         {
             using (var db = new PlayerContext())
             {
-                var temp = db.Playlists
+                var temp = await db.Playlists
                                 .Include(p => p.User)
-                                .FirstOrDefault(p => p.Id == TrackCollection.Id);
+                                .FirstOrDefaultAsync(p => p.Id == TrackCollection.Id);
 
                 if (temp is not null)
                 {
