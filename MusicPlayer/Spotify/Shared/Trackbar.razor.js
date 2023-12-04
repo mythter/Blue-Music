@@ -446,6 +446,7 @@
                 }
                 else if (audio.paused && this.returnedToStart) {
                     dotNet.invokeMethodAsync("Paused");
+                    this.returnedToStart = false;
                 }
             }
             displayDuration();
