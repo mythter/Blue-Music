@@ -370,6 +370,8 @@
         }
     }
 
+    static returnedToStart = false;
+
     static AudioInit(dotNet, audio, slider, playBtn, currentTime, durationTime, backBtn) {
         let raf = null;
 
@@ -427,8 +429,6 @@
 
         const setStartPosition = () => {
             audio.currentTime = 0;
-            audio.pause();
-
             slider.value = audio.currentTime;
             currentTime.textContent = calculateTime(slider.value);
             setSliderPosition();
@@ -436,13 +436,16 @@
 
         audio.addEventListener('loadedmetadata', () => {
             cancelAnimationFrame(raf);
+            console.log("loadedmetadata");
             if (audio.readyState > 0) {
                 currentTime.textContent = '0:00'
                 slider.value = 0;
                 setSliderPosition();
-
-                if (audio.paused) {
+                if (audio.paused && !this.returnedToStart) {
                     audio.play();
+                }
+                else if (audio.paused && this.returnedToStart) {
+                    dotNet.invokeMethodAsync("Paused");
                 }
             }
             displayDuration();
@@ -456,14 +459,15 @@
         });
 
         audio.addEventListener('pause', () => {
-            playBtn.innerHTML = '<i class="fa-solid fa-circle-play"></i>';
             cancelAnimationFrame(raf);
-            dotNet.invokeMethodAsync("Paused");
+            if (audio.currentTime != audio.duration) {
+                dotNet.invokeMethodAsync("Paused");
+            }
         });
 
         audio.addEventListener('play', () => {
-            playBtn.innerHTML = '<i class="fa-solid fa-circle-pause"></i>';
             requestAnimationFrame(whilePlaying);
+            this.returnedToStart = false;
             dotNet.invokeMethodAsync("Playing");
         });
 
@@ -522,17 +526,15 @@
         }
     }
 
-    static PlayPause(audio) {
-        if (!audio.paused) {
-            audio.pause();
-        }
-        else {
-            audio.play();
-        }
-    }
-
     static Start(audio) {
         audio.load();
+    }
+
+    static SetStartTrack(audio) {
+        audio.load();
+        this.returnedToStart = true;
+        console.log("set track to start");
+        console.log(this.returnedToStart);
     }
 
     static displayDuration(audio, durationTime) {
