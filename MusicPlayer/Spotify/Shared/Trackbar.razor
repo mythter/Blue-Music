@@ -51,22 +51,18 @@
             </div>
 
             <button @ref=PlayButton class="playpause-button button @(Track is null ? "inactive" : "")">
-                @if (Track is not null)
-                {
-                    <i class="fa-solid fa-circle-play"></i>
-                }
-                else
-                {
-                    <i class="fa-solid fa-circle-pause"></i>
-                }
+                <i class="fa-solid @(Track is null ? "inactive fa-circle-pause" : "fa-circle-play")"></i>
             </button>
 
             <div class="buttons-right-area">
                 <button @ref=ForwardButton class="next-button button" @onclick="@PlayNext">
                     <i class="fa-solid fa-forward-step @(Track is null ? "inactive" : "")"></i>
                 </button>
-                <button class="repeat-button button">
-                    <i class="ph-bold ph-repeat @(IsRepeat ? "repeat-on" : "")"></i>
+                <button class="repeat-button button" @onclick="@SwitchRepeat">
+                    <i class="ph-bold
+                            @(Repeat == RepeatMode.RepeatOnce ? "ph-repeat-once" : "ph-repeat")
+                            @(Repeat != RepeatMode.None ? "repeat-on" : "")">
+                    </i>
                 </button>
             </div>
         </div>
@@ -160,7 +156,7 @@
 
     bool IsShuffle { get; set; }
 
-    bool IsRepeat { get; set; }
+    RepeatMode Repeat { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -207,6 +203,11 @@
     {
         if (TrackCollection is null || (TrackCollection is not null && TrackCollection.Id != e.TrackCollection.Id))
         {
+            if (Repeat == RepeatMode.RepeatOnce)
+            {
+                Repeat = RepeatMode.Repeat;
+            }
+
             TrackCollection = e.TrackCollection;
             InitializeTrackList();
 
@@ -245,6 +246,11 @@
         }
         else
         {
+            if (Repeat == RepeatMode.RepeatOnce)
+            {
+                Repeat = RepeatMode.Repeat;
+            }
+
             if (TrackCollection is null || TrackCollection.Id != e.TrackCollection.Id)
             {
                 TrackCollection = e.TrackCollection;
@@ -321,14 +327,29 @@
     }
 
     [JSInvokable]
-    public void PlayNext()
+    public async Task PlayNextWhenEnded()
     {
-        if (TrackIndex < 0 || TrackIndex + 1 >= Tracks.Count)
+        if (TrackIndex == Tracks.Count - 1 && Repeat == RepeatMode.Repeat)
+        {
+            TrackIndex = 0;
+            InitializeTrack(Tracks[TrackIndex].Id);
+        }
+        else if (Repeat == RepeatMode.RepeatOnce)
+        {
+            if (jsModule is not null)
+            {
+                await jsModule.InvokeVoidAsync("Trackbar.Start", Audio);
+            }
+        }
+        else if (TrackIndex < 0 || TrackIndex + 1 >= Tracks.Count)
         {
             return;
         }
+        else
+        {
+            InitializeTrack(Tracks[++TrackIndex].Id);
+        }
 
-        InitializeTrack(Tracks[++TrackIndex].Id);
         StateHasChanged();
     }
 
@@ -342,6 +363,16 @@
 
         InitializeTrack(Tracks[--TrackIndex].Id);
         StateHasChanged();
+    }
+
+    public async Task PlayNext()
+    {
+        if (Repeat == RepeatMode.RepeatOnce)
+        {
+            Repeat = RepeatMode.Repeat;
+        }
+
+        await PlayNextWhenEnded();
     }
 
     private void InitializeTrack(Guid id)
@@ -481,7 +512,7 @@
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="trackId"> Id of track which index it needs to find in a collection. </param>
     /// <returns></returns>
@@ -495,5 +526,22 @@
         {
             return -1;
         }
+    }
+
+    private void SwitchRepeat()
+    {
+        Repeat = Repeat switch
+        {
+            RepeatMode.None => RepeatMode.Repeat,
+            RepeatMode.Repeat => RepeatMode.RepeatOnce,
+            _ => RepeatMode.None,
+        };
+    }
+
+    enum RepeatMode
+    {
+        None = 0,
+        Repeat = 1,
+        RepeatOnce = 2
     }
 }

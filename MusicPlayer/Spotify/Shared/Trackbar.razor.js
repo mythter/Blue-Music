@@ -452,7 +452,7 @@
 
         audio.addEventListener('ended', () => {
             setStartPosition();
-            dotNet.invokeMethodAsync("PlayNext");
+            dotNet.invokeMethodAsync("PlayNextWhenEnded");
         });
 
         audio.addEventListener('pause', () => {
