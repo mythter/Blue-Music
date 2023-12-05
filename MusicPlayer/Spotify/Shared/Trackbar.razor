@@ -206,6 +206,12 @@
 
     private async Task OnStartCollcetion(object sender, StartCollectionEventArgs e)
     {
+        // if collection is not valid do nothing
+        if (!IsCollectionValid(e.TrackCollection))
+        {
+            return;
+        }
+
         // if collection is the same just continue playing
         if (TrackCollection?.Id == e.TrackCollection.Id)
         {
@@ -382,7 +388,7 @@
         {
             playerService.Changed(TrackCollection.Id, Track.Id);
         }
-    }   
+    }
 
     [JSInvokable]
     public async Task PlayNextWhenEnded()
@@ -638,6 +644,27 @@
     {
         IsPlaying = e.IsPaused ? false : true;
         StateHasChanged();
+    }
+
+    private bool IsCollectionValid(ITrackStorable? collection)
+    {
+        if (collection is not null)
+        {
+            using (var db = new PlayerContext())
+            {
+                ITrackStorable? trackCollection = null;
+                if (collection.Type == TrackCollectionType.Album)
+                {
+                    trackCollection = db.Albums.FirstOrDefault(a => a.Id == collection.Id);
+                }
+                else if (collection.Type == TrackCollectionType.Playlist)
+                {
+                    trackCollection = db.Playlists.FirstOrDefault(a => a.Id == collection.Id);
+                }
+                return trackCollection is not null;
+            }
+        }
+        return false;
     }
 
     enum RepeatMode
