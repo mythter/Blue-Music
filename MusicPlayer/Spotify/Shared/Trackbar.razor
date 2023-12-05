@@ -206,7 +206,7 @@
 
     private async Task OnStartCollcetion(object sender, StartCollectionEventArgs e)
     {
-        if (TrackCollection is null || (TrackCollection is not null && TrackCollection.Id != e.TrackCollection.Id))
+        // if collection is the same just continue playing
         if (TrackCollection?.Id == e.TrackCollection.Id)
         {
             if (jsModule is not null)
@@ -223,17 +223,22 @@
                 Repeat = RepeatMode.Repeat;
             }
 
+            // initialize new collection
             TrackCollection = e.TrackCollection;
             InitializeTrackList();
 
+            // get track index depending of collection tracklist and shuffle mode
             TrackIndex = GetInitialTrackIndex();
 
+            // if shuffle mode is On when starting playing tracklist
+            // shuffle the tracklist and put current track on the first place
             if (IsShuffle && Tracks.Count > 1)
             {
                 Tracks.ShuffleAndSetFirst(TrackIndex);
                 TrackIndex = 0;
             }
 
+            // if TrackIndex is correct initialize track by its index in the tracklist
             if (TrackIndex >= 0 && TrackIndex < Tracks.Count)
             {
                 InitializeTrack(Tracks[TrackIndex].Id);
@@ -250,6 +255,7 @@
 
     private async Task OnStartTrack(object sender, StartTrackEventArgs e)
     {
+        // if track and collection are the same just continue playing
         if (Track?.Id == e.TrackId && TrackCollection?.Id == e.TrackCollection.Id)
         {
             if (jsModule is not null)
@@ -259,25 +265,32 @@
         }
         else
         {
+            // if track or collection changed and repeat mode is Repeat Once
+            // change it to repeat mode Repeat
             if (Repeat == RepeatMode.RepeatOnce)
             {
                 Repeat = RepeatMode.Repeat;
             }
 
+            // if collection changed then initialize new tracklist
             if (TrackCollection is null || TrackCollection.Id != e.TrackCollection.Id)
             {
                 TrackCollection = e.TrackCollection;
                 InitializeTrackList();
             }
 
+            // get track index depending of collection tracklist and shuffle mode
             TrackIndex = GetTrackIndexById(e.TrackId);
 
+            // if shuffle mode is On when starting playing tracklist
+            // shuffle the tracklist and put current track on the first place
             if (IsShuffle && Tracks.Count > 1)
             {
                 Tracks.ShuffleAndSetFirst(TrackIndex);
                 TrackIndex = 0;
             }
 
+            // if track changed and TrackIndex is correct then initialize new track
             if (Track is null || Track.Id != e.TrackId)
             {
                 if (TrackIndex >= 0 && TrackIndex < Tracks.Count)
@@ -379,22 +392,28 @@
             return;
         }
 
+        // if TrackIndex is last index and repeat mode is None
+        // set the starting track of the tracklist and pause it
         if (TrackIndex == Tracks.Count - 1 && Repeat == RepeatMode.None)
         {
             await SetStartTrack();
             return;
         }
-
-        if (TrackIndex == Tracks.Count - 1 && Repeat == RepeatMode.Repeat)
+        // else if TrackIndex is last index but repeat mode is Repeat
+        // set TrackIndex to 0 and start playing track
+        else if (TrackIndex == Tracks.Count - 1 && Repeat == RepeatMode.Repeat)
         {
             TrackIndex = 0;
             InitializeTrack(Tracks[TrackIndex].Id);
         }
+        // else if repeat mode is not RepeatOnce
+        // increment TrackIndex by 1 and start playing track
         else if (Repeat != RepeatMode.RepeatOnce)
         {
             InitializeTrack(Tracks[++TrackIndex].Id);
         }
 
+        // start playing track
         if (jsModule is not null)
         {
             await jsModule.InvokeVoidAsync("Trackbar.Start", Audio);
@@ -417,6 +436,7 @@
 
     public async Task PlayNext()
     {
+        // if Repeat Once mode is on and Play Next button clicked change the repeat mode to Repeat
         if (Repeat == RepeatMode.RepeatOnce)
         {
             Repeat = RepeatMode.Repeat;
@@ -464,19 +484,18 @@
         {
             using (var db = new PlayerContext())
             {
-                TrackCollection = db.Albums
+                var collection = db.Albums
                                        .Include(a => a.Artist)
                                        .Include(a => a.Tracks)
                                        .FirstOrDefault(a => a.Id == TrackCollection.Id);
 
-                if (TrackCollection is not null)
+                if (collection is not null)
                 {
-                    Tracks = ((AlbumModel)TrackCollection).Tracks;
+                    Tracks = ((AlbumModel)collection).Tracks;
                 }
                 else
                 {
-                    Tracks = new List<TrackModel>
-    ();
+                    Tracks = new List<TrackModel>();
                 }
             }
         }
@@ -488,13 +507,13 @@
         {
             using (var db = new PlayerContext())
             {
-                TrackCollection = db.Playlists
-                .Include(p => p.User)
-                .Include(p => p.PlaylistTrack)
-                .ThenInclude(pt => pt.Track)
-                .FirstOrDefault(p => p.Id == TrackCollection.Id);
+                var collection = db.Playlists
+                                        .Include(p => p.User)
+                                        .Include(p => p.PlaylistTrack)
+                                        .ThenInclude(pt => pt.Track)
+                                        .FirstOrDefault(p => p.Id == TrackCollection.Id);
 
-                if (TrackCollection is not null)
+                if (collection is not null)
                 {
                     Tracks = (from t in db.Tracks
                               from pt in db.PlaylistTracks
@@ -504,8 +523,7 @@
                 }
                 else
                 {
-                    Tracks = new List<TrackModel>
-                        ();
+                    Tracks = new List<TrackModel>();
                 }
             }
 
@@ -515,8 +533,9 @@
     private void TurnShuffleOn()
     {
         IsShuffle = true;
-        if (Tracks.Count > 1)
+        if (Tracks.Count > 1 && TrackIndex >= 0 && TrackIndex < Tracks.Count)
         {
+            // shuffle tracklist and place current track on the first place
             Tracks.ShuffleAndSetFirst(TrackIndex);
             TrackIndex = 0;
         }
@@ -525,7 +544,9 @@
     private void TurnShuffleOff()
     {
         IsShuffle = false;
+        // get the initial tracklist order
         InitializeTrackList();
+        // get index of current track in the tracklist
         if (Track is not null)
         {
             TrackIndex = GetTrackIndexById(Track.Id);
@@ -533,7 +554,7 @@
     }
 
     /// <summary>
-    ///
+    /// Gets an index of track in tracklist depending on the shuffle mode and count of tracks in the tracklist.
     /// </summary>
     /// <returns>
     /// 0 if tracks count greater than 0
@@ -562,10 +583,12 @@
     }
 
     /// <summary>
-    ///
+    /// Gets an index of track in the tracklist by its id.
     /// </summary>
     /// <param name="trackId"> Id of track which index it needs to find in a collection. </param>
-    /// <returns></returns>
+    /// <returns>
+    /// Non negative number if track exists in the tracklist, otherwise -1.
+    /// </returns>
     private int GetTrackIndexById(Guid trackId)
     {
         if (Tracks.Count > 0)
