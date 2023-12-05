@@ -377,8 +377,7 @@
 
             if (!isAudioValid())
                 return;
-
-            // if audio valid do common logic
+                
             if (audio.paused) {
                 audio.play();
             } else {
@@ -503,12 +502,10 @@
                 }
             }
             keyPressed = true;
-            console.log("keydown", keyPressed);
         })
 
         document.body.addEventListener('keyup', () => {
             keyPressed = false;
-            console.log("keyup", keyPressed);
         })
     }
 
