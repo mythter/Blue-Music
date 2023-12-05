@@ -7,12 +7,6 @@ namespace Spotify.Services
 
     public delegate Task StartCollectionEventHandler(object sender, StartCollectionEventArgs e);
 
-    public delegate void PlayPauseEventHandler(object sender, PlayPauseTrackEventArgs e);
-
-    public delegate void PlayStateChangedEventHandler(object sender, PlayStateChangedEventArgs e);
-
-    public delegate void TrackChangedEventHandler(object sender, TrackChangedEventArgs e);
-
     public class PlayerService : IPlayerService
     {
         public Guid CurrentPlayingTrackId { get; private set; }
@@ -23,17 +17,17 @@ namespace Spotify.Services
 
         public event EventHandler? PauseTrack;
 
-        public event PlayPauseEventHandler? TrackPaused;
+        public event EventHandler<PlayPauseTrackEventArgs>? TrackPaused;
 
-        public event PlayPauseEventHandler? TrackPlaying;
+        public event EventHandler<PlayPauseTrackEventArgs>? TrackPlaying;
 
         public event StartTrackEventHandler? StartTrack;
 
         public event StartCollectionEventHandler? StartCollection;
 
-        public event TrackChangedEventHandler? TrackChanged;
+        public event EventHandler<TrackChangedEventArgs>? TrackChanged;
 
-        public event PlayStateChangedEventHandler? PlayStateChanged;
+        public event EventHandler<PlayStateChangedEventArgs>? PlayStateChanged;
 
         public void Start(ITrackStorable trackCollection, Guid trackId)
         {
