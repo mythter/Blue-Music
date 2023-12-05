@@ -201,12 +201,23 @@
         playerService.StartCollection -= OnStartCollcetion;
         playerService.PauseTrack -= OnPauseTrack;
         playerService.PlayTrack -= OnPlayTrack;
+        playerService.PlayStateChanged -= OnPlayStateChanged;
     }
 
     private async Task OnStartCollcetion(object sender, StartCollectionEventArgs e)
     {
         if (TrackCollection is null || (TrackCollection is not null && TrackCollection.Id != e.TrackCollection.Id))
+        if (TrackCollection?.Id == e.TrackCollection.Id)
         {
+            if (jsModule is not null)
+            {
+                await jsModule.InvokeVoidAsync("Trackbar.Play", Audio);
+            }
+        }
+        else
+        {
+            // if collection changed and repeat mode is Repeat Once
+            // change it to repeat mode Repeat
             if (Repeat == RepeatMode.RepeatOnce)
             {
                 Repeat = RepeatMode.Repeat;
@@ -229,12 +240,10 @@
             }
 
             StateHasChanged();
-        }
-        else
-        {
+
             if (jsModule is not null)
             {
-                await jsModule.InvokeVoidAsync("Trackbar.Play", Audio);
+                await jsModule.InvokeVoidAsync("Trackbar.Start", Audio);
             }
         }
     }
