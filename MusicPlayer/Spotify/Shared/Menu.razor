@@ -1,4 +1,4 @@
-﻿@inject NavigationManager navigation
+﻿@inject NavigationService navigationService
 
 <div class="menu">
     <div class="menu-item" @onclick="HomePage">
@@ -14,6 +14,6 @@
 @code {
     private void HomePage()
     {
-        navigation.NavigateTo($"/");
+        navigationService.NavigateTo($"/");
     }
 }

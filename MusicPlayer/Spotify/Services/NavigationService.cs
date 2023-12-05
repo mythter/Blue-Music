@@ -10,7 +10,8 @@ namespace Spotify.Services
         private readonly NavigationManager _navigationManager;
         private readonly List<string> _history;
         private int _position;
-        private bool _isNavigateWithControls;
+
+        public event EventHandler<LocationChangedEventArgs> LocationChanged;
 
         public bool CanNavigateBack => _position > 0 && _position < _history.Count;
 
@@ -29,6 +30,19 @@ namespace Spotify.Services
         public void NavigateTo(string url)
         {
             _navigationManager.NavigateTo(url);
+            EnsureSize();
+            string absoluteUri = _navigationManager.ToAbsoluteUri(url).ToString();
+
+            if (_position >= 0
+                && _position < _history.Count
+                && _history[_position] == absoluteUri)
+            {
+                return;
+            }
+
+            _history.RemoveRange(_position + 1, _history.Count - _position - 1);
+            _history.Add(absoluteUri);
+            _position++;
         }
 
         public void NavigateBack()
@@ -38,7 +52,6 @@ namespace Spotify.Services
                 return;
             }
             var url = _history[--_position];
-            _isNavigateWithControls = true;
             _navigationManager.NavigateTo(url);
         }
 
@@ -49,25 +62,12 @@ namespace Spotify.Services
                 return;
             }
             var url = _history[++_position];
-            _isNavigateWithControls = true;
             _navigationManager.NavigateTo(url);
         }
 
         private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
         {
-            EnsureSize();
-            if (!_isNavigateWithControls)
-            {
-                if (_position >= 0 && _position < _history.Count && _history[_position] == e.Location)
-                {
-                    return;
-                }
-
-                _history.RemoveRange(_position + 1, _history.Count - _position - 1);
-                _history.Add(e.Location);
-                _position++;
-            }
-            _isNavigateWithControls = false;
+            LocationChanged?.Invoke(sender, e);
         }
 
         private void EnsureSize()

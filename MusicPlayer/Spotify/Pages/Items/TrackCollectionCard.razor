@@ -1,5 +1,5 @@
 ﻿@inject IJSRuntime js
-@inject NavigationManager navigation
+@inject NavigationService navigationService
 @inject IPlayerService playerService
 @implements IDisposable
 
@@ -76,7 +76,7 @@
     private void OpenPage()
     {
         string path = TrackCollection is AlbumModel ? "album" : "playlist";
-        navigation.NavigateTo($"/{path}/{TrackCollection?.Id}");
+        navigationService.NavigateTo($"/{path}/{TrackCollection?.Id}");
     }
 
     public void StartCollection()

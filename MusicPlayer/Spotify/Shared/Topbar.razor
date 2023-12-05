@@ -1,5 +1,4 @@
 ﻿@inject NavigationService navigationService
-@inject NavigationManager navigation
 @implements IDisposable
 
 <header class="header">
@@ -40,7 +39,7 @@
 @code {
     protected override void OnInitialized()
     {
-        navigation.LocationChanged += LocationChanged;
+        navigationService.LocationChanged += LocationChanged;
     }
 
     private void GoBack()
@@ -60,6 +59,6 @@
 
     public void Dispose()
     {
-        navigation.LocationChanged -= LocationChanged;
+        navigationService.LocationChanged -= LocationChanged;
     }
 }

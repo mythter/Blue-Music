@@ -1,4 +1,4 @@
-﻿@inject NavigationManager navigation
+﻿@inject NavigationService navigationService
 @inject IPlayerService playerService;
 @implements IDisposable
 
@@ -67,7 +67,7 @@
         if (TrackCollection is not null)
         {
             string path = TrackCollection.Type == TrackCollectionType.Album ? "album" : "playlist";
-            navigation.NavigateTo($"/{path}/{TrackCollection.Id}");
+            navigationService.NavigateTo($"/{path}/{TrackCollection.Id}");
         }
     }
 
