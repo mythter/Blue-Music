@@ -370,7 +370,7 @@
 
     static returnedToStart = false;
 
-    static AudioInit(dotNet, audio, slider, playBtn, currentTime, durationTime, backBtn) {
+    static AudioInit(dotNet, audio, slider, playBtn, currentTime, durationTime) {
         let raf = null;
 
         playBtn.addEventListener('click', () => {
@@ -383,19 +383,7 @@
             } else {
                 audio.pause();
             }
-        });
-
-        backBtn.addEventListener('click', () => {
-
-            if (!isAudioValid())
-                return;
-
-            if (audio.currentTime > 3) {
-                this.setTrackToStart(audio, slider, currentTime);
-            } else {
-                dotNet.invokeMethodAsync("PlayPrevious");
-            }
-        });
+        }); 
 
         const calculateTime = (secs) => {
             return this.calculateTime(secs);
@@ -530,6 +518,14 @@
         audio.load();
     }
 
+    static PlayPrevious(dotNet, audio, slider, currentTime) {
+        if (audio.currentTime > 3) {
+            this.SetTrackToStart(audio, slider, currentTime);
+        } else {
+            dotNet.invokeMethodAsync("PlayPreviousIfNotFirst");
+        }
+    }
+
     static displayDuration(audio, durationTime) {
         durationTime.textContent = this.calculateTime(audio.duration);
     }
@@ -550,7 +546,7 @@
         slider.max = Math.floor(audio.duration);
     }
 
-    static setTrackToStart(audio, slider, currentTime) {
+    static SetTrackToStart(audio, slider, currentTime) {
         audio.currentTime = 0;
         slider.value = audio.currentTime;
         currentTime.textContent = this.calculateTime(slider.value);

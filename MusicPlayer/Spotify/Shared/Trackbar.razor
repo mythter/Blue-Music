@@ -45,7 +45,7 @@
                 <button class="shuffle-button button" @onclick="@(IsShuffle ? TurnShuffleOff : TurnShuffleOn)">
                     <i class="ph-bold ph-shuffle @(IsShuffle ? "shuffle-on" : "")"></i>
                 </button>
-                <button @ref=BackwardButton class="previous-button button">
+                <button @ref=BackwardButton class="previous-button button" @onclick="@PlayPrevious">
                     <i class="fa-solid fa-backward-step @(Track is null ? "inactive" : "")"></i>
                 </button>
             </div>
@@ -382,7 +382,7 @@
         {
             playerService.Changed(TrackCollection.Id, Track.Id);
         }
-    }
+    }   
 
     [JSInvokable]
     public async Task PlayNextWhenEnded()
@@ -423,7 +423,7 @@
     }
 
     [JSInvokable]
-    public void PlayPrevious()
+    public async Task PlayPreviousIfNotFirst()
     {
         if (TrackIndex - 1 < 0 || TrackIndex >= Tracks.Count)
         {
@@ -443,6 +443,29 @@
         }
 
         await PlayNextWhenEnded();
+    }
+
+    public async Task PlayPrevious()
+    {
+        if (TrackIndex >= Tracks.Count)
+        {
+            return;
+        }
+
+        if (TrackIndex == 0 && Tracks.Count > 0)
+        {
+            if (jsModule is not null)
+            {
+                jsModule.InvokeVoidAsync("Trackbar.SetTrackToStart", Audio, Slider, CurrentTime);
+            }
+        }
+        else
+        {
+            if (jsModule is not null)
+            {
+                jsModule.InvokeVoidAsync("Trackbar.PlayPrevious", DotNetObjectReference.Create(this), Audio, Slider, CurrentTime);
+            }
+        }
     }
 
     private void InitializeTrack(Guid id)
