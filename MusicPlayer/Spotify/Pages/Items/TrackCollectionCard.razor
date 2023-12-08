@@ -75,7 +75,11 @@
 
     private void OpenPage()
     {
-        string path = TrackCollection is AlbumModel ? "album" : "playlist";
+        string path = TrackCollection?.Type switch {
+            TrackCollectionType.Album => "album",
+            TrackCollectionType.Playlist => "playlist",
+            _ => throw new ArgumentException("TrackCollection type must have one value of TrackCollectionType enum.", nameof(TrackCollection.Type))
+        };
         navigationService.NavigateTo($"/{path}/{TrackCollection?.Id}");
     }
 
