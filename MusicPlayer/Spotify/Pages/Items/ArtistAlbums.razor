@@ -42,6 +42,7 @@
                 var album = db.Albums
                                 .Include(a => a.Artist)
                                 .FirstOrDefault(a => a.Id == AlbumId);
+
                 if (album is not null)
                 {
                     Albums = db.Albums

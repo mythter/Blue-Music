@@ -7,8 +7,6 @@ namespace Spotify.Data
         public static List<TrackModel> Tracks { get; set; }
         public static List<PlaylistModel> Playlists { get; set; }
 
-        public static List<AlbumModel> Albums { get; set; }
-
         static DataBaseMoq()
         {
 

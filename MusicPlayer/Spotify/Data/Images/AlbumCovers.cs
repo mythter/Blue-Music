@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Spotify.Data
+﻿namespace Spotify.Data
 {
     public static class AlbumCovers
     {

@@ -1,5 +1,4 @@
 ﻿@using Humanizer
-@using Spotify.Services
 @inject IPlayerService playerService;
 @implements IDisposable
 
@@ -241,7 +240,7 @@
         playerService.Pause();
     }
 
-    public void OnPlayStateChanged(object sender, PlayStateChangedEventArgs e)
+    public void OnPlayStateChanged(object? sender, PlayStateChangedEventArgs e)
     {
         if (TrackCollection?.Id == e.CollectionId && !e.IsPaused)
         {

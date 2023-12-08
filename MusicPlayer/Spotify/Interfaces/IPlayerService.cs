@@ -11,7 +11,6 @@ namespace Spotify.Interfaces
 
         bool IsPaused { get; }
 
-
         event StartTrackEventHandler? StartTrack;
 
         event StartCollectionEventHandler? StartCollection;

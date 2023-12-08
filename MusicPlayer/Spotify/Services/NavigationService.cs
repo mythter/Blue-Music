@@ -11,7 +11,7 @@ namespace Spotify.Services
         private readonly List<string> _history;
         private int _position;
 
-        public event EventHandler<LocationChangedEventArgs> LocationChanged;
+        public event EventHandler<LocationChangedEventArgs>? LocationChanged;
 
         public bool CanNavigateBack => _position > 0 && _position < _history.Count;
 

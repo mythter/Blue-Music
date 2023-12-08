@@ -135,7 +135,7 @@
         }
     }
 
-    public void OnPlayStateChanged(object sender, PlayStateChangedEventArgs e)
+    public void OnPlayStateChanged(object? sender, PlayStateChangedEventArgs e)
     {
         if (TrackCollection?.Id == e.CollectionId && !e.IsPaused)
         {
@@ -148,7 +148,7 @@
         StateHasChanged();
     }
 
-    public void OnTrackChanged(object sender, TrackChangedEventArgs e)
+    public void OnTrackChanged(object? sender, TrackChangedEventArgs e)
     {
         if (TrackCollection?.Id == e.CollectionId)
         {
