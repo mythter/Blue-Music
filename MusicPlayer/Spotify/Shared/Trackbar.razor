@@ -325,6 +325,12 @@
         Play();
     }
 
+    public void OnPlayStateChanged(object? sender, PlayStateChangedEventArgs e)
+    {
+        IsPlaying = e.IsPaused ? false : true;
+        StateHasChanged();
+    }
+
     private void Pause()
     {
         if (jsModule is not null)
@@ -429,7 +435,7 @@
     }
 
     [JSInvokable]
-    public async Task PlayPreviousIfNotFirst()
+    public void PlayPreviousIfNotFirst()
     {
         if (TrackIndex - 1 < 0 || TrackIndex >= Tracks.Count)
         {
@@ -462,14 +468,14 @@
         {
             if (jsModule is not null)
             {
-                jsModule.InvokeVoidAsync("Trackbar.SetTrackToStart", Audio, Slider, CurrentTime);
+                await jsModule.InvokeVoidAsync("Trackbar.SetTrackToStart", Audio, Slider, CurrentTime);
             }
         }
         else
         {
             if (jsModule is not null)
             {
-                jsModule.InvokeVoidAsync("Trackbar.PlayPrevious", DotNetObjectReference.Create(this), Audio, Slider, CurrentTime);
+                await jsModule.InvokeVoidAsync("Trackbar.PlayPrevious", DotNetObjectReference.Create(this), Audio, Slider, CurrentTime);
             }
         }
     }
@@ -640,12 +646,6 @@
         };
     }
 
-    public void OnPlayStateChanged(object sender, PlayStateChangedEventArgs e)
-    {
-        IsPlaying = e.IsPaused ? false : true;
-        StateHasChanged();
-    }
-
     private bool IsCollectionValid(ITrackStorable? collection)
     {
         if (collection is not null)
@@ -665,12 +665,5 @@
             }
         }
         return false;
-    }
-
-    enum RepeatMode
-    {
-        None = 0,
-        Repeat = 1,
-        RepeatOnce = 2
     }
 }
