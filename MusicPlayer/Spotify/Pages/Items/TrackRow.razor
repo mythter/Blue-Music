@@ -67,8 +67,6 @@
 
     public TrackModel? Track { get; set; }
 
-    public Guid CollectionId { get; set; }
-
     protected override async Task OnInitializedAsync()
     {
         playerService.PlayStateChanged += OnPlayStateChanged;
@@ -79,11 +77,6 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        if (Collection is not null)
-        {
-            CollectionId = Collection.Id;
-        }
-
         await InitializeTrackAsync();
     }
 
@@ -97,19 +90,11 @@
                  .FirstOrDefaultAsync(t => t.Id == TrackId);
         }
 
-        if (CollectionId == playerService.CurrentPlayingCollectionId
+        if (Collection?.Id == playerService.CurrentPlayingCollectionId
             && TrackId == playerService.CurrentPlayingTrackId)
         {
             IsLoaded = true;
-
-            if (!playerService.IsPaused)
-            {
-                IsPlaying = true;
-            }
-            else
-            {
-                IsPlaying = false;
-            }
+            IsPlaying = playerService.IsPaused ? false : true;
         }
         else
         {
@@ -132,9 +117,9 @@
         playerService.Pause();
     }
 
-    public void OnPlayStateChanged(object sender, PlayStateChangedEventArgs e)
+    public void OnPlayStateChanged(object? sender, PlayStateChangedEventArgs e)
     {
-        if (CollectionId == e.CollectionId && TrackId == e.TrackId && !e.IsPaused)
+        if (Collection?.Id == e.CollectionId && TrackId == e.TrackId && !e.IsPaused)
         {
             IsPlaying = true;
         }
@@ -145,9 +130,9 @@
         StateHasChanged();
     }
 
-    public void OnTrackChanged(object sender, TrackChangedEventArgs e)
+    public void OnTrackChanged(object? sender, TrackChangedEventArgs e)
     {
-        if (CollectionId == e.CollectionId && TrackId == e.TrackId)
+        if (Collection?.Id == e.CollectionId && TrackId == e.TrackId)
         {
             IsLoaded = true;
         }
