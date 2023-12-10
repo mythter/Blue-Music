@@ -374,7 +374,7 @@
     {
         if (TrackCollection is not null && Track is not null)
         {
-            playerService.Playing(TrackCollection, Track.Id);
+            playerService.StateChanged(TrackCollection.Id, Track.Id, false);
         }
     }
 
@@ -383,7 +383,7 @@
     {
         if (TrackCollection is not null && Track is not null)
         {
-            playerService.Paused(TrackCollection, Track.Id);
+            playerService.StateChanged(TrackCollection.Id, Track.Id, true);
         }
     }
 

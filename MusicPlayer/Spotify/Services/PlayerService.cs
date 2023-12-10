@@ -17,10 +17,6 @@ namespace Spotify.Services
 
         public event EventHandler? PauseTrack;
 
-        public event EventHandler<PlayPauseTrackEventArgs>? TrackPaused;
-
-        public event EventHandler<PlayPauseTrackEventArgs>? TrackPlaying;
-
         public event StartTrackEventHandler? StartTrack;
 
         public event StartCollectionEventHandler? StartCollection;
@@ -49,22 +45,6 @@ namespace Spotify.Services
         public void Play()
         {
             PlayTrack?.Invoke(this, EventArgs.Empty);
-        }
-
-        public void Paused(ITrackStorable trackCollection, Guid trackId)
-        {
-            var args1 = new PlayPauseTrackEventArgs(trackCollection, trackId);
-            TrackPaused?.Invoke(this, args1);
-
-            StateChanged(trackCollection.Id, trackId, true);
-        }
-
-        public void Playing(ITrackStorable trackCollection, Guid trackId)
-        {
-            var args1 = new PlayPauseTrackEventArgs(trackCollection, trackId);
-            TrackPlaying?.Invoke(this, args1);
-
-            StateChanged(trackCollection.Id, trackId, false);
         }
 
         public void Changed(Guid collectionId, Guid trackId)

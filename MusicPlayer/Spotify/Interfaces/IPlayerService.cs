@@ -19,10 +19,6 @@ namespace Spotify.Interfaces
 
         event EventHandler? PauseTrack;
 
-        event EventHandler<PlayPauseTrackEventArgs>? TrackPaused;
-
-        event EventHandler<PlayPauseTrackEventArgs>? TrackPlaying;
-
         event EventHandler<TrackChangedEventArgs>? TrackChanged;
 
         event EventHandler<PlayStateChangedEventArgs>? PlayStateChanged;
@@ -34,10 +30,6 @@ namespace Spotify.Interfaces
         void Play();
 
         void Pause();
-
-        void Playing(ITrackStorable trackCollection, Guid trackId);
-        
-        void Paused(ITrackStorable trackCollection, Guid trackId);
         
         void Changed(Guid collectionId, Guid trackId);
 
