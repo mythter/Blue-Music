@@ -252,10 +252,7 @@
 
             StateHasChanged();
 
-            if (jsModule is not null)
-            {
-                await jsModule.InvokeVoidAsync("Trackbar.Start", Audio);
-            }
+            Start();
         }
     }
 
@@ -308,10 +305,7 @@
 
             StateHasChanged();
 
-            if (jsModule is not null)
-            {
-                await jsModule.InvokeVoidAsync("Trackbar.Start", Audio);
-            }
+            Start();
         }
     }
 
