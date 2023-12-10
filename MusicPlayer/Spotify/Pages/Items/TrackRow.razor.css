@@ -10,6 +10,10 @@
     font-size: 14px;
 }
 
+    .track-entry:focus, .track-entry *:focus {
+        outline: none;
+    }
+
     .track-entry:hover {
         background-color: #1e232a;
     }
