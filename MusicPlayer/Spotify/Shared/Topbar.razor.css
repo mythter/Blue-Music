@@ -75,8 +75,8 @@
     width: fit-content;
     min-height: 32px;
     max-height: 32px;
-    padding-left: 16px;
-    padding-right: 16px;
+    padding-left: 8px;
+    padding-right: 8px;
     gap: 8px;
     font-size: 14px;
 }
