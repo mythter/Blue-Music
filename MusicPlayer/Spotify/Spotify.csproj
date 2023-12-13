@@ -23,9 +23,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="wwwroot\assets\gif\equaliser-animated.gif">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
+    <Content Update="wwwroot\assets\gif\equa.gif">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
